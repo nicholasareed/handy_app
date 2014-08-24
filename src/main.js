@@ -206,7 +206,7 @@ define(function(require, exports, module) {
     Utils.Analytics.init();
 
     // Config file, symlinked (ln -s) into multiple directories
-    var ConfigXml = require('text!../config.xml');
+    var ConfigXml = require('text!config.xml');
     // Parse config.xml and set approprate App variables
     App.Config = $($.parseXML(ConfigXml));
     if(App.Config.find("widget").get(0).attributes.id.value.indexOf('.pub') !== -1){
