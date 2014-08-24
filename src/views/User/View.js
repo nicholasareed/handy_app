@@ -143,7 +143,7 @@ define(function(require, exports, module) {
                 } else {
                     that.is_me = false;
                     console.error('Not is_me!');
-                    var my_friend_profile_ids = _.pluck(App.Data.Profiles.toJSON(), '_id');
+                    // var my_friend_profile_ids = _.pluck(App.Data.Profiles.toJSON(), '_id');
                     
 
                     // if(_.intersection(that.model.get('related_profile_ids'),my_friend_profile_ids).length > 0){
@@ -153,17 +153,17 @@ define(function(require, exports, module) {
                     // }
                 }
 
-                // compare/against
-                // only do this one time
-                if(that.is_me === false){
+                // // compare/against
+                // // only do this one time
+                // if(that.is_me === false){
 
-                    that.tabBar.defineSection('compare', {
-                        content: '<i class="icon ion-android-contacts"></i><div>Compare</div>',
-                        onClasses: ['profile-tabbar-default', 'on'],
-                        offClasses: ['profile-tabbar-default', 'off']
-                    });
+                //     that.tabBar.defineSection('compare', {
+                //         content: '<i class="icon ion-android-contacts"></i><div>Compare</div>',
+                //         onClasses: ['profile-tabbar-default', 'on'],
+                //         offClasses: ['profile-tabbar-default', 'off']
+                //     });
 
-                }
+                // }
 
                 // update going forward
                 that.update_content();
@@ -635,7 +635,7 @@ define(function(require, exports, module) {
 
             // Profile Photo
             if(that.model.get('profilephoto.urls')){
-                that.profileTop.ProfileImage.Surface.setContent(that.model.get('profilephoto.urls.thumb100x100'));
+                that.profileTop.ProfileImage.Surface.setContent(that.model.get('profilephoto.urls.thumb300x300'));
             } else {
                 that.profileTop.ProfileImage.Surface.setContent('img/generic-profile.png');
             }
