@@ -27,7 +27,7 @@ define(function(require, exports, module) {
     var Backbone = require('backbone-adapter');
 
     // Models
-    var TodoModel = require("models/todo");
+    var TodoContentModel = require("models/todo_content");
 
     // Extras
     var Utils = require('utils');
@@ -35,8 +35,12 @@ define(function(require, exports, module) {
 
     // Templates
     var Handlebars          = require('lib2/handlebars-adapter');
-    var tpl                 = require('text!./tpl/Todo.html');
-    var template            = Handlebars.compile(tpl);
+    var tpls                = {
+        text: require('text!./tpl/ContentText.html')
+    };
+    var templates           = {
+        text: Handlebars.compile(tpls.text)
+    }
 
     function SubView(options) {
         var that = this;
@@ -44,6 +48,7 @@ define(function(require, exports, module) {
         this.options = options;
 
         // Load models
+        this.todo_id = this.options.todo_id;
         this.loadModels();
 
         // Should switch to a RenderController or Lightbox for displaying this content?
@@ -54,18 +59,11 @@ define(function(require, exports, module) {
         this.contentLayout.Views = [];
         this.contentLayout.sequenceFrom(this.contentLayout.Views);
 
+        // this.createTemplates();
+
         this.createDefaultSurfaces();
         this.createDefaultLightboxes();
 
-        // this.contentLayout.Views.push(this.lightboxButtons);
-
-        // Gather data after structure built
-        App.Data.User.populated().then(function(){
-
-            // that.update_friend_collection();
-            // App.Data.User.on('sync', that.update_friend_collection.bind(that));
-
-        });
 
         // Need to wait for at least 1 item before showing the result?
         // - otherwise, there is a Render error
@@ -87,8 +85,9 @@ define(function(require, exports, module) {
         // if(this.options && this.options.filter){
         //     options['$filter'] = this.options.filter;
         // }
-        this.collection = new TodoModel.TodoCollection([],{
+        this.collection = new TodoContentModel.TodoContentCollection([],{
             // type: 'friend'
+            todo_id: this.todo_id
         });
         this.collection.on("sync", that.updateCollectionStatus.bind(this), this);
         this.collection.on("add", this.addOne, this);
@@ -125,7 +124,7 @@ define(function(require, exports, module) {
         });
         this.loadingSurface.pipe(this._eventOutput);
         this.emptyListSurface = new Surface({
-            content: "None to Show",
+            content: "No updates to Todo yet",
             size: [undefined, 100],
             classes: ['empty-list-surface-default'],
             properties: {
@@ -208,79 +207,48 @@ define(function(require, exports, module) {
     SubView.prototype.addOne = function(Model){
         var that = this;
 
-        var todoView = new View(),
-            name = Model.get('title') || '&nbsp;none';
+        var contentView = new View();
 
-        todoView.Model = Model;
+        contentView.Model = Model;
 
-        todoView.Layout = new FlexibleLayout({
-            direction: 0, // x, horizontal
-            ratios: [true, 1] // Done, Title, 
-        });
-        todoView.Layout.Views = [];
-
-        // Action button (checkbox)
-        todoView.Action = new View();
-        todoView.Action.getSize = function(){
-            return [60,60];
+        var surfaceVars = {
+            content: '',
+            classes: ['todo-content-item-default']
         };
 
-        todoView.Action.Toggle = new ToggleButton({
-            size: [40, 40],
-            content: '',
-            classes: ['text-center'],
-            onClasses: ['todo-toggle', 'square-toggle', 'toggle-on'],
-            offClasses: ['todo-toggle', 'square-toggle', 'toggle-off'],
+        switch(Model.get('type')){
+            case 'text':
+                // Display some text
+                surfaceVars.content = templates.text(Model.toJSON());
+                surfaceVars.classes.push('todo-content-text-default');
+                break;
 
-            // NOT for setting the default toggle state of the button
-            toggleMode: ToggleButton.TOGGLE
-        });
-        todoView.Action.Toggle.pipe(that.contentLayout);
+            default:
+                console.error('no type');
+                Utils.Notification.Toast('invalid contentView type');
+                return;
+        }
 
-        // Handle toggle button click
-        todoView.Action.Toggle.on('select', function(m){
-            // console.log('select, saving');
-            // if(that.model.get('scheme.' + Info.scheme_key) !== true){
-            //     var data = {};
-            //     data['scheme.' + Info.scheme_key] = true;
-            //     that.model.save(data,{patch: true});
-            // }
-        });
-        todoView.Action.Toggle.on('deselect', function(){
-            // console.log('deselect, saving');
-            // if(that.model.get('scheme.' + Info.scheme_key) !== false){
-            //     var data = {};
-            //     data['scheme.' + Info.scheme_key] = false;
-            //     that.model.save(data,{patch: true});
-            // }
-        });
-        todoView.Action.add(todoView.Action.Toggle);
-        todoView.Layout.Views.push(todoView.Action);
+        console.log(surfaceVars);
 
         // Surface
-        todoView.Surface = new Surface({
-            content: template({
-                Todo: Model.toJSON()
-            }),
+        contentView.Surface = new Surface({
+            content: surfaceVars.content,
             size: [undefined, true],
-            classes: ['select-friends-list-item-default']
+            classes: surfaceVars.classes
         });
-        Utils.dataModelReplaceOnSurface(todoView.Surface);
-        todoView.getSize = function(){
-            return [undefined, todoView.Surface._size ? todoView.Surface._size[1] : 100];
+        contentView.getSize = function(){
+            return [undefined, contentView.Surface._size ? contentView.Surface._size[1] : undefined];
         };
-        todoView.Surface.pipe(that.contentLayout);
-        todoView.Surface.on('click', function(){
-            Utils.Notification.Toast('View Todo');
-            App.history.navigate('todo/' + Model.get('_id'));
+        contentView.Surface.pipe(that.contentLayout);
+        contentView.Surface.on('click', function(){
+            // Utils.Notification.Toast('View Todo');
+            // App.history.navigate('todo/' + Model.get('_id'));
         });
 
-        todoView.Layout.Views.push(todoView.Surface);
-        todoView.Layout.sequenceFrom(todoView.Layout.Views);
+        contentView.add(contentView.Surface);
 
-        todoView.add(todoView.Layout);
-
-        this.contentLayout.Views.splice(this.contentLayout.Views.length-1, 0, todoView);
+        this.contentLayout.Views.splice(this.contentLayout.Views.length-1, 0, contentView);
         this.collection.infiniteResults += 1;
 
     };

@@ -17,6 +17,7 @@ define(function(require, exports, module) {
     var RenderNode         = require('famous/core/RenderNode')
 
     var Utility = require('famous/utilities/Utility');
+    var Timer = require('famous/utilities/Timer');
 
     // Helpers
     var Utils = require('utils');
@@ -93,18 +94,25 @@ define(function(require, exports, module) {
             // };
             // App.history.navigate('friend/add');
 
-            Utils.Notification.Toast('Create a new Todo!');
+            Timer.setTimeout(function(){
 
-            var newModel = new TodoModel.Todo({
-                title: 'titlehere2'
-            });
+                var p = prompt('Todo title');
+                if(p && p.trim() != ''){
 
-            newModel.save({
-                success: function(){
-                    //Saved!
+                    Utils.Notification.Toast('Create a new Todo!');
+
+                    var newModel = new TodoModel.Todo({
+                        title: p
+                    });
+
+                    newModel.save()
+                    .then(function(){
+                        that.AllView.collection.fetch();
+                    });
 
                 }
-            });
+
+            },200);
 
 
         });

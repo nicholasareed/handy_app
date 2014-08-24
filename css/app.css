@@ -350,11 +350,17 @@ body {
 }
 
 
+
 /* Toggle buttons */
 
 .circle-toggle {
   border-radius: 50%;
   -webkit-border-radius: 50%;
+}
+
+.square-toggle {
+  /*border-radius: 50%;
+  -webkit-border-radius: 50%;*/
 }
 
 .toggle-on {
@@ -365,6 +371,115 @@ body {
 .toggle-off {
   background: #E74C3C;
   color: white;
+}
+
+
+
+/* Todo List */
+
+.todo-toggle {
+  margin-top: 16px;
+  margin-left: 10px;
+  border: 1px solid #ddd;
+}
+
+.todo-toggle.toggle-on {
+
+  display: inline-block;
+  font-family: "Ionicons";
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  text-rendering: auto;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  line-height: 40px;
+  font-size: 20px;
+  text-align: center;
+  color: black;
+  /*background: red;*/
+  background: #fefefe;
+}
+.todo-toggle.toggle-on:before {
+  content: "\f2d5";
+}
+
+.todo-toggle.toggle-off {
+  background: none;
+}
+
+
+
+/* Todo item View */
+
+.todo-view-title-default {
+  line-height: 30px;
+  font-size: 24px;
+  padding: 8px 10px;
+}
+
+.todo-view-todocontent-add-button-default {
+  padding: 8px;
+  background: rgba(255,255,255,0.5);
+  border-top: 1px solid #eee;
+}
+
+.todo-view-todocontent-add-button-default div {
+  display: inline-block;
+  width: 100%;
+
+  background: #ddd;
+  text-align: center;
+
+  line-height: 40px;
+  font-size: 14px;
+
+  color: #444;
+
+}
+
+
+.todo-view-assigned-default {
+  padding: 8px;
+}
+
+.todo-view-assigned-default.notassigned {
+  color: #888;
+}
+
+.todo-view-assigned-default.assigned {
+  font-weight: bold;
+}
+
+
+
+.todo-content-item-default {
+
+}
+
+.todo-content-text-default {
+  padding: 8px;
+}
+
+.todo-content-text-default > div {
+  padding: 8px;
+  border: 1px solid #eee;
+}
+
+.todo-content-text-default > div > div:nth-child(1) {
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.todo-content-text-default > div > div:nth-child(2) {
+  color: #888;
+
+  font-size: 11px;
+  line-height: 13px;
 }
 
 

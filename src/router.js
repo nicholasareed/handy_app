@@ -204,6 +204,12 @@ define(function(require, exports, module) {
                     App.Views.MainFooter.Tabs.select('todos', false);
                     defaultRoute('TodoList', 'Todo/List', arguments);
                 },
+                'todo/:id' : function(){
+                    // console.log('User/:id');
+                    // App.Views.MainFooter.route_show = true;
+                    // App.Views.MainFooter.Tabs.select('todos', false);
+                    defaultRoute('TodoView', 'Todo/View', arguments);
+                },
 
 
                 'users/search' : function(){

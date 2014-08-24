@@ -7,10 +7,12 @@
 <!-- Assigned? -->
 {{#if Todo.assigned_id}}
     <div>
-        assigned to <span data-replace-id="{{Todo.assigned_id}}" data-replace-model="Profile" data-replace-field="profile.name">&nbsp;</span>
+        <strong>
+        	<span data-replace-id="{{Todo.assigned_id._id}}" data-replace-model="Profile" data-replace-field="profile.name">&nbsp;</span>
+        </strong>
     </div>
 {{else}}
-    <div class="no_time">
+    <div class="no_time" style="color: #ddd;">
         not assigned
     </div>
 {{/if}}
