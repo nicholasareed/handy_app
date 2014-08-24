@@ -243,6 +243,12 @@ define(function(require, exports, module) {
                 return;
             }
 
+            App.history.modifyLast({
+                tag: 'StartAssign'
+            });
+            App.history.navigate('todo/assign/' + that.model.get('_id'));
+
+            return;
 
             // Not assigned to anyone, lets go assign/delegate to someone!
             // App.history.navigate('todo/assign/' + Model.get('_id'));

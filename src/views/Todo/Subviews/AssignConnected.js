@@ -80,6 +80,8 @@ define(function(require, exports, module) {
 
         // App.Data.User contains friends
 
+        this.model = this.options.model;
+
         // Create collection of Games for player_id
         var options = {};
         // if(this.options && this.options.filter){
@@ -219,7 +221,23 @@ define(function(require, exports, module) {
         };
         userView.Surface.pipe(that.contentLayout);
         userView.Surface.on('click', function(){
-            App.history.navigate('user/' + Model.get('_id'));
+
+            // Assign/delegate to this person
+
+            // Not assigned to anyone, lets go assign/delegate to someone!
+            // App.history.navigate('todo/assign/' + Model.get('_id'));
+            that.model.save({
+                assigned_id: Model.get('_id')
+            },{
+                patch: true,
+                success: function(){
+                    console.log('Success');
+                    that.model.fetch();
+                    App.history.backTo('StartAssign');
+                }
+            })
+
+            // App.history.navigate('user/' + Model.get('_id'));
         });
         userView.add(userView.Surface);
 

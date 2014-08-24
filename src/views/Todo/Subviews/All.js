@@ -266,6 +266,12 @@ define(function(require, exports, module) {
             classes: ['select-friends-list-item-default']
         });
         Utils.dataModelReplaceOnSurface(todoView.Surface);
+        Model.on('change', function(){
+            todoView.Surface.setContent(template({
+                Todo: Model.toJSON()
+            }));
+            Utils.dataModelReplaceOnSurface(todoView.Surface);
+        });
         todoView.getSize = function(){
             return [undefined, todoView.Surface._size ? todoView.Surface._size[1] : 100];
         };

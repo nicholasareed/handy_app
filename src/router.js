@@ -142,7 +142,7 @@ define(function(require, exports, module) {
 
                 'actions/all' : function(){
                     App.Views.MainFooter.route_show = true;
-                    App.Views.MainFooter.Tabs.select('news', false);
+                    App.Views.MainFooter.Tabs.select('updates', false);
                     defaultRoute('Action', 'Action/Actions', arguments);
                 },
 
@@ -203,6 +203,13 @@ define(function(require, exports, module) {
                     App.Views.MainFooter.route_show = true;
                     App.Views.MainFooter.Tabs.select('todos', false);
                     defaultRoute('TodoList', 'Todo/List', arguments);
+                },
+
+                'todo/assign/:id' : function(){
+                    // console.log('User/:id');
+                    // App.Views.MainFooter.route_show = true;
+                    // App.Views.MainFooter.Tabs.select('todos', false);
+                    defaultRoute('TodoAssign', 'Todo/AssignList', arguments, {cache: false});
                 },
                 'todo/:id' : function(){
                     // console.log('User/:id');
