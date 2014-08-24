@@ -18,6 +18,7 @@ define(function(require, exports, module) {
     var RenderController = require('famous/views/RenderController');
 
     var Utility = require('famous/utilities/Utility');
+    var Timer = require('famous/utilities/Timer');
 
     var HeaderFooterLayout = require('famous/views/HeaderFooterLayout');
     var NavigationBar = require('famous/widgets/NavigationBar');
@@ -92,7 +93,7 @@ define(function(require, exports, module) {
         });
         this.collection.on("sync", that.updateCollectionStatus.bind(this), this);
         this.collection.on("add", this.addOne, this);
-        // this.collection.on("remove", this.removeOne, this); // todo...
+        this.collection.on("remove", this.removeOne, this);
         this.collection.infiniteResults = 0;
         this.collection.totalResults = 0;
 
@@ -245,6 +246,12 @@ define(function(require, exports, module) {
             //     data['scheme.' + Info.scheme_key] = true;
             //     that.model.save(data,{patch: true});
             // }
+
+            // Remove this one!
+            Timer.setTimeout(function(){
+                that.collection.remove(Model.get('_id'));
+            },500);
+
         });
         todoView.Action.Toggle.on('deselect', function(){
             // console.log('deselect, saving');
@@ -289,6 +296,25 @@ define(function(require, exports, module) {
         this.contentLayout.Views.splice(this.contentLayout.Views.length-1, 0, todoView);
         this.collection.infiniteResults += 1;
 
+    };
+
+    SubView.prototype.removeOne = function(Model){
+        var that = this;
+
+        // find the view
+        var tmpView = _.find(this.contentLayout.Views, function(tmp){
+            return tmp.Model == Model;
+        });
+
+        if(!tmpView){
+            console.error('no tmpView');
+            return;
+        }
+
+        this.contentLayout.Views = _.without(this.contentLayout.Views, tmpView);
+
+        this.updateCollectionStatus();
+        
     };
 
     SubView.prototype.updateCollectionStatus = function() { 
