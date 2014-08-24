@@ -120,7 +120,7 @@ define(function(require, exports, module) {
             that.model.fetch({prefill: true});
 
             // Listen for 'showing' events
-            this._eventInput.on('inOutTransition', function(args){
+            that._eventInput.on('inOutTransition', function(args){
                 // 0 = direction
                 if(args[0] == 'showing'){
                     that.model.fetch();
