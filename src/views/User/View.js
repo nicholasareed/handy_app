@@ -188,13 +188,14 @@ define(function(require, exports, module) {
         
         // Icons
 
-        // -- settings (lightbox)
+        // -- settings/message (lightbox)
         this.headerContent = new View();
         this.headerContent.Lightbox = new RenderController();
         this.headerContent.SizeMod = new StateModifier({
             size: [60, 50]
         });
         this.headerContent.add(this.headerContent.SizeMod).add(this.headerContent.Lightbox);
+        // settings
         this.headerContent.Settings = new Surface({
             content: '<i class="icon ion-gear-a"></i><div>Settings</div>',
             size: [60, undefined],
@@ -203,6 +204,19 @@ define(function(require, exports, module) {
         this.headerContent.Settings.on('click', function(){
             App.history.navigate('settings');
         });
+        // message
+        this.headerContent.Message = new Surface({
+            content: '<i class="icon ion-ios7-chatboxes"></i><div>Msg</div>',
+            size: [60, undefined],
+            classes: ['header-tab-icon-text']
+        });
+        this.headerContent.Message.on('click', function(){
+            App.history.navigate('inbox/' + that.profile_id);
+        });
+
+
+
+
         // - spacer1
         this.headerContent.spacer1 = new Surface({
             content: '<span></span>',
@@ -659,8 +673,12 @@ define(function(require, exports, module) {
                 that.headerContent.Lightbox.show(that.headerContent.Settings);
 
             } else {
-                that.header.navBar.back.setSize([20,undefined]);
-                that.header.navBar.back.setContent('<i class="icon ion-android-arrow-back"></i>');
+
+                that.headerContent.Lightbox.show(that.headerContent.Message);
+
+                // that.header.navBar.back.setSize([20,undefined]);
+                // that.header.navBar.back.setContent('<i class="icon ion-android-arrow-back"></i>');
+
                 // that.header.navBar.title.setContent(that.model.get('email').split('@')[0].split('+')[0]);
             }
 

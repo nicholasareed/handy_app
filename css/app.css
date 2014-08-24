@@ -628,11 +628,42 @@ body {
 }
 
 
+/* By User Messages (see all the users) */
+
+.message-byuser-container-default {
+  padding: 4px 8px;
+}
+
+.message-byuser-container-default span[data-replace-model="Profile"]{
+  font-weight: bold;
+}
+
+.message-byuser-container-default span.ago {
+  color: #999;
+  font-size: 11px;
+}
+
+.message-byuser-container-default div:nth-child(1) {
+  padding-top: 8px;
+  font-size: 14px;
+  line-height: 16px;
+}
+
+.message-byuser-container-default > div:last-child {
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #ddd;
+}
+
+
 
 /* Messages */
 
 .message-text-default {
   padding: 4px 8px;
+}
+
+.message-text-default.from_me {
+  text-align: right;
 }
 
 .message-text-default span[data-replace-model="Profile"]{
@@ -641,6 +672,24 @@ body {
 
 .message-text-default span.ago {
   color: #999;
+  font-size: 11px;
+}
+
+.message-text-default div:nth-child(1) {
+  padding-top:8px;
+
+  font-size: 14px;
+  line-height: 16px;
+}
+.message-text-default > div:last-child {
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #ddd;
+}
+
+
+.message-text-default div.text {
+  font-size: 18px;
+  line-height: 22px;
 }
 
 .message-text-default div.message-other-person {

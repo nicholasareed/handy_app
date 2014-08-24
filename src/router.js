@@ -146,6 +146,14 @@ define(function(require, exports, module) {
                     defaultRoute('Action', 'Action/Actions', arguments);
                 },
 
+
+                'inbox/:user_id' : function(){
+                    App.Views.MainFooter.route_show = true;
+                    App.Views.MainFooter.Tabs.select('messages', false);
+                    // defaultRoute('Inbox', 'Message/Inbox', arguments);
+                    defaultRoute('InboxThread', 'Message/Thread', arguments);
+                },
+                
                 'inbox' : function(){
                     App.Views.MainFooter.route_show = true;
                     App.Views.MainFooter.Tabs.select('messages', false);
@@ -177,12 +185,12 @@ define(function(require, exports, module) {
                     defaultRoute('Dash', 'User/View', arguments); // used to be Player/Dash
                 },
 
-                'user/sentence' : function(){
-                    defaultRoute('UserSentence', 'User/Sentence', arguments, {cache: false});
-                },
-                'user/sentence_friends/:hash' : function(){
-                    defaultRoute('UserSentenceFriends', 'User/SentenceFriends', arguments, {cache: true});
-                },
+                // 'user/sentence' : function(){
+                //     defaultRoute('UserSentence', 'User/Sentence', arguments, {cache: false});
+                // },
+                // 'user/sentence_friends/:hash' : function(){
+                //     defaultRoute('UserSentenceFriends', 'User/SentenceFriends', arguments, {cache: true});
+                // },
                 // 'sentence/matches' : function(){
                 //     defaultRoute('SentenceMatches', 'User/SentenceMatches', arguments, {cache: true});
                 // },

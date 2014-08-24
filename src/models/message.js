@@ -28,7 +28,6 @@ define(function (require) {
 
             model: Message,
 
-            url: Credentials.server_root + "messages/by_players",
             urlRoot: Credentials.server_root + "messages/",
 
             // Paginator Core
@@ -214,13 +213,13 @@ define(function (require) {
                   this['$filter'] = options['$filter'];
                 }
 
-                // if(options.player_id){
-                //     this.url = this.url + '/player/' + options.player_id;
+                // if(options.user_id){
+                //     this.url = this.url + '/user/' + options.user_id;
                 // }
             },
 
             comparator: function(model){
-                return -1 * moment(model.get('created')); // 20131106T230554+0000
+                return -1 * moment(model.get('created')).format('X'); // 20131106T230554+0000
             }
 
         });

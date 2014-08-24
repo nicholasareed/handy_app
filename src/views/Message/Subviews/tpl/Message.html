@@ -1,14 +1,15 @@
 
 <div>
-    <span data-replace-id="{{message.from_user_id}}" data-replace-model="Profile" data-replace-field="username" data-replace-pre="@">&nbsp;</span> <span class="ago">{{ago}}</span>
+    <!--<span data-replace-id="{{Message.from_user_id}}" data-replace-model="Profile" data-replace-field="profile.name">&nbsp;</span> -->
+    <span class="ago">{{ago}}</span>
 </div>
 <div>
-    {{#if message.text}}
-        <div class="text">{{message.text}}</div>
+    {{#if Message.text}}
+        <div class="text">{{Message.text}}</div>
     {{/if}}
-    {{#if message.media}}
-        {{#each message.media}}
-            <img src="{{message.media.[0].urls.thumb300x300}}" />
+    {{#if Message.media}}
+        {{#each Message.media}}
+            <img src="{{Message.media.[0].urls.thumb300x300}}" />
         {{/each}}
     {{/if}}
 </div>

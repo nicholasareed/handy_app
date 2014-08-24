@@ -17,6 +17,7 @@ define(function(require, exports, module) {
     var RenderNode         = require('famous/core/RenderNode')
 
     var Utility = require('famous/utilities/Utility');
+    var Timer = require('famous/utilities/Timer');
 
     // Helpers
     var Utils = require('utils');
@@ -35,13 +36,13 @@ define(function(require, exports, module) {
     var Credentials         = JSON.parse(require('text!credentials.json'));
     var numeral = require('lib2/numeral.min');
 
-    // Side menu of options
-    var GameMenuView      = require('views/Game/GameMenu');
+    // // Side menu of options
+    // var GameMenuView      = require('views/Game/GameMenu');
 
-    // Notifications SubView
-    var NotificationsView      = require('./Notifications');
+    // // Notifications SubView
+    // var NotificationsView      = require('./Notifications');
     var MessagesView      = require('./Subviews/Messages');
-    var UserMessagesView      = require('./Subviews/UserMessages');
+    // var UserMessagesView      = require('./Subviews/UserMessages');
 
     // Models
     // var GameModel = require('models/game');
@@ -49,10 +50,11 @@ define(function(require, exports, module) {
     var MediaModel = require('models/media');
     var MessageModel = require('models/message');
     var UserMessageModel = require("models/user_message");
+    var ProfileModel = require("models/profile");
 
     // Templates
     var Handlebars          = require('lib2/handlebars-adapter');
-    var tpl                 = require('text!./tpl/UserMessage.html');
+    var tpl                 = require('text!./Subviews/tpl/Message.html');
     var template            = Handlebars.compile(tpl);
 
     function PageView(params) {
@@ -74,22 +76,37 @@ define(function(require, exports, module) {
 
         this.createContent();
 
+        this.model.populated().then(function(){
+            that.header.navBar.setContent(that.model.get('profile.name'));
+        });
+
 
         this.add(this.layout);
-
-
 
     }
 
     PageView.prototype = Object.create(View.prototype);
     PageView.prototype.constructor = PageView;
     
-    PageView.prototype.loadModels = function(player_id){
+    PageView.prototype.loadModels = function(){
         var that = this;
+
+        this.model = new ProfileModel.Profile({
+            _id: this.options.args[0]
+        });
+        this.model.fetch({prefill: true});
 
         // Gathering a list of users
         // - no pagination
-        this.collection = new UserMessageModel.UserMessageCollection();
+        this.collection = new MessageModel.MessageCollection([],{
+            '$filter': {
+                '$or' : [{
+                    to_user_id: this.model.get('_id')
+                },{
+                    from_user_id: this.model.get('_id')
+                }]
+            }
+        });
         this.collection.infiniteResults = 0;
         this.collection.on("sync", that.updateCollectionStatus.bind(this), this);
         this.collection.on("add", this.addOne, this);
@@ -116,34 +133,103 @@ define(function(require, exports, module) {
     PageView.prototype.createHeader = function(){
         var that = this;
         
+        // Icons
+
+        // Invite somebody
+        this.headerContent = new View();
+        this.headerContent.NewMessage = new Surface({
+            content: '<i class="icon ion-ios7-plus-outline"></i>',
+            size: [App.Defaults.Header.Icon.w, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.NewMessage.on('click', function(){
+            // App.Cache.FriendListOptions = {
+            //     default: 'outgoing'
+            // };
+
+            Timer.setTimeout(function(){
+
+                var p = prompt('Your Message:');
+                if(!p || p.trim() == ''){
+                    return;
+                }
+
+                Utils.Notification.Toast('Saving...');
+
+                // Get elements to save
+                var Message = new MessageModel.Message({
+                    to_user_id: that.model.get('_id'),
+                    text: p
+                    // media: this.summary.media
+                });
+
+                console.log(Message.toJSON());
+
+                Message.save()
+                    .then(function(newModel){
+
+                        // console.log('----');
+                        // console.log(newModel);
+                        // console.log(that.model.toJSON());
+                        // debugger;
+
+                        that.model.set(newModel);
+                        // console.log(that.model.toJSON());
+                        // debugger;
+
+
+                        // Created OK
+                        Utils.Notification.Toast('Message Created!');
+
+                        // // Enable submit
+                        // that.submitButtonSurface.setSize([undefined, 40]);
+
+                        // Clear sport cache
+                        // - todo...
+
+                        // Going back to the Dash, or back somewhere else?
+                        // App.history.backTo('StartMessageAdd');
+
+                        that.collection.fetch();
+
+                    });
+
+            },200);
+
+            // App.history.navigate('friend/add');
+        });
+
         // create the header
         this.header = new StandardHeader({
-            content: "Inbox",
+            content: "",
             classes: ["normal-header"],
-            // backClasses: ["normal-header"],
-            backContent: false,
+            backClasses: ["normal-header"],
+            // backContent: false,
             moreClasses: ["normal-header"],
-            moreContent: false, //"New", //'<span class="icon ion-navicon-round"></span>'
+            // moreContent: false, //"New", //'<span class="icon ion-navicon-round"></span>'
+            moreSurfaces: [
+                this.headerContent.NewMessage
+            ]
         }); 
-        // this.header._eventOutput.on('back',function(){
-        //     App.history.back();//.history.go(-1);
-        // });
-        // this.header.navBar.title.on('click', function(){
-        //     App.history.back();
-        // });
-        this.header._eventOutput.on('more',function(){
-            // if(that.model.get('CarPermission.coowner')){
-            //     App.history.navigate('car/permission/' + that.model.get('_id'), {trigger: true});
-            // }
-            // that.menuToggle();
-
-            // Modify Last
-            App.history.modifyLast({
-                tag: 'StartMessageAdd'
-            });
-            App.history.navigate('message/add',{history: false});
-
+        this.header._eventOutput.on('back',function(){
+            App.history.back();
         });
+        this.header.navBar.title.on('click', function(){
+            App.history.back();
+        });
+        // this.header._eventOutput.on('more',function(){
+        //     // if(that.model.get('CarPermission.coowner')){
+        //     //     App.history.navigate('car/permission/' + that.model.get('_id'), {trigger: true});
+        //     // }
+        //     // that.menuToggle();
+
+        //     // Modify Last
+        //     App.history.modifyLast({
+        //         tag: 'StartMessageAdd'
+        //     });
+        //     App.history.navigate('message/add',{history: false});
+
+        // });
         this._eventOutput.on('inOutTransition', function(args){
             this.header.inOutTransition.apply(this.header, args);
         })
@@ -196,7 +282,7 @@ define(function(require, exports, module) {
         });
         this.loadingSurface.pipe(this._eventOutput);
         this.emptyListSurface = new Surface({
-            content: "You have not started any conversations",
+            content: "No messages exchanged",
             size: [undefined, 100],
             classes: ['empty-list-surface-default'],
             properties: {
@@ -310,7 +396,7 @@ define(function(require, exports, module) {
 
     };
 
-    PageView.prototype.addOne = function(UserMessage) { 
+    PageView.prototype.addOne = function(Message) { 
         var that = this;
         
         moment.lang('en', {
@@ -331,71 +417,47 @@ define(function(require, exports, module) {
             }
         });
 
-        // var media = Message.get('media_id');
-        // if(!media){
-        //     return; // media not ready yet? or invalid?
-        // }
         var messageView = new View();
 
-        messageView.Model = UserMessage;
-        console.log(UserMessage.toJSON());
-        // var imageSrc = '';
-        // try {
-        //     imageSrc = media.urls.thumb300x300;
-        // }catch(err){
-        //     // Not yet assembled
-        //     imageSrc = 'img/ajax-loader.gif'; // spinner
-        //     Timer.setTimeout(function(){
-        //         that.collection.once('sync', function(){
-        //             media = Message.get('media_id');
-        //             imageSrc = media.urls.thumb300x300;
-        //             messageView.Surface.setContent(template({
-        //                 player_id: Message.get('player_id'),
-        //                 ago: moment(Message.get('created')).format('h:mma - MMM Do'),
-        //                 image_src: imageSrc
-        //             }));
-        //         },2000);
-        //         that.collection.fetch();
-        //     }, 10000);
-        // }
-
-        // var other_person_id;
-        // // console.info(Message.get('from_user_id'), App.Data.User.get('_id'));
-        // if(Message.get('from_user_id') == App.Data.User.get('_id')){
-        //     console.info('to', Message.get('from_user_id'), App.Data.User.get('_id'));
-        //     console.info('to', Message.get('to_user_id'));
-        //     other_person_id = Message.get('to_user_id');
-        // } else {
-        //     console.info('from', Message.get('from_user_id'), App.Data.User.get('_id'));
-        //     other_person_id = Message.get('from_user_id');
-        // }
-        
+        messageView.Model = Message;
+            
+        var classes = ['message-text-default'];
+        if(Message.get('from_user_id') == App.Data.User.get('_id')){
+            classes.push('from_me');
+        }
         messageView.Surface = new Surface({
             content: template({
-                UserMessage: UserMessage.toJSON(),
-                ago: moment(UserMessage.get('created')).format('h:mma - MMM Do')
+                Message: Message.toJSON(),
+                ago: moment(Message.get('created')).format('h:mma - MMM Do')
             }),
             size: [undefined, true],
-            classes: ['message-byuser-container-default'],
+            classes: classes,
             properties: {
                 // backgroundColor: "red"
             }
 
         });
-        messageView.Surface.on('click', function(){
-            App.history.navigate('inbox/' + UserMessage.get('_id'));
-        });
-        UserMessage.on('change', function(){
+        Message.on('change', function(){
             messageView.Surface.setContent(template({
-                UserMessage: UserMessage.toJSON(),
-                ago: moment(UserMessage.get('created')).format('h:mma - MMM Do')
+                Message: Message.toJSON(),
+                ago: moment(Message.get('created')).format('h:mma - MMM Do')
             }));
             Utils.dataModelReplaceOnSurface(messageView.Surface);
         });
+        // messageView.Surface = new Surface({
+        //     content: UserMessage.toJSON(),
+        //     size: [undefined, true],
+        //     classes: ['message-text-default']
+        // });
+        // messageView.Surface.on('click', function(){
+        //     UserMessage.fetch();
+        // });
+
 
         Utils.dataModelReplaceOnSurface(messageView.Surface);
+        // messageView.Surface.pipe(this._eventOutput);
         messageView.Surface.pipe(this.contentLayout);
-        messageView.Surface.Model = UserMessage;
+        messageView.Surface.Model = Message;
         messageView.add(messageView.Surface);
         messageView.getSize = function(){
             if(messageView.Surface.getSize(true)){
@@ -462,7 +524,7 @@ define(function(require, exports, module) {
 
         // Resort the contentLayout.Views
         this.contentLayout.Views = _.sortBy(this.contentLayout.Views, function(v){
-            // console.log(v.Model.get('created').format('X'));
+            // console.log(v.Model.get('created'));
             return moment(v.Model.get('created')).format('X');
         });
 
