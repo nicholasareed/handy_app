@@ -156,7 +156,7 @@ define(function(require, exports, module) {
 
         // create the header
         this.header = new StandardHeader({
-            content: 'Invite Friends',
+            content: 'Connect to People',
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             // moreContent: false

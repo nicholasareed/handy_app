@@ -256,17 +256,25 @@ define(function(require, exports, module) {
         switch(Action.get('type')){
             case 'joined':
                 // Joined Nemesis (testing)
-                content = 'You joined Nemesis!';
+                content = 'You joined!';
                 classes = ['action-news-item-default'];
                 break;
-            case 'new_nemesis':
+            case 'new_friend':
                 // Connected with a new Nemesis
                 content = '<span data-replace-id="'+ Action.get('details.nemesis_player_id') +'" data-replace-model="Player" data-replace-field="Profile.name">&nbsp;</span> is your new Nemesis!',
                 classes = ['action-news-item-default'];
                 break;
-            case 'new_sport':
-                // You added a new Sport
-                content = '<span data-replace-id="'+ Action.get('sport_id._id') +'" data-replace-model="Sport" data-replace-field="name">&nbsp;</span> is your newly-created sport!',
+            case 'todo_updated':
+                content = '<span data-replace-id="'+ Action.get('todo_id') +'" data-replace-model="Todo" data-replace-field="title">&nbsp;</span> was updated',
+                classes = ['action-news-item-default'];
+                break;
+            case 'todo_assigned':
+                // assigned to me?
+                content = '<span data-replace-id="'+ Action.get('todo_id') +'" data-replace-model="Todo" data-replace-field="title">&nbsp;</span> was assigned',
+                classes = ['action-news-item-default'];
+                break;
+            case 'todo_new_media':
+                content = '<span data-replace-id="'+ Action.get('todo_id') +'" data-replace-model="Todo" data-replace-field="title">&nbsp;</span> has new Media',
                 classes = ['action-news-item-default'];
                 break;
             default:

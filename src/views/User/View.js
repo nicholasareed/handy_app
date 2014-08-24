@@ -212,6 +212,36 @@ define(function(require, exports, module) {
             App.history.navigate('users/search');
         });
 
+        // // - Invite a Connection
+        // this.headerContent.Invite = new Surface({
+        //     content: '<i class="icon ion-ios7-plus-outline"></i><div>Invite</div>',
+        //     size: [App.Defaults.Header.Icon.w, undefined],
+        //     classes: ['header-tab-icon-text']
+        // });
+        // this.headerContent.Invite.on('click', function(){
+        //     // App.Cache.FriendListOptions = {
+        //     //     default: 'outgoing'
+        //     // };
+        //     // App.history.navigate('friend/list');
+        //     App.history.navigate('friend/add');
+        // });
+
+
+        // - Connections
+        this.headerContent.Friends = new Surface({
+            content: '<i class="icon ion-android-friends"></i><div>People</div>',
+            size: [App.Defaults.Header.Icon.w, undefined],
+            classes: ['header-tab-icon-text']
+        });
+        this.headerContent.Friends.on('click', function(){
+            // App.Cache.FriendListOptions = {
+            //     default: 'outgoing'
+            // };
+            // App.history.navigate('friend/list');
+            App.history.navigate('friend/list');
+        });
+
+
         // create the header
         this.header = new StandardHeader({
             content: '', //App.Data.User.get('email').split('@')[0].split('+')[0],
@@ -223,8 +253,10 @@ define(function(require, exports, module) {
             // moreContent: false,
             moreSurfaces: [
                 this.headerContent,
-                this.headerContent.spacer1,
-                this.headerContent.Search
+                // this.headerContent.Invite,
+                this.headerContent.Friends,
+                // this.headerContent.spacer1,
+                // this.headerContent.Search
             ],
             backContent: false
         }); 

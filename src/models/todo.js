@@ -7,29 +7,31 @@ define(function (require) {
         moment            = require('moment'),
         Credentials         = JSON.parse(require('text!credentials.json')),
 
-        Action = Backbone.DeepModel.extend({
+        Todo = Backbone.DeepModel.extend({
 
             idAttribute: '_id',
 
-            urlRoot: Credentials.server_root + "action/",
+            urlRoot: Credentials.server_root + "todo/",
 
             initialize: function () {
                 // ok
-                this.url = this.urlRoot + '';
                 if(this.id){
-                    this.url = this.urlRoot + '/' + this.id;
+                  this.url = this.urlRoot + this.id;
+                } else {
+                  this.url = this.urlRoot;
                 }
             }
 
         });
 
-    Action = Backbone.UniqueModel(Action);
+    Todo = Backbone.UniqueModel(Todo);
 
-    var ActionCollection = Backbone.Paginator.requestPager.extend({
+    var TodoCollection = Backbone.Paginator.requestPager.extend({
 
-            model: Action,
+            model: Todo,
 
-            urlRoot: Credentials.server_root + "actions",
+            // url: Credentials.server_root + "todos/by_players",
+            urlRoot: Credentials.server_root + "todos/",
 
             // Paginator Core
             paginator_core: {
@@ -55,14 +57,31 @@ define(function (require) {
               currentPage: 0,
 
               // how many items per page should be shown
-              perPage: 5,
+              perPage: 10,
               totalPages: 10 // the default, gets overwritten
             },
 
             // Paginator Server API
+            timeframe: 'all', // top, local
             server_api: {
+
+              'type' : function(){
+                return this.type;
+              },
+
               // the query field in the request
-              '$filter': '',
+              '$filter': function(){
+                var f = {};
+                // if(this.sport_id !== 'all'){
+                //   f.sport_id = this.sport_id;
+                // }
+                if(this.timeframe !== 'all'){
+                  f.created = {
+                      '$gte' : this.timeframe
+                    }
+                }
+                return JSON.stringify(f);
+              },
 
               // number of items to return per request/page
               '$top': function() { return this.perPage },
@@ -87,6 +106,12 @@ define(function (require) {
             parse: function (response) {
                 this.totalPages = Math.ceil(response.total / this.perPage);
                 this.totalResults = response.total;
+                this.summary = response.summary;
+
+                // console.log('SUMMARY', this.summary);
+                // console.log(JSON.stringify(this.summary));
+                
+                // debugger;
                 return response.results;
             },
 
@@ -95,29 +120,25 @@ define(function (require) {
                 options = options || {};
                 this.options = options;
                 this.url = this.urlRoot + '';
-
-                if(options.todo_id){
-                  this.url = this.urlRoot + 'actions/todo/' + options.todo_id;
+                
+                if(options.type){
+                  this.type = options.type;
                 }
 
-                // if(options.player_id){
-                //     // Viewing actions for an individual player (what everybody would see about that Player)
-                //     // - used for what I see about myself, and news/actions about other individual players
-                //     this.url = this.urlRoot + '/player/' + options.player_id;
-                // } else {
-                //     // Summary of actions that I care about (me, as a logged in user_id)
-                //     if(options.type){                      
-                //       this.url = this.urlRoot + '/' + options.type;
-                //     }
-                // }
+                if(options.project_filter){
+                  this.project_filter = options.project_filter;
+                }
 
+                if(options.timeframe){
+                  this.timeframe = options.timeframe;
+                }
             },
 
             comparator: function(model){
-                return -1 * moment(model.get('created')); // 20131106T230554+0000
+                return -1 * moment(model.get('created'), "YYYYMMDD HHmmss"); // 20131106T230554+0000
             },
 
-            findByLastAction: function(){
+            findByLastTodo: function(){
                 var deferred = $.Deferred();
                 
                 deferred.resolve(this.first());
@@ -128,8 +149,8 @@ define(function (require) {
         });
 
     return {
-        Action: Action,
-        ActionCollection: ActionCollection
+        Todo: Todo,
+        TodoCollection: TodoCollection
     };
 
 });

@@ -140,6 +140,12 @@ define(function(require, exports, module) {
                     defaultRoute('Feedback', 'Misc/Feedback', arguments);
                 },
 
+                'actions/all' : function(){
+                    App.Views.MainFooter.route_show = true;
+                    App.Views.MainFooter.Tabs.select('news', false);
+                    defaultRoute('Action', 'Action/Actions', arguments);
+                },
+
                 'inbox' : function(){
                     App.Views.MainFooter.route_show = true;
                     App.Views.MainFooter.Tabs.select('messages', false);
@@ -193,6 +199,13 @@ define(function(require, exports, module) {
                 },
 
 
+                'todo/list' : function(){
+                    App.Views.MainFooter.route_show = true;
+                    App.Views.MainFooter.Tabs.select('todos', false);
+                    defaultRoute('TodoList', 'Todo/List', arguments);
+                },
+
+
                 'users/search' : function(){
                     defaultRoute('UsersSearch', 'User/Search', arguments, { cache: true });
                 },
@@ -208,7 +221,6 @@ define(function(require, exports, module) {
 
                 'friend/list' : function(){
                     defaultRoute('FriendList', 'Friend/List', arguments, {cache: true});
-
                 },
                 'friend/add' : function(){
                     defaultRoute('FriendInvite', 'Friend/LocalInvite', arguments, {cache: true});

@@ -91,7 +91,7 @@ define(function(require, exports, module) {
         
         // create the header
         this.header = new StandardHeader({
-            content: "News",
+            content: "Updates",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             backContent: false,
@@ -123,90 +123,100 @@ define(function(require, exports, module) {
         var that = this;
 
         // this.contentScrollView = new ScrollView(App.Defaults.ScrollView);
-        this.contentScrollView = new FlexibleLayout({
-            direction: FlexibleLayout.DIRECTION_Y,
-            ratios: [true, 1]
-        });
-        this.contentScrollView.Views = [];
+        // this.contentScrollView = new FlexibleLayout({
+        //     direction: FlexibleLayout.DIRECTION_Y,
+        //     ratios: [true, 1]
+        // });
+        // this.contentScrollView.Views = [];
 
-        // Content
+        this.YouView = new YouView();
+        // this.contentScrollView.Views.push(this.YouView);
+
+        // Content (with modifier)
         this.ContentStateModifier = new StateModifier();
+        this.layout.content.add(this.ContentStateModifier).add(this.YouView);
 
-        // Create the Tabs
-        this.TopTabs = new View();
-        this.TopTabs.Bar = new TabBar();
-        this.TopTabs.BarSizeMod = new StateModifier({
-            size: [undefined, 40]
-        });
-        this.TopTabs.add(this.TopTabs.BarSizeMod).add(this.TopTabs.Bar);
+        // // Flexible Layout sequencing
+        // this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
 
-        this.TopTabs.Bar.defineSection('nemeses', {
-            content: 'Nemeses',
-            onClasses: ['actions-news-tabbar-default', 'on'],
-            offClasses: ['actions-news-tabbar-default', 'off']
-        });
-        this.TopTabs.Bar.defineSection('you', {
-            content: 'You',
-            onClasses: ['actions-news-tabbar-default', 'on'],
-            offClasses: ['actions-news-tabbar-default', 'off']
-        });
+        return;
 
-        // Add tabs to sequence
-        this.contentScrollView.Views.push(this.TopTabs);
 
-        // Tab content
+        // // Create the Tabs
         // this.TopTabs = new View();
-        this.TopTabs.Content = new RenderController();
+        // this.TopTabs.Bar = new TabBar();
+        // this.TopTabs.BarSizeMod = new StateModifier({
+        //     size: [undefined, 40]
+        // });
+        // this.TopTabs.add(this.TopTabs.BarSizeMod).add(this.TopTabs.Bar);
 
-        // Nemeses
-        this.TopTabs.Content.Nemeses = new View();
-        this.TopTabs.Content.Nemeses.View = new NemesesView();
-        this.TopTabs.Content.Nemeses.add(this.TopTabs.Content.Nemeses.View);
+        // this.TopTabs.Bar.defineSection('nemeses', {
+        //     content: 'Nemeses',
+        //     onClasses: ['actions-news-tabbar-default', 'on'],
+        //     offClasses: ['actions-news-tabbar-default', 'off']
+        // });
+        // this.TopTabs.Bar.defineSection('you', {
+        //     content: 'You',
+        //     onClasses: ['actions-news-tabbar-default', 'on'],
+        //     offClasses: ['actions-news-tabbar-default', 'off']
+        // });
+
+        // // Add tabs to sequence
+        // this.contentScrollView.Views.push(this.TopTabs);
+
+        // // Tab content
+        // // this.TopTabs = new View();
+        // this.TopTabs.Content = new RenderController();
+
+        // // Nemeses
         // this.TopTabs.Content.Nemeses = new View();
-        // this.TopTabs.Content.Nemeses.Surface = new Surface({
-        //     content: 'No news for Nemeses!',
-        //     size: [undefined, 50],
-        //     properties: {
-        //         textAlign: "center",
-        //         backgroundColor: "white",
-        //         color: "#222",
-        //         lineHeight: "50px",
-        //         borderTop: "1px solid #ddd"
+        // this.TopTabs.Content.Nemeses.View = new NemesesView();
+        // this.TopTabs.Content.Nemeses.add(this.TopTabs.Content.Nemeses.View);
+        // // this.TopTabs.Content.Nemeses = new View();
+        // // this.TopTabs.Content.Nemeses.Surface = new Surface({
+        // //     content: 'No news for Nemeses!',
+        // //     size: [undefined, 50],
+        // //     properties: {
+        // //         textAlign: "center",
+        // //         backgroundColor: "white",
+        // //         color: "#222",
+        // //         lineHeight: "50px",
+        // //         borderTop: "1px solid #ddd"
+        // //     }
+        // // });
+        // // this.TopTabs.Content.Nemeses.add(this.TopTabs.Content.Nemeses.Surface);
+
+        // // You
+        // this.TopTabs.Content.You = new View();
+        // this.TopTabs.Content.You.View = new YouView();
+        // this.TopTabs.Content.You.add(this.TopTabs.Content.You.View);
+
+        // // Add Lightbox to sequence (FlexibleLayout)
+        // this.contentScrollView.Views.push(this.TopTabs.Content);
+
+        // // Listeners for Tabs
+        // this.TopTabs.Bar.on('select', function(result){
+        //     switch(result.id){
+
+        //         case 'nemeses':
+        //             that.TopTabs.Content.show(that.TopTabs.Content.Nemeses);
+        //             break;
+
+        //         case 'you':
+        //             that.TopTabs.Content.show(that.TopTabs.Content.You);
+        //             break;
+
+        //         default:
+        //             alert('none chosen');
+        //             break;
         //     }
         // });
-        // this.TopTabs.Content.Nemeses.add(this.TopTabs.Content.Nemeses.Surface);
+        // this.TopTabs.Bar.select('nemeses');
 
-        // You
-        this.TopTabs.Content.You = new View();
-        this.TopTabs.Content.You.View = new YouView();
-        this.TopTabs.Content.You.add(this.TopTabs.Content.You.View);
+        // this.layout.content.add(this.ContentStateModifier).add(this.contentScrollView);
 
-        // Add Lightbox to sequence (FlexibleLayout)
-        this.contentScrollView.Views.push(this.TopTabs.Content);
-
-        // Listeners for Tabs
-        this.TopTabs.Bar.on('select', function(result){
-            switch(result.id){
-
-                case 'nemeses':
-                    that.TopTabs.Content.show(that.TopTabs.Content.Nemeses);
-                    break;
-
-                case 'you':
-                    that.TopTabs.Content.show(that.TopTabs.Content.You);
-                    break;
-
-                default:
-                    alert('none chosen');
-                    break;
-            }
-        });
-        this.TopTabs.Bar.select('nemeses');
-
-        this.layout.content.add(this.ContentStateModifier).add(this.contentScrollView);
-
-        // Flexible Layout sequencing
-        this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
+        // // Flexible Layout sequencing
+        // this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
 
     };
 

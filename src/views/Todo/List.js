@@ -40,12 +40,13 @@ define(function(require, exports, module) {
 
     // Notifications SubView
     var AllView      = require('./Subviews/All');
-    var PotentialView      = require('./Subviews/Potential');
-    var IncomingView      = require('./Subviews/Incoming');
-    var OutgoingView      = require('./Subviews/Outgoing');
+    // var PotentialView      = require('./Subviews/Potential');
+    // var IncomingView      = require('./Subviews/Incoming');
+    // var OutgoingView      = require('./Subviews/Outgoing');
     
     // Models
     var MediaModel = require('models/media');
+    var TodoModel = require('models/todo');
 
     function PageView(params) {
         var that = this;
@@ -81,16 +82,31 @@ define(function(require, exports, module) {
 
         // Invite somebody
         this.headerContent = new View();
-        this.headerContent.Invite = new Surface({
+        this.headerContent.Create = new Surface({
             content: '<i class="icon ion-ios7-plus-outline"></i>',
             size: [App.Defaults.Header.Icon.w, undefined],
             classes: ['header-tab-icon-text-big']
         });
-        this.headerContent.Invite.on('click', function(){
+        this.headerContent.Create.on('click', function(){
             // App.Cache.FriendListOptions = {
             //     default: 'outgoing'
             // };
-            App.history.navigate('friend/add');
+            // App.history.navigate('friend/add');
+
+            Utils.Notification.Toast('Create a new Todo!');
+
+            var newModel = new TodoModel.Todo({
+                title: 'titlehere2'
+            });
+
+            newModel.save({
+                success: function(){
+                    //Saved!
+
+                }
+            });
+
+
         });
 
         // // Find Friends
@@ -106,7 +122,7 @@ define(function(require, exports, module) {
 
         // create the header
         this.header = new StandardHeader({
-            content: "Connections",
+            content: "Todo List",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             // moreContent: false
@@ -114,7 +130,7 @@ define(function(require, exports, module) {
             // moreClasses: ["normal-header"],
             moreSurfaces: [
                 // this.headerContent.PotentialFriends,
-                this.headerContent.Invite
+                this.headerContent.Create
             ]
             // moreContent: "New", //'<span class="icon ion-navicon-round"></span>'
         });

@@ -416,7 +416,7 @@ define(function(require, exports, module) {
                     switch(result.id){
                         
                         case 'todos':
-                            App.history.navigate('todos/list');
+                            App.history.navigate('todo/list');
                             break;
 
                         case 'profiles':
@@ -424,7 +424,7 @@ define(function(require, exports, module) {
                             break;
 
                         case 'updates':
-                            App.history.navigate('dash');
+                            App.history.navigate('actions/all');
                             break;
 
                         case 'messages':
