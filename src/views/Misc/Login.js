@@ -222,7 +222,7 @@ define(function(require, exports, module) {
 
                     // Reload home
                     App.history.eraseUntilTag('allofem');
-                    App.history.navigate('user/sentence');
+                    App.history.navigate('dash');
 
                 }
             });
