@@ -50,7 +50,8 @@ define(function(require, exports, module) {
                     // alert('Exiting app');
                     Utils.Notification.Toast('Exiting App');
                     console.error('exiting app');
-                    historyObj.navigate('user/sentence');
+                    historyObj.data = [];
+                    historyObj.navigate('dash');
                     return;
                 }
 

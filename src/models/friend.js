@@ -42,8 +42,8 @@ define(function (require) {
                     this.url = this.urlRoot + '/friend';
                 }
 
-                if(options.type == 'potential'){
-                    this.url = this.urlRoot + '/potential';
+                if(options.type == 'recommended'){
+                    this.url = this.urlRoot + '/recommended';
                 }
             },
 

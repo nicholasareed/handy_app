@@ -332,40 +332,42 @@ define(function(require, exports, module) {
             if(that.is_me){
                 // Launch options for photo
 
+                Utils.Notification.Toast('Tap "Edit Your Profile"');
+
                 // Slide to the change screen for the user
                 // that.previousPage = window.location.hash;
 
-                // Options and details
-                Utils.Popover.Buttons({
-                    title: 'New Profile Photo',
-                    // text: 'text here',
-                    buttons: [
-                        {
-                            text: "Camera",
-                            value: "camera",
-                            success: function(){
-                                Utils.takePicture('camera', {}, that.uploadProfileImage.bind(that), function(message){
-                                    // failed taking a picture
-                                    console.log(message);
-                                    console.log(JSON.stringify(message));
-                                    Utils.Notification.Toast('Failed picture');
-                                });
-                            }
-                        },
-                        {
-                            text: "Gallery",
-                            value: "gallery",
-                            success: function(){
-                                Utils.takePicture('gallery', {}, that.uploadProfileImage.bind(that), function(message){
-                                    // failed taking a picture
-                                    console.log(message);
-                                    console.log(JSON.stringify(message));
-                                    Utils.Notification.Toast('Failed picture');
-                                });
-                            }
-                        }
-                    ]
-                });
+                // // Options and details
+                // Utils.Popover.Buttons({
+                //     title: 'New Profile Photo',
+                //     // text: 'text here',
+                //     buttons: [
+                //         {
+                //             text: "Camera",
+                //             value: "camera",
+                //             success: function(){
+                //                 Utils.takePicture('camera', {}, that.uploadProfileImage.bind(that), function(message){
+                //                     // failed taking a picture
+                //                     console.log(message);
+                //                     console.log(JSON.stringify(message));
+                //                     Utils.Notification.Toast('Failed picture');
+                //                 });
+                //             }
+                //         },
+                //         {
+                //             text: "Gallery",
+                //             value: "gallery",
+                //             success: function(){
+                //                 Utils.takePicture('gallery', {}, that.uploadProfileImage.bind(that), function(message){
+                //                     // failed taking a picture
+                //                     console.log(message);
+                //                     console.log(JSON.stringify(message));
+                //                     Utils.Notification.Toast('Failed picture');
+                //                 });
+                //             }
+                //         }
+                //     ]
+                // });
 
 
                 // // Options and details
@@ -437,6 +439,10 @@ define(function(require, exports, module) {
                 textAlign: "center"
             }
         });
+        this.profileTop.ProfileName.getSize = function(){
+            return [undefined, 50];
+        };
+
         this.profileTop.ProfileName.add(this.profileTop.ProfileName.StateModifier).add(this.profileTop.ProfileName.Surface);
         this.profileTop.Views.push(this.profileTop.ProfileName);
 

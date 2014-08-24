@@ -55,7 +55,7 @@ define(function(require, exports, module) {
         this.createDefaultSurfaces();
         this.createDefaultLightboxes();
 
-        // this.contentLayout.Views.push(this.lightboxButtons);
+        this.contentLayout.Views.push(this.lightboxButtons);
 
         // Gather data after structure built
         App.Data.User.populated().then(function(){
@@ -102,7 +102,7 @@ define(function(require, exports, module) {
         this._eventInput.on('inOutTransition', function(args){
             // 0 = direction
             if(args[0] == 'showing'){
-                // that.collection.fetch();
+                that.collection.fetch();
             }
         });
 
@@ -125,10 +125,7 @@ define(function(require, exports, module) {
         this.emptyListSurface = new Surface({
             content: "None to Show",
             size: [undefined, 100],
-            classes: ['empty-list-surface-default'],
-            properties: {
-                // backgroundColor: 'red'
-            }
+            classes: ['empty-list-surface-default']
         });
         this.emptyListSurface.pipe(this._eventOutput);
 
@@ -214,9 +211,12 @@ define(function(require, exports, module) {
              content: template({
                 User: Model.toJSON()
              }), //'<div><span class="ellipsis-all">' +name+'</span></div>',
-             size: [undefined, 60],
+             size: [undefined, true],
              classes: ['select-friends-list-item-default']
         });
+        userView.getSize = function(){
+            return [undefined, userView.Surface._size ? userView.Surface._size[1] : undefined]
+        };
         userView.Surface.pipe(that.contentLayout);
         userView.Surface.on('click', function(){
             // App.history.navigate('player/' + Model.get('_id'));
@@ -243,6 +243,7 @@ define(function(require, exports, module) {
             nextRenderable = this.emptyListSurface;
         } else {
             nextRenderable = this.contentLayout;
+            // debugger;
         }
 
         if(nextRenderable != this.lightboxContent.lastRenderable){
@@ -250,8 +251,8 @@ define(function(require, exports, module) {
             this.lightboxContent.show(nextRenderable);
         }
 
-        // // Splice out the lightboxButtons before sorting
-        // var popped = this.contentLayout.Views.pop();
+        // Splice out the lightboxButtons before sorting
+        this.contentLayout.Views = _.without(this.contentLayout.Views, this.lightboxButtons);
 
         // Resort the contentLayout.Views
         this.contentLayout.Views = _.sortBy(this.contentLayout.Views, function(v){
@@ -259,7 +260,7 @@ define(function(require, exports, module) {
             return v.Model.get('profile.name').toLowerCase();
         });
 
-        // this.contentLayout.Views.push(popped);
+        // this.contentLayout.Views.push(this.lightboxButtons);
 
         console.log(this.contentLayout.Views);
 

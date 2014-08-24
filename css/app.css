@@ -204,17 +204,22 @@ body {
 }
 
 .select-friends-list-item-default > div:nth-child(1) {
+
+  padding-top: 8px;
+
   font-size: 28px;
   line-height: 34px;
   color: #333;
 }
 
-/*
+
 .select-friends-list-item-default > div:nth-child(2) {
   font-size: 14px;
   line-height: 20px;
   color: #333;
-}*/
+
+  padding-bottom: 16px;
+}
 
 
 /* Matched Sentence Friends */

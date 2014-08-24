@@ -86,7 +86,7 @@ define(function(require, exports, module) {
         //     options['$filter'] = this.options.filter;
         // }
         this.collection = new FriendModel.FriendCollection([],{
-            type: 'friend'
+            type: 'recommended'
         });
         this.collection.on("sync", that.updateCollectionStatus.bind(this), this);
         this.collection.on("add", this.addOne, this);
@@ -123,7 +123,7 @@ define(function(require, exports, module) {
         });
         this.loadingSurface.pipe(this._eventOutput);
         this.emptyListSurface = new Surface({
-            content: "None to Show",
+            content: "Recommended people will show up as you connect with more people. ",
             size: [undefined, 100],
             classes: ['empty-list-surface-default'],
             properties: {

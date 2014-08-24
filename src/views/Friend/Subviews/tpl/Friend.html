@@ -1,34 +1,16 @@
 
 <!-- Image and Name -->
 <div>
-    <span data-replace-id="{{message.from_user_id}}" data-replace-model="Profile" data-replace-field="username" data-replace-pre="@">&nbsp;</span>
+    <span class="ellipsis-all">{{User.profile.name}}&nbsp;</span>
 </div>
 
 <!-- Time remaining (if applicable) -->
 {{#if time_remaining}}
     <div>
-        {{time_remaining}}
+        <i class="icon ion-thumbsup"></i>
     </div>
 {{else}}
     <div class="no_time">
-    Not matched
+        not yet recommended
     </div>
 {{/if}}
-
-{{#if activities_list}}
-    <div>
-        {{#each activities_list}}
-            <span>
-
-                {{#if bold}}
-                    <strong>{{text}}</strong>
-                {{else}}
-                    {{text}}
-                {{/if}}
-
-            </span>
-        {{/each}}
-    </div>
-{{/if}}
-
-<!-- Invite Button -->

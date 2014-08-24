@@ -39,10 +39,11 @@ define(function(require, exports, module) {
     var GameMenuView      = require('views/Game/GameMenu');
 
     // Notifications SubView
-    var AllView      = require('./Subviews/All');
-    var PotentialView      = require('./Subviews/Potential');
-    var IncomingView      = require('./Subviews/Incoming');
-    var OutgoingView      = require('./Subviews/Outgoing');
+    var ConnectedView      = require('./Subviews/Connected');
+    var RecommendedView      = require('./Subviews/Recommended');
+    // var PotentialView      = require('./Subviews/Potential');
+    // var IncomingView      = require('./Subviews/Incoming');
+    // var OutgoingView      = require('./Subviews/Outgoing');
     
     // Models
     var MediaModel = require('models/media');
@@ -106,7 +107,7 @@ define(function(require, exports, module) {
 
         // create the header
         this.header = new StandardHeader({
-            content: "Connections",
+            content: "People",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             // moreContent: false
@@ -152,12 +153,12 @@ define(function(require, exports, module) {
         // Content
         this.ContentStateModifier = new StateModifier();
 
-        this.AllView = new AllView();
+        // this.AllView = new AllView();
 
-        this.layout.content.add(this.ContentStateModifier).add(this.AllView);
+        // this.layout.content.add(this.ContentStateModifier).add(this.AllView);
 
 
-        return;
+        // return;
 
 
         // Create the Tabs
@@ -171,13 +172,13 @@ define(function(require, exports, module) {
         };
         this.TopTabs.add(Utils.usePlane('contentTabs')).add(this.TopTabs.BarSizeMod).add(this.TopTabs.Bar);
 
-        this.TopTabs.Bar.defineSection('all', {
-            content: '<i class="icon ion-android-friends"></i><div>All</div>',
+        this.TopTabs.Bar.defineSection('connected', {
+            content: '<i class="icon ion-arrow-swap"></i><div>Connected</div>',
             onClasses: ['friend-list-tabbar-default', 'on'],
             offClasses: ['friend-list-tabbar-default', 'off']
         });
-        this.TopTabs.Bar.defineSection('potential', {
-            content: '<i class="icon ion-android-social"></i><div>Potential</div>',
+        this.TopTabs.Bar.defineSection('recommended', {
+            content: '<i class="icon ion-thumbsup"></i><div>Recommended</div>',
             onClasses: ['friend-list-tabbar-default', 'on'],
             offClasses: ['friend-list-tabbar-default', 'off']
         });
@@ -198,17 +199,29 @@ define(function(require, exports, module) {
         // Tab content
         this.TopTabs.Content = new RenderController();
 
-        // All 
-        this.TopTabs.Content.AllFriends = new View();
-        this.TopTabs.Content.AllFriends.View = new AllView();
-        this.TopTabs.Content.AllFriends.add(this.TopTabs.Content.AllFriends.View);
-        this._subviews.push(this.TopTabs.Content.AllFriends.View);
+        // Connected 
+        this.TopTabs.Content.Connected = new View();
+        this.TopTabs.Content.Connected.View = new ConnectedView();
+        this.TopTabs.Content.Connected.add(this.TopTabs.Content.Connected.View);
+        this._subviews.push(this.TopTabs.Content.Connected.View);
 
-        // Potential 
-        this.TopTabs.Content.PotentialFriends = new View();
-        this.TopTabs.Content.PotentialFriends.View = new PotentialView();
-        this.TopTabs.Content.PotentialFriends.add(this.TopTabs.Content.PotentialFriends.View);
-        this._subviews.push(this.TopTabs.Content.PotentialFriends.View);
+        // Recommended 
+        this.TopTabs.Content.Recommended = new View();
+        this.TopTabs.Content.Recommended.View = new RecommendedView();
+        this.TopTabs.Content.Recommended.add(this.TopTabs.Content.Recommended.View);
+        this._subviews.push(this.TopTabs.Content.Recommended.View);
+
+        // // All 
+        // this.TopTabs.Content.AllFriends = new View();
+        // this.TopTabs.Content.AllFriends.View = new AllView();
+        // this.TopTabs.Content.AllFriends.add(this.TopTabs.Content.AllFriends.View);
+        // this._subviews.push(this.TopTabs.Content.AllFriends.View);
+
+        // // Potential 
+        // this.TopTabs.Content.PotentialFriends = new View();
+        // this.TopTabs.Content.PotentialFriends.View = new PotentialView();
+        // this.TopTabs.Content.PotentialFriends.add(this.TopTabs.Content.PotentialFriends.View);
+        // this._subviews.push(this.TopTabs.Content.PotentialFriends.View);
 
         // // Incoming
         // this.TopTabs.Content.IncomingInvites = new View();
@@ -228,6 +241,16 @@ define(function(require, exports, module) {
         // Listeners for Tabs
         this.TopTabs.Bar.on('select', function(result){
             switch(result.id){
+
+                case 'connected':
+                    that.TopTabs.Content.show(that.TopTabs.Content.Connected);
+                    // that.TopTabs.Content.AllFriends.View.collection.fetch();
+                    break;
+
+                case 'recommended':
+                    that.TopTabs.Content.show(that.TopTabs.Content.Recommended);
+                    // that.TopTabs.Content.AllFriends.View.collection.fetch();
+                    break;
 
                 case 'all':
                     that.TopTabs.Content.show(that.TopTabs.Content.AllFriends);
@@ -256,7 +279,7 @@ define(function(require, exports, module) {
         });
 
         // This depends on the previously selected! 
-        var default_selected = 'all';
+        var default_selected = 'connected';
         // try {
         //     default_selected = App.Cache.FriendListOptions.default || 'all';
         // }catch(err){console.error(err);}

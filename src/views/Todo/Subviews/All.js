@@ -218,7 +218,7 @@ define(function(require, exports, module) {
             classes: ['select-friends-list-item-default']
         });
         todoView.getSize = function(){
-            return [undefined, todoView.Surface._size ? todoView.Surface._size[1] : undefined];
+            return [undefined, todoView.Surface._size ? todoView.Surface._size[1] : 60];
         };
         todoView.Surface.pipe(that.contentLayout);
         todoView.Surface.on('click', function(){
