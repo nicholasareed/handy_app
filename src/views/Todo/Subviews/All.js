@@ -314,10 +314,12 @@ define(function(require, exports, module) {
         this.contentLayout.Views = _.without(this.contentLayout.Views, tmpView);
 
         this.updateCollectionStatus();
-        
+
     };
 
     SubView.prototype.updateCollectionStatus = function() { 
+        var that = this;
+
         console.info('updateCollectionStatus');
 
         this.collection.totalResults = this.collection.length;
@@ -355,6 +357,9 @@ define(function(require, exports, module) {
 
         // Re-sequence?
         this.contentLayout.sequenceFrom(this.contentLayout.Views);
+        Timer.setTimeout(function(){
+            that.contentLayout.sequenceFrom(that.contentLayout.Views);
+        },250);
 
         // Show correct infinity buttons (More, All, etc.)
         this.render_infinity_buttons();
