@@ -1,0 +1,20 @@
+
+{{#compare game.sport_id.result_type "==" "1v1"}}
+	<strong>{{game.sport_id.name}}</strong>
+	<br />
+
+	<strong>Result:</strong> {{#if game.tmp_extras.won}}Won{{/if}} {{#if game.tmp_extras.lost}}Lost{{/if}} {{#if game.versus.tie}}Tied{{/if}}
+	<br />
+	<strong>Opponent:</strong> 
+	<div data-replace-id="{{game.tmp_extras.opponent_id}}" data-replace-model="Player" data-replace-field="Profile.name">&nbsp;</div>
+{{/compare}}
+
+
+{{#compare game.sport_id.result_type "==" "free-for-all"}}
+	<strong>{{game.sport_id.name}}</strong>
+	<br />
+
+	<strong>Result:</strong> {{game.tmp_extras.my_result}}
+	<br />
+	<strong>Total Players:</strong> {{game.tmp_extras.players}}
+{{/compare}}

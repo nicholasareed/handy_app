@@ -1,0 +1,5 @@
+*.eslintrc
+*.travis.yml
+*.jscsrc
+*Gruntfile.js
+.git

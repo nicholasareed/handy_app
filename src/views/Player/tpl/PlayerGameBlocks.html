@@ -1,0 +1,53 @@
+
+<div class="clearfix">
+	<div class="full">
+		{{game.tmp_extras.datetime}}
+	</div>
+</div>
+
+<div>
+
+	<span>
+		{{#if game.tmp_extras.starred}}
+			<i class="icon ion-ios7-star{{#unless game.tmp_extras.starred}}-outline{{/unless}}"></i>
+		{{/if}}
+	</span>
+
+	{{#compare game.sport_id.result_type "==" "1v1"}}
+		<span>
+			{{#compare game.tmp_extras.my_result "==" "w"}}W{{/compare}}
+			{{#compare game.tmp_extras.my_result "==" "l"}}L{{/compare}}
+			{{#compare game.tmp_extras.my_result "==" "t"}}T{{/compare}}
+		</span>
+	{{/compare}}
+
+
+	{{#compare game.sport_id.result_type "==" "free-for-all"}}
+		<span>
+			{{game.tmp_extras.my_place}}
+		</span>
+	{{/compare}}
+
+	<span>
+		{{#compare game.tmp_extras.to_certify "===" true}}
+			<!-- nothing needed -->
+			&nbsp; 
+		{{/compare}}
+
+		{{#compare game.tmp_extras.to_certify "===" false}}
+			<!-- disputed! -->
+			<i class="icon ion-ios7-compose-outline" style="color:red;"></i>
+		{{/compare}}
+
+		{{#compare game.tmp_extras.to_certify "===" null}}
+			<!-- undecided on -->
+			<i class="icon ion-ios7-compose-outline"></i>
+		{{/compare}}
+		
+	</span>
+
+</div>
+
+<div>
+	<span class="ellipsis ellipsis-block full">{{game.sport_id.name}}</span>
+</div>

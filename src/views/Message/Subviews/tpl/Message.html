@@ -1,0 +1,20 @@
+
+<div>
+    <span data-replace-id="{{message.from_user_id}}" data-replace-model="Profile" data-replace-field="username" data-replace-pre="@">&nbsp;</span> <span class="ago">{{ago}}</span>
+</div>
+<div>
+    {{#if message.text}}
+        <div class="text">{{message.text}}</div>
+    {{/if}}
+    {{#if message.media}}
+        {{#each message.media}}
+            <img src="{{message.media.[0].urls.thumb300x300}}" />
+        {{/each}}
+    {{/if}}
+</div>
+
+{{#if show_other_person}}
+    <div class="message-other-person">
+        <span data-replace-id="{{other_person_id}}" data-replace-model="Profile" data-replace-field="username" data-replace-pre="@">&nbsp;</span>
+    </div>
+{{/if}}

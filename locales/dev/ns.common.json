@@ -1,0 +1,11 @@
+{
+    "app": {
+      "name": "Waiting App"
+    },
+    "footer" : {
+    	"waiting" : "Home",
+    	"messages" : "Messages",
+    	"profiles" : "Profiles",
+    	"friends" : "Friends"
+    }
+}

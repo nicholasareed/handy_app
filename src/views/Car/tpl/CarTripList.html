@@ -1,0 +1,122 @@
+
+    <div class="trip-quick-summary quicklink" href="trip/{{trip._id}}">
+
+        <div class="trip-detached-top clearfix">
+
+            <div class="three-quarters">
+
+                <div class="datetime-holder">
+                    <!--<span class="date">{{display_trip_list_date trip.start_time}}</span>-->
+                    <span class="time">{{display_trip_list_time trip.start_time}}</span>
+                </div>
+                <!--
+                {{#compare trip.end_time "==" null}}
+                    <span class="trip-in-progress-still">
+                        Driving
+                    </span>
+                {{/compare}}
+                -->
+
+            </div>
+
+            <div class="quarter text-right">
+
+                <div class="datetime-holder">
+                    {{#compare trip.end_time "==" null}}
+                        <span class="trip-in-progress-still">
+                            Driving
+                        </span>
+                    {{else}}
+                        <span class="time">{{display_trip_list_time trip.end_time}}</span>
+                    {{/compare}}
+
+                </div>
+
+                <div class="card-status-holder card-bill-holder-{{trip.billed}}">
+                    <span class="icon ion-card card-billed-{{trip.billed}} card-paid-{{trip.paid}}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="trip-info-locations">
+
+            <div class="clearfix">
+
+                <div class="third start-address">
+                    <span class="address-text ellipsis ellipsis-block">{{trip.start_gps_address}}</span>
+                </div>
+
+                <div class="third text-center">
+                    <span style="font-size:12px;">to</span>
+                </div>
+
+                <div class="third end-address">
+                    {{#if trip.end_gps_address}}
+                        <span class="address-text ellipsis ellipsis-block">{{trip.end_gps_address}}</span>
+                    {{else}}
+                        {{#if trip.end_time}}
+                            <span class="address-text ellipsis ellipsis-block">Unknown</span>
+                        {{else}}
+                            <span class="address-text ellipsis ellipsis-block" style="color:green;">Ongoing</span>
+                        {{/if}}
+                    {{/if}}
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="trip-info-bottom">
+            <div class="clearfix shadow-position">
+
+                <div class="half name-of">
+                    <div style="padding: 8px 4px;">
+                        {{#compare model_type "==" "car"}}
+                            <span class="ellipsis full" data-replace-model="driver"  data-replace-id="{{trip.driver_id}}"  data-replace-field="name">
+                                &nbsp;
+                            </span>
+                        {{else}}
+
+                            <span class="ellipsis full" data-replace-model="car"  data-replace-id="{{trip.car_id}}"  data-replace-field="name">
+                                &nbsp;
+                            </span>
+
+                        {{/compare}}
+                    </div>
+                </div>
+
+                {{#if trip.end_time}}
+                    <div class="half text-right">
+                        <div class="std-padding">
+                            <span class="display_number">{{toFixedOrNone trip.miles 1}}</span><span class="display_abbrev">mi</span>
+                            &nbsp;
+                            <span class="display_number">{{seconds_to_drive_time trip.drive_time}}</span>
+                        </div>
+                    </div>
+                    <div class="quarter nodisplay">
+                        <div class="std-padding">
+                            <span class="display_number">${{toFixedOrNone trip.total_cost 2}}</span>
+                        </div>
+                    </div>
+                {{else}}
+                    <div class="half text-right">
+                        <div class="std-padding">
+                            <span class="display_number">{{toFixedOrNone trip.running_values.miles 1}}</span><span class="display_abbrev">mi</span>
+                            &nbsp;
+                            <span class="display_number">{{seconds_to_drive_time trip.running_values.drive_time}}</span>
+                        </div>
+                    </div>
+                    <div class="quarter nodisplay">
+                        <div class="std-padding">
+                            <span class="display_number">${{toFixedOrNone trip.stopped_values.total_cost 2}}</span>
+                        </div>
+                    </div>
+                {{/if}}
+
+                <div class="with-fake-shadow"></div>
+
+            </div>
+        </div>
+
+    </div>
+
