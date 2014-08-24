@@ -127,6 +127,12 @@ define(function(require, exports, module) {
         });
 
         this.collection.fetch({prefill: true});
+        
+        this._eventOutput.on('inOutTransition', function(tmp){
+            if(tmp[0] == 'showing'){
+                that.collection.fetch();
+            }
+        });
 
     }
 
@@ -173,7 +179,7 @@ define(function(require, exports, module) {
                         // console.log(that.model.toJSON());
                         // debugger;
 
-                        that.model.set(newModel);
+                        // that.model.set(newModel);
                         // console.log(that.model.toJSON());
                         // debugger;
 
@@ -527,6 +533,7 @@ define(function(require, exports, module) {
             // console.log(v.Model.get('created'));
             return moment(v.Model.get('created')).format('X');
         });
+        this.contentLayout.Views.reverse();
 
         // re-add buttons
         // if(this.collection.length > 0){
