@@ -469,7 +469,7 @@ define(function(require, exports, module) {
                         duration: 250,
                         curve: Easing.itExpo
                     };
-                    App.Views.MainFooter.positionMod.setTransform(Transform.translate(0,-1000,0), transition);
+                    App.Views.MainFooter.positionMod.setTransform(Transform.translate(0,1000,0), transition);
                 };
 
                 // Add to maincontext
