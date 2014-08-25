@@ -284,7 +284,7 @@ define(function(require, exports, module) {
         };
         todoView.Surface.pipe(that.contentLayout);
         todoView.Surface.on('click', function(){
-            Utils.Notification.Toast('View Todo');
+            // Utils.Notification.Toast('View Todo');
             App.history.navigate('todo/' + Model.get('_id'));
         });
 

@@ -18,7 +18,6 @@ define(function(require, exports, module) {
     var RenderController = require('famous/views/RenderController');
 
     var Utility = require('famous/utilities/Utility');
-    var Timer = require('famous/utilities/Timer');
 
     var HeaderFooterLayout = require('famous/views/HeaderFooterLayout');
     var NavigationBar = require('famous/widgets/NavigationBar');
@@ -28,7 +27,7 @@ define(function(require, exports, module) {
     var Backbone = require('backbone-adapter');
 
     // Models
-    var InvoiceModel = require("models/invoice");
+    var InvoiceContentModel = require("models/invoice_content");
 
     // Extras
     var Utils = require('utils');
@@ -36,8 +35,12 @@ define(function(require, exports, module) {
 
     // Templates
     var Handlebars          = require('lib2/handlebars-adapter');
-    var tpl                 = require('text!./tpl/Invoice.html');
-    var template            = Handlebars.compile(tpl);
+    var tpls                = {
+        text: require('text!./tpl/ContentText.html')
+    };
+    var templates           = {
+        text: Handlebars.compile(tpls.text)
+    }
 
     function SubView(options) {
         var that = this;
@@ -45,6 +48,7 @@ define(function(require, exports, module) {
         this.options = options;
 
         // Load models
+        this.invoice_id = this.options.invoice_id;
         this.loadModels();
 
         // Should switch to a RenderController or Lightbox for displaying this content?
@@ -55,18 +59,11 @@ define(function(require, exports, module) {
         this.contentLayout.Views = [];
         this.contentLayout.sequenceFrom(this.contentLayout.Views);
 
+        // this.createTemplates();
+
         this.createDefaultSurfaces();
         this.createDefaultLightboxes();
 
-        // this.contentLayout.Views.push(this.lightboxButtons);
-
-        // Gather data after structure built
-        App.Data.User.populated().then(function(){
-
-            // that.update_friend_collection();
-            // App.Data.User.on('sync', that.update_friend_collection.bind(that));
-
-        });
 
         // Need to wait for at least 1 item before showing the result?
         // - otherwise, there is a Render error
@@ -88,12 +85,13 @@ define(function(require, exports, module) {
         // if(this.options && this.options.filter){
         //     options['$filter'] = this.options.filter;
         // }
-        this.collection = new InvoiceModel.InvoiceCollection([],{
+        this.collection = new InvoiceContentModel.InvoiceContentCollection([],{
             // type: 'friend'
+            invoice_id: this.invoice_id
         });
         this.collection.on("sync", that.updateCollectionStatus.bind(this), this);
         this.collection.on("add", this.addOne, this);
-        this.collection.on("remove", this.removeOne, this);
+        // this.collection.on("remove", this.removeOne, this); // invoice...
         this.collection.infiniteResults = 0;
         this.collection.totalResults = 0;
 
@@ -126,7 +124,7 @@ define(function(require, exports, module) {
         });
         this.loadingSurface.pipe(this._eventOutput);
         this.emptyListSurface = new Surface({
-            content: "None to Show",
+            content: "No updates to Invoice yet",
             size: [undefined, 100],
             classes: ['empty-list-surface-default'],
             properties: {
@@ -209,117 +207,53 @@ define(function(require, exports, module) {
     SubView.prototype.addOne = function(Model){
         var that = this;
 
-        var invoiceView = new View(),
-            name = Model.get('title') || '&nbsp;none';
+        var contentView = new View();
 
-        invoiceView.Model = Model;
+        contentView.Model = Model;
 
-        invoiceView.Layout = new FlexibleLayout({
-            direction: 0, // x, horizontal
-            ratios: [true, 1] // Done, Title, 
-        });
-        invoiceView.Layout.Views = [];
-
-        // Action button (checkbox)
-        invoiceView.Action = new View();
-        invoiceView.Action.getSize = function(){
-            return [60,60];
+        var surfaceVars = {
+            content: '',
+            classes: ['invoice-content-item-default']
         };
 
-        invoiceView.Action.Toggle = new ToggleButton({
-            size: [40, 40],
-            content: '',
-            classes: ['text-center'],
-            onClasses: ['invoice-toggle', 'circle-toggle', 'toggle-on'],
-            offClasses: ['invoice-toggle', 'circle-toggle', 'toggle-off'],
+        switch(Model.get('type')){
+            case 'text':
+                // Display some text
+                surfaceVars.content = templates.text(Model.toJSON());
+                surfaceVars.classes.push('invoice-content-text-default');
+                break;
 
-            // NOT for setting the default toggle state of the button
-            toggleMode: ToggleButton.TOGGLE
-        });
-        invoiceView.Action.Toggle.pipe(that.contentLayout);
+            default:
+                console.error('no type');
+                Utils.Notification.Toast('invalid contentView type');
+                return;
+        }
 
-        // Handle toggle button click
-        invoiceView.Action.Toggle.on('select', function(m){
-            // console.log('select, saving');
-            // if(that.model.get('scheme.' + Info.scheme_key) !== true){
-            //     var data = {};
-            //     data['scheme.' + Info.scheme_key] = true;
-            //     that.model.save(data,{patch: true});
-            // }
-
-            // // Remove this one!
-            // Timer.setTimeout(function(){
-            //     that.collection.remove(Model.get('_id'));
-            // },500);
-
-        });
-        invoiceView.Action.Toggle.on('deselect', function(){
-            // console.log('deselect, saving');
-            // if(that.model.get('scheme.' + Info.scheme_key) !== false){
-            //     var data = {};
-            //     data['scheme.' + Info.scheme_key] = false;
-            //     that.model.save(data,{patch: true});
-            // }
-        });
-        invoiceView.Action.add(invoiceView.Action.Toggle);
-        invoiceView.Layout.Views.push(invoiceView.Action);
+        console.log(surfaceVars);
 
         // Surface
-        invoiceView.Surface = new Surface({
-            content: template({
-                Invoice: Model.toJSON()
-            }),
+        contentView.Surface = new Surface({
+            content: surfaceVars.content,
             size: [undefined, true],
-            classes: ['invoice-list-item-default']
+            classes: surfaceVars.classes
         });
-        Utils.dataModelReplaceOnSurface(invoiceView.Surface);
-        Model.on('change', function(){
-            invoiceView.Surface.setContent(template({
-                Invoice: Model.toJSON()
-            }));
-            Utils.dataModelReplaceOnSurface(invoiceView.Surface);
-        });
-        invoiceView.getSize = function(){
-            return [undefined, invoiceView.Surface._size ? invoiceView.Surface._size[1] : 100];
+        contentView.getSize = function(){
+            return [undefined, contentView.Surface._size ? contentView.Surface._size[1] : undefined];
         };
-        invoiceView.Surface.pipe(that.contentLayout);
-        invoiceView.Surface.on('click', function(){
+        contentView.Surface.pipe(that.contentLayout);
+        contentView.Surface.on('click', function(){
             // Utils.Notification.Toast('View Invoice');
-            App.history.navigate('invoice/' + Model.get('_id'));
+            // App.history.navigate('invoice/' + Model.get('_id'));
         });
 
-        invoiceView.Layout.Views.push(invoiceView.Surface);
-        invoiceView.Layout.sequenceFrom(invoiceView.Layout.Views);
+        contentView.add(contentView.Surface);
 
-        invoiceView.add(invoiceView.Layout);
-
-        this.contentLayout.Views.splice(this.contentLayout.Views.length-1, 0, invoiceView);
+        this.contentLayout.Views.splice(this.contentLayout.Views.length-1, 0, contentView);
         this.collection.infiniteResults += 1;
 
     };
 
-    SubView.prototype.removeOne = function(Model){
-        var that = this;
-
-        // find the view
-        var tmpView = _.find(this.contentLayout.Views, function(tmp){
-            return tmp.Model == Model;
-        });
-
-        if(!tmpView){
-            console.error('no tmpView');
-            return;
-        }
-
-        this.contentLayout.Views = _.without(this.contentLayout.Views, tmpView);
-
-        this.updateCollectionStatus();
-
-    };
-
     SubView.prototype.updateCollectionStatus = function() { 
-        var that = this;
-
         console.info('updateCollectionStatus');
 
         this.collection.totalResults = this.collection.length;
@@ -357,9 +291,6 @@ define(function(require, exports, module) {
 
         // Re-sequence?
         this.contentLayout.sequenceFrom(this.contentLayout.Views);
-        Timer.setTimeout(function(){
-            that.contentLayout.sequenceFrom(that.contentLayout.Views);
-        },250);
 
         // Show correct infinity buttons (More, All, etc.)
         this.render_infinity_buttons();

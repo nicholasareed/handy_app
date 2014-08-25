@@ -444,6 +444,90 @@ body {
 }
 
 
+/* Invoice item View */
+
+.invoice-view-title-default {
+  line-height: 30px;
+  font-size: 24px;
+  padding: 8px 10px;
+}
+
+.invoice-view-invoicecontent-add-button-default {
+  padding: 8px;
+  background: rgba(255,255,255,0.5);
+  border-top: 1px solid #eee;
+}
+
+.invoice-view-invoicecontent-add-button-default div {
+  display: inline-block;
+  width: 100%;
+
+  background: #ddd;
+  text-align: center;
+
+  line-height: 40px;
+  font-size: 14px;
+
+  color: #444;
+
+}
+
+
+.invoice-view-to-default {
+  padding: 8px;
+}
+
+.invoice-view-to-default.notassigned {
+  color: #888;
+}
+
+.invoice-view-to-default.assigned {
+  font-weight: bold;
+}
+
+
+.invoice-view-from-default {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.invoice-view-from-default.no_owner {
+  color: #888;
+}
+
+.invoice-view-from-default.has_owner {
+  font-weight: bold;
+}
+
+
+
+.invoice-content-item-default {
+
+}
+
+.invoice-content-text-default {
+  padding: 8px;
+}
+
+.invoice-content-text-default > div {
+  padding: 8px;
+  border: 1px solid #eee;
+}
+
+.invoice-content-text-default > div > div:nth-child(1) {
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.invoice-content-text-default > div > div:nth-child(2) {
+  color: #888;
+
+  font-size: 11px;
+  line-height: 13px;
+}
+
+
+
 
 
 /* Todo List */
