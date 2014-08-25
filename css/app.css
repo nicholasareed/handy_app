@@ -558,6 +558,15 @@ body {
   padding-bottom: 16px;
 }
 
+.todo-list-item-default > div:nth-child(2) span.assigned {
+  padding-right: 8px;
+  color: #2C3E50;
+}
+
+.todo-list-item-default > div:nth-child(2) span.owner {
+  color: #7F8C8D;
+}
+
 
 .todo-toggle {
   margin-top: 16px;
@@ -627,6 +636,8 @@ body {
 
 .todo-view-assigned-default {
   padding: 8px;
+  font-size: 18px;
+  line-height: 24px;
 }
 
 .todo-view-assigned-default.notassigned {
@@ -640,6 +651,10 @@ body {
 
 .todo-view-owner-default {
   padding: 8px;
+  
+  font-size: 18px;
+  line-height: 24px;
+
   border-bottom: 1px solid #ddd;
 }
 
@@ -1167,6 +1182,12 @@ body {
   z-index: 10;
 }
 
+.normal-header.title {
+  font-family: Helvetica, sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+}
+
 .more-surfaces-header-default {
   /*background: #182030;*/
 }
@@ -1644,6 +1665,8 @@ input[type="email"]:active {
 textarea,
 textarea:focus,
 textarea:active {
+  font-family: 'Circular Light';
+
   border: 1px solid #ddd;
   border-bottom: 2px solid #999;
   border-shadow: none;

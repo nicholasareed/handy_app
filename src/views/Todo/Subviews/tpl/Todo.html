@@ -1,18 +1,25 @@
 
-<!-- Image and Name -->
+<!-- Title -->
 <div>
     <span class="ellipsis-all">{{Todo.title}}&nbsp;</span>
 </div>
 
-<!-- Assigned? -->
-{{#if Todo.assigned_id}}
-    <div>
-        <strong>
+<div>
+
+	<!-- Assigned? -->
+	{{#if Todo.assigned_id}}
+        <span class="assigned">
         	<span data-replace-id="{{Todo.assigned_id._id}}" data-replace-model="Profile" data-replace-field="profile.name">&nbsp;</span>
-        </strong>
-    </div>
-{{else}}
-    <div class="no_time" style="color: #ddd;">
-        not assigned
-    </div>
-{{/if}}
+        </span>
+	{{/if}}
+
+	<!-- Owner? -->
+	{{#if Todo.owner_id}}
+		{{#compare Todo.owner_id._id "!=" User._id}}
+	        <span class="owner">
+	        	<span data-replace-id="{{Todo.owner_id._id}}" data-replace-model="Profile" data-replace-field="profile.name">&nbsp;</span>
+	        </span>
+	    {{/compare}}
+	{{/if}}
+
+</div>

@@ -256,6 +256,22 @@ define(function (require) {
 
         },
 
+        bindSize: function(emitter, tmpView, tmpSurface){
+            var oldSize = null;
+            tmpView.getSize = function(){
+                // console.log(tmpSurface._size);
+                // this._size = [undefined, tmpSurface._size ? tmpSurface._size[1] : 120];
+                this._size = [undefined, tmpSurface._size ? tmpSurface._size[1] : undefined];
+                if(oldSize != tmpSurface._size){
+                    console.info('new size');
+                    console.log(tmpSurface._size, tmpSurface._size ? tmpSurface._size[1] : undefined);
+                    emitter.trigger('newsize');
+                }
+                oldSize = tmpSurface._size;
+                return [undefined, tmpSurface._size ? tmpSurface._size[1] : undefined];
+            };
+        },
+
         Intent: {
             HandleOpenUrl: function(url){
                 // what type of a url are we looking at?

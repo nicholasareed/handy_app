@@ -370,6 +370,17 @@ define(function(require, exports, module) {
             target.appendChild(content);
         }
         else target.innerHTML = content;
+
+        var size = this.size ? this.size : [undefined, undefined]; //this.getSize() return _size, which we don't want
+        if(size.indexOf(true) === -1){
+            return;
+        }
+        var width = size[0] === true ? target.offsetWidth : size[0];
+        var height = size[1] === true ? target.offsetHeight : size[1];
+
+        this._trueSize = [width, height];
+        this.setSize([width, height]);
+
     };
 
     /**

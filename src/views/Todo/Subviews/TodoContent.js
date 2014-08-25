@@ -229,7 +229,7 @@ define(function(require, exports, module) {
                 return;
         }
 
-        console.log(surfaceVars);
+        // console.log(surfaceVars);
 
         // Surface
         contentView.Surface = new Surface({
@@ -280,14 +280,14 @@ define(function(require, exports, module) {
 
         // Resort the contentLayout.Views
         this.contentLayout.Views = _.sortBy(this.contentLayout.Views, function(v){
-            console.log(v.Model.get('created'));
+            // console.log(v.Model.get('created'));
             return v.Model.get('created');
         });
         this.contentLayout.Views.reverse();
 
         // this.contentLayout.Views.push(popped);
 
-        console.log(this.contentLayout.Views);
+        // console.log(this.contentLayout.Views);
 
         // Re-sequence?
         this.contentLayout.sequenceFrom(this.contentLayout.Views);

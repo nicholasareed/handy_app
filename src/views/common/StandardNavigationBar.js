@@ -42,7 +42,7 @@ define(function(require, exports, module) {
         View.apply(this, arguments);
 
         this.title = new Surface({
-            classes: this.options.classes,
+            classes: this.options.classes.concat('title'),
             content: this.options.content
         });
         this.title.View = new View();
@@ -53,18 +53,22 @@ define(function(require, exports, module) {
         // console.log(this.options.size[1]);
         // debugger;
 
+        var tmpBackWidth = 20;
         if(this.options.back){
             this.back = this.options.back;
         } else {
+            if(this.options.backContent == false){
+                tmpBackWidth = 1;
+            }
             this.back = new Surface({
-                size: [20, this.options.size[1]], // changed width from: this.options.size[1]
+                size: [tmpBackWidth, this.options.size[1]], // changed width from: this.options.size[1]
                 classes: this.options.backClasses,
                 content: this.options.backContent
             });
         }
         this.back.View = new View();
         this.back.View.getSize = function(){
-            return [20, that.options.size[1]];
+            return that.back.getSize() ? that.back.getSize() : [tmpBackWidth,undefined];
         };
         this.back.PositionModifier = new StateModifier();
         this.back.OpacityModifier = new StateModifier();

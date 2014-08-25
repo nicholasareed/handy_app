@@ -34,6 +34,7 @@ define(function(require, exports, module) {
     // Views
     var StandardHeader = require('views/common/StandardHeader');
     var StandardTabBar = require('views/common/StandardTabBar');
+    var SmartSurface = require('views/common/SmartSurface');
 
     // Extras
     var Utils = require('utils');
@@ -214,27 +215,40 @@ define(function(require, exports, module) {
             ratios: [true, 1, true]
         });
 
+        var emitter = new EventHandler();
+
         this.todoLayout.Layout.Views = [];
 
         // Details
-        this.todoDetails = new SequentialLayout();
+        this.todoDetails = new View();
+        this.todoDetails.BgSurface = new Surface({
+            size: [undefined, undefined],
+            properties: {
+                backgroundColor: 'rgba(250,250,250,0.8)'
+            }
+        });
+        this.todoDetails.SeqLayout = new SequentialLayout();
         this.todoDetails.Views = [];
 
         // Title
-        this.todoDetails.TitleSurface = new Surface({
+        this.todoDetails.Title = new View();
+        this.todoDetails.Title.Surface = new Surface({
             content: 'title content',
             size: [window.innerWidth, true],
             classes: ['todo-view-title-default']
         });
-        this.todoDetails.Views.push(this.todoDetails.TitleSurface);
+        // Utils.bindSize(emitter, this.todoDetails.Title, this.todoDetails.Title.Surface);
+        this.todoDetails.Title.add(this.todoDetails.Title.Surface);
+        this.todoDetails.Views.push(this.todoDetails.Title.Surface);
 
         // Assign/delegate to someone
-        this.todoDetails.AssignedSurface = new Surface({
+        this.todoDetails.Assigned = new View();
+        this.todoDetails.Assigned.Surface = new Surface({
             content: '',
-            size: [undefined, true],
+            size: [window.innerWidth, true],
             classes: ['todo-view-assigned-default']
         });
-        this.todoDetails.AssignedSurface.on('click', function(){
+        this.todoDetails.Assigned.Surface.on('click', function(){
             // // Redo assignment
             // if(that.model.get('assigned_id')){
             //     // already assigned!
@@ -248,18 +262,22 @@ define(function(require, exports, module) {
             });
             App.history.navigate('todo/assign/' + that.model.get('_id'));
         });
-        this.todoDetails.Views.push(this.todoDetails.AssignedSurface);
+
+        // Utils.bindSize(emitter, this.todoDetails.Assigned, this.todoDetails.Assigned.Surface);
+        this.todoDetails.Assigned.add(this.todoDetails.Assigned.Surface);
+        this.todoDetails.Views.push(this.todoDetails.Assigned.Surface);
 
         // owner
-        this.todoDetails.OwnerSurface = new Surface({
+        this.todoDetails.Owner = new View();
+        this.todoDetails.Owner.Surface = new Surface({
             content: '',
-            size: [undefined, true],
+            size: [window.innerWidth, true],
             classes: ['todo-view-owner-default'],
             properties: {
                 borderBottom: "1px solid #ddd;"
             }
         });
-        this.todoDetails.OwnerSurface.on('click', function(){
+        this.todoDetails.Owner.Surface.on('click', function(){
             // // Redo owner
             // if(that.model.get('owner_id') && that.model.get('owner_id._id') != App.Data.User.get('_id')){
             //     // already changed owner!
@@ -273,24 +291,62 @@ define(function(require, exports, module) {
             });
             App.history.navigate('todo/owner/' + that.model.get('_id'));
         });
-        this.todoDetails.Views.push(this.todoDetails.OwnerSurface);
+
+        // Utils.bindSize(emitter, this.todoDetails.Owner, this.todoDetails.Owner.Surface);
+        this.todoDetails.Owner.add(this.todoDetails.Owner.Surface);
+        this.todoDetails.Views.push(this.todoDetails.Owner.Surface);
 
 
-        this.todoDetails.sequenceFrom(this.todoDetails.Views);
+        this.todoDetails.getSize = function(){
+            var tmpH = 1;
+            that.todoDetails.Views.forEach(function(tmp){
+                if(tmp._trueSize){
+                    tmpH += tmp._trueSize[1];
+                }
+            });
+            return [undefined, tmpH ? tmpH : undefined];
+        }
 
+        this.todoDetails.SeqLayout.sequenceFrom(this.todoDetails.Views);
+        emitter.on('newsize', function(){
+            console.info('resyncing!');
+            that.todoDetails.SeqLayout.sequenceFrom(that.todoDetails.Views);
+        });
 
+        this.todoDetails.add(Utils.usePlane('content',1)).add(this.todoDetails.BgSurface);
+        this.todoDetails.add(Utils.usePlane('content',2)).add(this.todoDetails.SeqLayout);
         this.todoLayout.Layout.Views.push(this.todoDetails);
+
+        that.todoDetails.Views.forEach(function(tmp){
+            tmp.on('deploy', function(){
+                console.log('deployed, ratios setting');
+                that.todoLayout.Layout.setRatios([true, 1, true]);                
+            });
+            // tmp._eventOutput.on('deploy', function(){
+            //     console.log('deployed, ratios setting2');
+            //     that.todoLayout.Layout.setRatios([true, 1, true]);                
+            // });
+        });
 
 
         // Content
         this.todoContent = new TodoContentView({
             todo_id: this.todo_id
         });
-        this.todoLayout.Layout.Views.push(this.todoContent);
+        this.todoContent.View = new View();
+        this.todoContent.View.add(Utils.usePlane('content')).add(this.todoContent);
+        this.todoLayout.Layout.Views.push(this.todoContent.View);
 
+
+        // Sequence everything
         this.todoLayout.Layout.sequenceFrom(this.todoLayout.Layout.Views);
+        emitter.on('newsize', function(){
+            console.info('resyncing!');
+            that.todoLayout.Layout.setRatios([true, 1, true]);
+        });
 
         this.todoLayout.add(this.todoLayout.Layout);
+
         this.contentScrollView.Views.push(this.todoLayout);
 
 
@@ -324,7 +380,7 @@ define(function(require, exports, module) {
             },200);
 
         });
-        this.todoButtons.add(this.todoButtons.ButtonSurface);
+        this.todoButtons.add(Utils.usePlane('content',1)).add(this.todoButtons.ButtonSurface);
 
         this.todoLayout.Layout.Views.push(this.todoButtons);
 
@@ -378,34 +434,34 @@ define(function(require, exports, module) {
             // pass
 
             // title
-            this.todoDetails.TitleSurface.setContent(that.model.get('title'));
+            this.todoDetails.Title.Surface.setContent(that.model.get('title'));
 
             // assigned
             if(that.model.get('assigned_id')){
                 // assigned to someone
-                this.todoDetails.AssignedSurface.setContent('assigned: ' + that.model.get('assigned_id.profile.name'));
-                this.todoDetails.AssignedSurface.setClasses(['todo-view-assigned-default','assigned']);
+                this.todoDetails.Assigned.Surface.setContent('assigned: ' + that.model.get('assigned_id.profile.name'));
+                this.todoDetails.Assigned.Surface.setClasses(['todo-view-assigned-default','assigned']);
             } else {
                 // Not assigned
-                this.todoDetails.AssignedSurface.setContent('not assigned');
-                this.todoDetails.AssignedSurface.setClasses(['todo-view-assigned-default','notassigned']);
+                this.todoDetails.Assigned.Surface.setContent('not assigned');
+                this.todoDetails.Assigned.Surface.setClasses(['todo-view-assigned-default','notassigned']);
             }
 
             // owner
             if(that.model.get('owner_id')){
                 // assigned to someone
                 if(that.model.get('owner_id.profile')){
-                    this.todoDetails.OwnerSurface.setContent('owner: ' + that.model.get('owner_id.profile.name'));
+                    this.todoDetails.Owner.Surface.setContent('owner: ' + that.model.get('owner_id.profile.name'));
                 } else {
-                    this.todoDetails.OwnerSurface.setContent('owner: <span data-replace-id="' + that.model.get('owner_id') + '" data-replace-model="Profile" data-replace-target="profile.name"/>&nbsp;</span>');
-                    Utils.dataModelReplaceOnSurface(this.todoDetails.OwnerSurface);
+                    this.todoDetails.Owner.Surface.setContent('owner: <span data-replace-id="' + that.model.get('owner_id') + '" data-replace-model="Profile" data-replace-target="profile.name"/>&nbsp;</span>');
+                    Utils.dataModelReplaceOnSurface(this.todoDetails.Owner.Surface);
                 }
-                this.todoDetails.OwnerSurface.setClasses(['todo-view-owner-default','has_owner']);
+                this.todoDetails.Owner.Surface.setClasses(['todo-view-owner-default','has_owner']);
             } else {
                 // No owner at the moment
-                this.todoDetails.OwnerSurface.setContent('');
-                this.todoDetails.OwnerSurface.setClasses(['todo-view-owner-default','no_owner']);
-                this.todoDetails.OwnerSurface.setSize([undefined,1]);
+                this.todoDetails.Owner.Surface.setContent('');
+                this.todoDetails.Owner.Surface.setClasses(['todo-view-owner-default','no_owner']);
+                this.todoDetails.Owner.Surface.setSize([undefined,1]);
             }
 
             return;

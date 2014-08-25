@@ -267,7 +267,8 @@ define(function(require, exports, module) {
         // Surface
         todoView.Surface = new Surface({
             content: template({
-                Todo: Model.toJSON()
+                Todo: Model.toJSON(),
+                User: App.Data.User.toJSON()
             }),
             size: [undefined, true],
             classes: ['todo-list-item-default']
@@ -275,7 +276,8 @@ define(function(require, exports, module) {
         Utils.dataModelReplaceOnSurface(todoView.Surface);
         Model.on('change', function(){
             todoView.Surface.setContent(template({
-                Todo: Model.toJSON()
+                Todo: Model.toJSON(),
+                User: App.Data.User.toJSON()
             }));
             Utils.dataModelReplaceOnSurface(todoView.Surface);
         });

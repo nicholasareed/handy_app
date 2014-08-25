@@ -217,7 +217,14 @@ define(function(require, exports, module) {
         this.invoiceLayout.Layout.Views = [];
 
         // Details
-        this.invoiceDetails = new SequentialLayout();
+        this.invoiceDetails = new View();
+        this.invoiceDetails.BgSurface = new Surface({
+            size: [undefined, undefined],
+            properties: {
+                backgroundColor: 'rgba(250,250,250,0.8)'
+            }
+        });
+        this.invoiceDetails.SeqLayout = new SequentialLayout();
         this.invoiceDetails.Views = [];
 
         // Description/Details
@@ -231,7 +238,7 @@ define(function(require, exports, module) {
         // To user
         this.invoiceDetails.ToSurface = new Surface({
             content: '',
-            size: [undefined, true],
+            size: [window.innerWidth, true],
             classes: ['invoice-view-to-default']
         });
         this.invoiceDetails.ToSurface.on('click', function(){
@@ -254,7 +261,7 @@ define(function(require, exports, module) {
         // From user
         this.invoiceDetails.FromSurface = new Surface({
             content: '',
-            size: [undefined, true],
+            size: [window.innerWidth, true],
             classes: ['invoice-view-from-default'],
             properties: {
                 borderBottom: "1px solid #ddd;"
@@ -276,20 +283,41 @@ define(function(require, exports, module) {
         });
         this.invoiceDetails.Views.push(this.invoiceDetails.FromSurface);
 
+        this.invoiceDetails.getSize = function(){
+            var tmpH = 1;
+            that.invoiceDetails.Views.forEach(function(tmp){
+                if(tmp._trueSize){
+                    tmpH += tmp._trueSize[1];
+                }
+            });
+            return [undefined, tmpH ? tmpH : undefined];
+        }
 
-        this.invoiceDetails.sequenceFrom(this.invoiceDetails.Views);
+
+        this.invoiceDetails.SeqLayout.sequenceFrom(this.invoiceDetails.Views);
+
+        this.invoiceDetails.add(Utils.usePlane('content',1)).add(this.invoiceDetails.BgSurface);
+        this.invoiceDetails.add(Utils.usePlane('content',2)).add(this.invoiceDetails.SeqLayout);
+
+        that.invoiceDetails.Views.forEach(function(tmp){
+            tmp.on('deploy', function(){
+                console.log('deployed, ratios setting3');
+                that.invoiceLayout.Layout.setRatios([true, 1, true]);                
+            });
+        });
 
 
         this.invoiceLayout.Layout.Views.push(this.invoiceDetails);
 
 
-        // Content
+        // InvoiceContent (updates)
         this.invoiceContent = new InvoiceContentView({
             invoice_id: this.invoice_id
         });
-        this.invoiceLayout.Layout.Views.push(this.invoiceContent);
+        this.invoiceContent.View = new View();
+        this.invoiceContent.View.add(Utils.usePlane('content')).add(this.invoiceContent);
 
-        this.invoiceLayout.Layout.sequenceFrom(this.invoiceLayout.Layout.Views);
+        this.invoiceLayout.Layout.Views.push(this.invoiceContent.View);
 
         this.invoiceLayout.add(this.invoiceLayout.Layout);
         this.contentScrollView.Views.push(this.invoiceLayout);
@@ -325,10 +353,10 @@ define(function(require, exports, module) {
             },200);
 
         });
-        this.invoiceButtons.add(this.invoiceButtons.ButtonSurface);
+        this.invoiceButtons.add(Utils.usePlane('content',2)).add(this.invoiceButtons.ButtonSurface);
 
         this.invoiceLayout.Layout.Views.push(this.invoiceButtons);
-
+        this.invoiceLayout.Layout.sequenceFrom(this.invoiceLayout.Layout.Views);
 
 
         // Content state modifier

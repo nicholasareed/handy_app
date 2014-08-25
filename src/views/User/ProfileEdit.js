@@ -139,14 +139,14 @@ define(function(require, exports, module) {
         // Profile Image
         this.ProfileImage = new View();
         this.ProfileImage.SizeMod = new StateModifier({
-            size: [undefined, 200]
+            size: [undefined, 120]
         });
         this.ProfileImage.OriginMod = new StateModifier({
             origin: [0.5, 0.5]
         });
         this.ProfileImage.Surface = new ImageSurface({
             content: 'img/generic-profile.png',
-            size: [190,190],
+            size: [110,110],
             properties: {
                 borderRadius: "50%",
                 border: "1px solid #444"
@@ -227,7 +227,7 @@ define(function(require, exports, module) {
             name: 'bio',
             placeholder: 'A little about yourself',
             type: 'text',
-            size: [undefined, window.innerHeight / 2],
+            size: [undefined, window.innerHeight / 3],
             value: this.model.get('profile.bio')
         });
         this.inputBioSurface.pipe(this.contentScrollView);
