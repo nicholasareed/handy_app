@@ -35,7 +35,7 @@ define(function(require, exports, module) {
     // - none needed
 
     // Custom Surface
-    var TextAreaSurface = require('views/common/TextAreaSurface');
+    var TextAreaSurface = require('famous/surfaces/TextareaSurface');
 
 
     function PageView(options) {

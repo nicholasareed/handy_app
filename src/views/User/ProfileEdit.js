@@ -32,7 +32,7 @@ define(function(require, exports, module) {
     // Views
     var StandardHeader = require('views/common/StandardHeader');
     // var TextAreaSurface = require('views/common/TextAreaSurface');
-    var TextAreaSurface = require('famous/surfaces/TextAreaSurface');
+    var TextAreaSurface = require('famous/surfaces/TextareaSurface');
     
     var EventHandler = require('famous/core/EventHandler');
 
