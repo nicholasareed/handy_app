@@ -100,7 +100,8 @@ require.config({
 });
 
 // Global "App" variable
-var App = {};
+var App = {},
+    S = null; // used for Utils.hbSanitize
 
 define(function(require, exports, module) {
     'use strict';
@@ -135,9 +136,10 @@ define(function(require, exports, module) {
     require('lib2/hammer'); // creates global Hammer()
     var _ = require('underscore');
     var Utils = require('utils');
+    S = Utils.hbSanitize;
 
     // Models
-    var PreloadModels = require('models/_preload');
+    var PreloadModels = require('models/preload');
     var UserModel = require('models/user');
 
     console.info('Loaded main.js');
@@ -394,7 +396,7 @@ define(function(require, exports, module) {
                     offClasses: ['footer-tabbar-default', 'off']
                 });
                 tmpTabs.defineSection('updates', {
-                    content: '<i class="icon ion-lightbulb"></i><div><span class="ellipsis-all">Updates</span></div>',
+                    content: '<i class="icon ion-android-sort"></i><div><span class="ellipsis-all">Updates</span></div>',
                     onClasses: ['footer-tabbar-default', 'on'],
                     offClasses: ['footer-tabbar-default', 'off']
                 });

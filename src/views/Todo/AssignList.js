@@ -35,8 +35,8 @@ define(function(require, exports, module) {
     var Credentials         = JSON.parse(require('text!credentials.json'));
     var numeral = require('lib2/numeral.min');
 
-    // Side menu of options
-    var GameMenuView      = require('views/Game/GameMenu');
+    // // Side menu of options
+    // var GameMenuView      = require('views/Game/GameMenu');
 
     // Notifications SubView
     var ConnectedView      = require('./Subviews/AssignConnected');
@@ -117,7 +117,7 @@ define(function(require, exports, module) {
 
         // create the header
         this.header = new StandardHeader({
-            content: "People",
+            content: "Assign Todo",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             // moreContent: false

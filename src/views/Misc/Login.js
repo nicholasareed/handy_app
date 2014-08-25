@@ -213,7 +213,7 @@ define(function(require, exports, module) {
                     localStorage.setItem('user_v3_',JSON.stringify(userModel.toJSON()));
 
                     // Preload Models
-                    require(['models/_preload'], function(PreloadModels){
+                    require(['models/preload'], function(PreloadModels){
                         PreloadModels(that.options.App);
                     });
 

@@ -47,7 +47,7 @@ define(function(require, exports, module) {
     
     // Models
     var MediaModel = require('models/media');
-    var TodoModel = require('models/todo');
+    var InvoiceModel = require('models/invoice');
 
     function PageView(params) {
         var that = this;
@@ -81,65 +81,55 @@ define(function(require, exports, module) {
         
         // Icons
 
-        // Invite somebody
-        this.headerContent = new View();
-        this.headerContent.Create = new Surface({
-            content: '<i class="icon ion-ios7-plus-outline"></i>',
-            size: [App.Defaults.Header.Icon.w, undefined],
-            classes: ['header-tab-icon-text-big']
-        });
-        this.headerContent.Create.on('click', function(){
-            // App.Cache.FriendListOptions = {
-            //     default: 'outgoing'
-            // };
-            // App.history.navigate('friend/add');
+        // // Invite somebody
+        // this.headerContent = new View();
+        // this.headerContent.Create = new Surface({
+        //     content: '<i class="icon ion-ios7-plus-outline"></i>',
+        //     size: [App.Defaults.Header.Icon.w, undefined],
+        //     classes: ['header-tab-icon-text-big']
+        // });
+        // this.headerContent.Create.on('click', function(){
+        //     // App.Cache.FriendListOptions = {
+        //     //     default: 'outgoing'
+        //     // };
+        //     // App.history.navigate('friend/add');
 
-            Timer.setTimeout(function(){
+        //     Timer.setTimeout(function(){
 
-                var p = prompt('Todo title');
-                if(p && p.trim() != ''){
+        //         var p = prompt('Invoice details');
+        //         var a = prompt('amount');
+        //         if(p && p.trim() != '' && a){
 
-                    Utils.Notification.Toast('Create a new Todo!');
+        //             Utils.Notification.Toast('Create a new Invoice!');
 
-                    var newModel = new TodoModel.Todo({
-                        title: p
-                    });
+        //             var newModel = new InvoiceModel.Invoice({
+        //                 amount: a,
+        //                 details: p
+        //             });
 
-                    newModel.save()
-                    .then(function(){
-                        that.AllView.collection.fetch();
-                    });
+        //             newModel.save()
+        //             .then(function(){
+        //                 that.AllView.collection.fetch();
+        //             });
 
-                }
+        //         }
 
-            },200);
-
-
-        });
-
-        // Invoices
-        this.headerContent.Invoices = new Surface({
-            content: '<i class="icon ion-card"></i>',
-            size: [App.Defaults.Header.Icon.w, undefined],
-            classes: ['header-tab-icon-text-big']
-        });
-        this.headerContent.Invoices.on('click', function(){
-            App.history.navigate('invoice/list');
-        });
+        //     },200);
+        // });
 
 
         // create the header
         this.header = new StandardHeader({
-            content: "Todo List",
+            content: "Invoice List",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
-            // moreContent: false
+            moreContent: false
             // backContent: false,
             // moreClasses: ["normal-header"],
-            moreSurfaces: [
-                this.headerContent.Invoices,
-                this.headerContent.Create
-            ]
+            // moreSurfaces: [
+            //     // this.headerContent.Invoices,
+            //     this.headerContent.Create
+            // ]
             // moreContent: "New", //'<span class="icon ion-navicon-round"></span>'
         });
         this.header._eventOutput.on('back',function(){

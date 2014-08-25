@@ -153,7 +153,7 @@ define(function(require, exports, module) {
                     // defaultRoute('Inbox', 'Message/Inbox', arguments);
                     defaultRoute('InboxThread', 'Message/Thread', arguments);
                 },
-                
+
                 'inbox' : function(){
                     App.Views.MainFooter.route_show = true;
                     App.Views.MainFooter.Tabs.select('messages', false);
@@ -206,6 +206,10 @@ define(function(require, exports, module) {
                     defaultRoute('UserView', 'User/View', arguments);
                 },
 
+                'invoice/list' : function(){
+                    defaultRoute('InvoiceList', 'Invoice/List', arguments);
+                },
+
 
                 'todo/list' : function(){
                     App.Views.MainFooter.route_show = true;
@@ -214,10 +218,10 @@ define(function(require, exports, module) {
                 },
 
                 'todo/assign/:id' : function(){
-                    // console.log('User/:id');
-                    // App.Views.MainFooter.route_show = true;
-                    // App.Views.MainFooter.Tabs.select('todos', false);
                     defaultRoute('TodoAssign', 'Todo/AssignList', arguments, {cache: false});
+                },
+                'todo/owner/:id' : function(){
+                    defaultRoute('TodoOwner', 'Todo/OwnerList', arguments, {cache: false});
                 },
                 'todo/:id' : function(){
                     // console.log('User/:id');

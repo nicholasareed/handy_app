@@ -468,10 +468,58 @@ define(function (require) {
 
         },
 
+        GetRatio: function(normal_ratio, our_variable, max){
+            // Utils.GetRatio([160,320],[window.innerWidth,'x'])
+            var val;
+            if(our_variable[0] instanceof String){
+                // x
+                val = (our_variable[1] * normal_ratio[0]) / normal_ratio[1];
+            } else {
+                // y
+                val = (our_variable[0] / normal_ratio[0]) * normal_ratio[1];
+            }
+            if(max !== undefined && val > max){
+                return max;
+            }
+            return val;
+
+        },
+
         htmlEncode: function(value){
           //create a in-memory div, set it's inner text(which jQuery automatically encodes)
           //then grab the encoded contents back out.  The div never exists on the page.
           return $('<div/>').text(value).html();
+        },
+
+        hbSanitize: function(string){
+            // copied from Handlebars.js sanitizing of strings
+            var escape = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#x27;",
+                "`": "&#x60;"
+            };
+
+            var badChars = /[&<>"'`]/g;
+            var possible = /[&<>"'`]/;
+
+            function escapeChar(chr) {
+                return escape[chr] || "&amp;";
+            }
+
+            if (!string && string !== 0) {
+              return "";
+            }
+
+            // Force a string conversion as this will be done by the append regardless and
+            // the regex test will do this transparently behind the scenes, causing issues if
+            // an object's to string has escaped characters in it.
+            string = "" + string;
+
+            if(!possible.test(string)) { return string; }
+            return string.replace(badChars, escapeChar);
         },
 
         Notification: {

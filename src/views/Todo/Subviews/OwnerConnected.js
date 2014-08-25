@@ -55,7 +55,7 @@ define(function(require, exports, module) {
         this.createDefaultSurfaces();
         this.createDefaultLightboxes();
 
-        // this.contentLayout.Views.push(this.lightboxButtons);
+        this.contentLayout.Views.push(this.lightboxButtons);
 
         // Gather data after structure built
         App.Data.User.populated().then(function(){
@@ -80,13 +80,15 @@ define(function(require, exports, module) {
 
         // App.Data.User contains friends
 
+        this.model = this.options.model;
+
         // Create collection of Games for player_id
         var options = {};
         // if(this.options && this.options.filter){
         //     options['$filter'] = this.options.filter;
         // }
         this.collection = new FriendModel.FriendCollection([],{
-            type: 'recommended'
+            type: 'friend'
         });
         this.collection.on("sync", that.updateCollectionStatus.bind(this), this);
         this.collection.on("add", this.addOne, this);
@@ -102,7 +104,7 @@ define(function(require, exports, module) {
         this._eventInput.on('inOutTransition', function(args){
             // 0 = direction
             if(args[0] == 'showing'){
-                // that.collection.fetch();
+                that.collection.fetch();
             }
         });
 
@@ -123,12 +125,9 @@ define(function(require, exports, module) {
         });
         this.loadingSurface.pipe(this._eventOutput);
         this.emptyListSurface = new Surface({
-            content: "Recommended people will show up as you connect with more people.",
+            content: "None to Show",
             size: [undefined, 100],
-            classes: ['empty-list-surface-default'],
-            properties: {
-                // backgroundColor: 'red'
-            }
+            classes: ['empty-list-surface-default']
         });
         this.emptyListSurface.pipe(this._eventOutput);
 
@@ -214,12 +213,31 @@ define(function(require, exports, module) {
              content: template({
                 User: Model.toJSON()
              }), //'<div><span class="ellipsis-all">' +name+'</span></div>',
-             size: [undefined, 60],
+             size: [undefined, true],
              classes: ['select-friends-list-item-default']
         });
+        userView.getSize = function(){
+            return [undefined, userView.Surface._size ? userView.Surface._size[1] : undefined]
+        };
         userView.Surface.pipe(that.contentLayout);
         userView.Surface.on('click', function(){
-            // App.history.navigate('player/' + Model.get('_id'));
+
+            // Assign/delegate to this person
+
+            // Not assigned to anyone, lets go assign/delegate to someone!
+            // App.history.navigate('todo/assign/' + Model.get('_id'));
+            that.model.save({
+                owner_id: Model.get('_id')
+            },{
+                patch: true,
+                success: function(){
+                    console.log('Success');
+                    that.model.fetch();
+                    App.history.backTo('StartOwner');
+                }
+            })
+
+            // App.history.navigate('user/' + Model.get('_id'));
         });
         userView.add(userView.Surface);
 
@@ -243,6 +261,7 @@ define(function(require, exports, module) {
             nextRenderable = this.emptyListSurface;
         } else {
             nextRenderable = this.contentLayout;
+            // debugger;
         }
 
         if(nextRenderable != this.lightboxContent.lastRenderable){
@@ -250,8 +269,8 @@ define(function(require, exports, module) {
             this.lightboxContent.show(nextRenderable);
         }
 
-        // // Splice out the lightboxButtons before sorting
-        // var popped = this.contentLayout.Views.pop();
+        // Splice out the lightboxButtons before sorting
+        this.contentLayout.Views = _.without(this.contentLayout.Views, this.lightboxButtons);
 
         // Resort the contentLayout.Views
         this.contentLayout.Views = _.sortBy(this.contentLayout.Views, function(v){
@@ -259,7 +278,7 @@ define(function(require, exports, module) {
             return v.Model.get('profile.name').toLowerCase();
         });
 
-        // this.contentLayout.Views.push(popped);
+        // this.contentLayout.Views.push(this.lightboxButtons);
 
         console.log(this.contentLayout.Views);
 

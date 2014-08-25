@@ -31,6 +31,8 @@ define(function(require, exports, module) {
 
     // Views
     var StandardHeader = require('views/common/StandardHeader');
+    // var TextAreaSurface = require('views/common/TextAreaSurface');
+    var TextAreaSurface = require('famous/surfaces/TextAreaSurface');
     
     var EventHandler = require('famous/core/EventHandler');
 
@@ -82,7 +84,7 @@ define(function(require, exports, module) {
 
     PageView.prototype.createHeader = function(){
         var that = this;
-        
+
         // create the header
         this.header = new StandardHeader({
             content: "Edit Profile",
@@ -214,10 +216,25 @@ define(function(require, exports, module) {
             size: [undefined, 50],
             value: this.model.get('profile.name')
         });
+        this.inputNameSurface.pipe(this.contentScrollView);
         this.inputNameSurface.View = new View();
         this.inputNameSurface.View.StateModifier = new StateModifier();
         this.inputNameSurface.View.add(this.inputNameSurface.View.StateModifier).add(this.inputNameSurface);
         this.contentScrollView.Views.push(this.inputNameSurface.View);
+
+        // Bio
+        this.inputBioSurface = new TextAreaSurface({
+            name: 'bio',
+            placeholder: 'A little about yourself',
+            type: 'text',
+            size: [undefined, window.innerHeight / 2],
+            value: this.model.get('profile.bio')
+        });
+        this.inputBioSurface.pipe(this.contentScrollView);
+        this.inputBioSurface.View = new View();
+        this.inputBioSurface.View.StateModifier = new StateModifier();
+        this.inputBioSurface.View.add(this.inputBioSurface.View.StateModifier).add(this.inputBioSurface);
+        this.contentScrollView.Views.push(this.inputBioSurface.View);
 
         this.submitButtonSurface = new Surface({
             content: 'Save Profile',
@@ -244,20 +261,22 @@ define(function(require, exports, module) {
             return;
         }
 
+        var bio = $.trim(this.inputBioSurface.getValue().toString());
+
         // Disable submit
         this.submitButtonSurface.setSize([0,0]);
 
         // Get elements to save
         this.model.save({
-            profile_name: name
+            profile_name: name,
+            profile_bio: bio
         },{
             patch: true,
             success: function(response){
                 // console.log(response);
                 // debugger;
                 that.model.fetch();
-                App.history.back();//.history.go(-1);
-                // App.history.navigate('driver/' + that.model._id, {trigger: true});
+                App.history.back();
             }
         });
 

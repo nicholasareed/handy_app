@@ -17,7 +17,6 @@ define(function(require, exports, module) {
     var RenderNode         = require('famous/core/RenderNode')
 
     var Utility = require('famous/utilities/Utility');
-    var Timer = require('famous/utilities/Timer');
 
     // Helpers
     var Utils = require('utils');
@@ -36,23 +35,23 @@ define(function(require, exports, module) {
     var Credentials         = JSON.parse(require('text!credentials.json'));
     var numeral = require('lib2/numeral.min');
 
-    // Side menu of options
-    var GameMenuView      = require('views/Game/GameMenu');
+    // // Side menu of options
+    // var GameMenuView      = require('views/Game/GameMenu');
 
     // Notifications SubView
-    var AllView      = require('./Subviews/All');
-    // var PotentialView      = require('./Subviews/Potential');
-    // var IncomingView      = require('./Subviews/Incoming');
-    // var OutgoingView      = require('./Subviews/Outgoing');
+    var ConnectedView      = require('./Subviews/OwnerConnected');
+    // var RecommendedView      = require('./Subviews/Recommended');
     
     // Models
-    var MediaModel = require('models/media');
     var TodoModel = require('models/todo');
+    var MediaModel = require('models/media');
 
     function PageView(params) {
         var that = this;
         View.apply(this, arguments);
         this.params = params;
+
+        this.loadModels();
 
         // create the layout
         this.layout = new HeaderFooterLayout({
@@ -75,6 +74,16 @@ define(function(require, exports, module) {
 
     PageView.prototype = Object.create(View.prototype);
     PageView.prototype.constructor = PageView;
+
+    PageView.prototype.loadModels = function(){
+        var that = this;
+
+        this.model = new TodoModel.Todo({
+            _id: this.options.args[0]
+        });
+        this.model.fetch({prefill: true});
+
+    };
     
     PageView.prototype.createHeader = function(){
         var that = this;
@@ -83,62 +92,40 @@ define(function(require, exports, module) {
 
         // Invite somebody
         this.headerContent = new View();
-        this.headerContent.Create = new Surface({
+        this.headerContent.Invite = new Surface({
             content: '<i class="icon ion-ios7-plus-outline"></i>',
             size: [App.Defaults.Header.Icon.w, undefined],
             classes: ['header-tab-icon-text-big']
         });
-        this.headerContent.Create.on('click', function(){
+        this.headerContent.Invite.on('click', function(){
             // App.Cache.FriendListOptions = {
             //     default: 'outgoing'
             // };
-            // App.history.navigate('friend/add');
-
-            Timer.setTimeout(function(){
-
-                var p = prompt('Todo title');
-                if(p && p.trim() != ''){
-
-                    Utils.Notification.Toast('Create a new Todo!');
-
-                    var newModel = new TodoModel.Todo({
-                        title: p
-                    });
-
-                    newModel.save()
-                    .then(function(){
-                        that.AllView.collection.fetch();
-                    });
-
-                }
-
-            },200);
-
-
+            App.history.navigate('friend/add');
         });
 
-        // Invoices
-        this.headerContent.Invoices = new Surface({
-            content: '<i class="icon ion-card"></i>',
-            size: [App.Defaults.Header.Icon.w, undefined],
-            classes: ['header-tab-icon-text-big']
-        });
-        this.headerContent.Invoices.on('click', function(){
-            App.history.navigate('invoice/list');
-        });
+        // // Find Friends
+        // this.headerContent.PotentialFriends = new Surface({
+        //     content: '<i class="icon ion-earth"></i>',
+        //     size: [App.Defaults.Header.Icon.w, undefined],
+        //     classes: ['header-tab-icon-text-big']
+        // });
+        // this.headerContent.PotentialFriends.on('click', function(){
+        //     App.history.navigate('friend/potential');
+        // });
 
 
         // create the header
         this.header = new StandardHeader({
-            content: "Todo List",
+            content: "Todo Owner",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             // moreContent: false
             // backContent: false,
             // moreClasses: ["normal-header"],
             moreSurfaces: [
-                this.headerContent.Invoices,
-                this.headerContent.Create
+                // this.headerContent.PotentialFriends,
+                this.headerContent.Invite
             ]
             // moreContent: "New", //'<span class="icon ion-navicon-round"></span>'
         });
@@ -176,12 +163,12 @@ define(function(require, exports, module) {
         // Content
         this.ContentStateModifier = new StateModifier();
 
-        this.AllView = new AllView();
+        // this.AllView = new AllView();
 
-        this.layout.content.add(this.ContentStateModifier).add(this.AllView);
+        // this.layout.content.add(this.ContentStateModifier).add(this.AllView);
 
 
-        return;
+        // return;
 
 
         // Create the Tabs
@@ -195,16 +182,16 @@ define(function(require, exports, module) {
         };
         this.TopTabs.add(Utils.usePlane('contentTabs')).add(this.TopTabs.BarSizeMod).add(this.TopTabs.Bar);
 
-        this.TopTabs.Bar.defineSection('all', {
-            content: '<i class="icon ion-android-friends"></i><div>All</div>',
+        this.TopTabs.Bar.defineSection('connected', {
+            content: '<i class="icon ion-arrow-swap"></i><div>Connected</div>',
             onClasses: ['friend-list-tabbar-default', 'on'],
             offClasses: ['friend-list-tabbar-default', 'off']
         });
-        this.TopTabs.Bar.defineSection('potential', {
-            content: '<i class="icon ion-android-social"></i><div>Potential</div>',
-            onClasses: ['friend-list-tabbar-default', 'on'],
-            offClasses: ['friend-list-tabbar-default', 'off']
-        });
+        // this.TopTabs.Bar.defineSection('recommended', {
+        //     content: '<i class="icon ion-thumbsup"></i><div>Recommended</div>',
+        //     onClasses: ['friend-list-tabbar-default', 'on'],
+        //     offClasses: ['friend-list-tabbar-default', 'off']
+        // });
         // this.TopTabs.Bar.defineSection('incoming', {
         //     content: '<i class="icon ion-arrow-down-a"></i><div>Incoming</div>',
         //     onClasses: ['inbox-tabbar-default', 'on'],
@@ -222,17 +209,31 @@ define(function(require, exports, module) {
         // Tab content
         this.TopTabs.Content = new RenderController();
 
-        // All 
-        this.TopTabs.Content.AllFriends = new View();
-        this.TopTabs.Content.AllFriends.View = new AllView();
-        this.TopTabs.Content.AllFriends.add(this.TopTabs.Content.AllFriends.View);
-        this._subviews.push(this.TopTabs.Content.AllFriends.View);
+        // Connected 
+        this.TopTabs.Content.Connected = new View();
+        this.TopTabs.Content.Connected.View = new ConnectedView({
+            model: this.model
+        });
+        this.TopTabs.Content.Connected.add(this.TopTabs.Content.Connected.View);
+        this._subviews.push(this.TopTabs.Content.Connected.View);
 
-        // Potential 
-        this.TopTabs.Content.PotentialFriends = new View();
-        this.TopTabs.Content.PotentialFriends.View = new PotentialView();
-        this.TopTabs.Content.PotentialFriends.add(this.TopTabs.Content.PotentialFriends.View);
-        this._subviews.push(this.TopTabs.Content.PotentialFriends.View);
+        // // Recommended 
+        // this.TopTabs.Content.Recommended = new View();
+        // this.TopTabs.Content.Recommended.View = new RecommendedView();
+        // this.TopTabs.Content.Recommended.add(this.TopTabs.Content.Recommended.View);
+        // this._subviews.push(this.TopTabs.Content.Recommended.View);
+
+        // // All 
+        // this.TopTabs.Content.AllFriends = new View();
+        // this.TopTabs.Content.AllFriends.View = new AllView();
+        // this.TopTabs.Content.AllFriends.add(this.TopTabs.Content.AllFriends.View);
+        // this._subviews.push(this.TopTabs.Content.AllFriends.View);
+
+        // // Potential 
+        // this.TopTabs.Content.PotentialFriends = new View();
+        // this.TopTabs.Content.PotentialFriends.View = new PotentialView();
+        // this.TopTabs.Content.PotentialFriends.add(this.TopTabs.Content.PotentialFriends.View);
+        // this._subviews.push(this.TopTabs.Content.PotentialFriends.View);
 
         // // Incoming
         // this.TopTabs.Content.IncomingInvites = new View();
@@ -252,6 +253,16 @@ define(function(require, exports, module) {
         // Listeners for Tabs
         this.TopTabs.Bar.on('select', function(result){
             switch(result.id){
+
+                case 'connected':
+                    that.TopTabs.Content.show(that.TopTabs.Content.Connected);
+                    // that.TopTabs.Content.AllFriends.View.collection.fetch();
+                    break;
+
+                case 'recommended':
+                    that.TopTabs.Content.show(that.TopTabs.Content.Recommended);
+                    // that.TopTabs.Content.AllFriends.View.collection.fetch();
+                    break;
 
                 case 'all':
                     that.TopTabs.Content.show(that.TopTabs.Content.AllFriends);
@@ -280,7 +291,7 @@ define(function(require, exports, module) {
         });
 
         // This depends on the previously selected! 
-        var default_selected = 'all';
+        var default_selected = 'connected';
         // try {
         //     default_selected = App.Cache.FriendListOptions.default || 'all';
         // }catch(err){console.error(err);}

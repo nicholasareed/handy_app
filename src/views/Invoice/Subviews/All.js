@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var View = require('famous/core/View');
     var ScrollView = require('famous/views/Scrollview');
     var SequentialLayout = require('famous/views/SequentialLayout');
+    var FlexibleLayout = require('famous/views/FlexibleLayout');
     var Surface = require('famous/core/Surface');
     var Modifier = require('famous/core/Modifier');
     var StateModifier = require('famous/modifiers/StateModifier');
@@ -17,15 +18,17 @@ define(function(require, exports, module) {
     var RenderController = require('famous/views/RenderController');
 
     var Utility = require('famous/utilities/Utility');
+    var Timer = require('famous/utilities/Timer');
 
     var HeaderFooterLayout = require('famous/views/HeaderFooterLayout');
     var NavigationBar = require('famous/widgets/NavigationBar');
     var GridLayout = require("famous/views/GridLayout");
+    var ToggleButton = require('famous/widgets/ToggleButton');
 
     var Backbone = require('backbone-adapter');
 
     // Models
-    var FriendModel = require("models/friend");
+    var InvoiceModel = require("models/invoice");
 
     // Extras
     var Utils = require('utils');
@@ -33,7 +36,7 @@ define(function(require, exports, module) {
 
     // Templates
     var Handlebars          = require('lib2/handlebars-adapter');
-    var tpl                 = require('text!./tpl/Friend.html');
+    var tpl                 = require('text!./tpl/Invoice.html');
     var template            = Handlebars.compile(tpl);
 
     function SubView(options) {
@@ -85,12 +88,12 @@ define(function(require, exports, module) {
         // if(this.options && this.options.filter){
         //     options['$filter'] = this.options.filter;
         // }
-        this.collection = new FriendModel.FriendCollection([],{
-            type: 'recommended'
+        this.collection = new InvoiceModel.InvoiceCollection([],{
+            // type: 'friend'
         });
         this.collection.on("sync", that.updateCollectionStatus.bind(this), this);
         this.collection.on("add", this.addOne, this);
-        // this.collection.on("remove", this.removeOne, this); // todo...
+        this.collection.on("remove", this.removeOne, this);
         this.collection.infiniteResults = 0;
         this.collection.totalResults = 0;
 
@@ -123,7 +126,7 @@ define(function(require, exports, module) {
         });
         this.loadingSurface.pipe(this._eventOutput);
         this.emptyListSurface = new Surface({
-            content: "Recommended people will show up as you connect with more people.",
+            content: "None to Show",
             size: [undefined, 100],
             classes: ['empty-list-surface-default'],
             properties: {
@@ -206,32 +209,120 @@ define(function(require, exports, module) {
     SubView.prototype.addOne = function(Model){
         var that = this;
 
-        var userView = new View(),
-            name = Model.get('profile.name') || '&nbsp;none';
+        var invoiceView = new View(),
+            name = Model.get('title') || '&nbsp;none';
 
-        userView.Model = Model;
-        userView.Surface = new Surface({
-             content: template({
-                User: Model.toJSON()
-             }), //'<div><span class="ellipsis-all">' +name+'</span></div>',
-             size: [undefined, 60],
-             classes: ['select-friends-list-item-default']
-        });
-        userView.Surface.pipe(that.contentLayout);
-        userView.Surface.on('click', function(){
-            // App.history.navigate('player/' + Model.get('_id'));
-        });
-        userView.add(userView.Surface);
+        invoiceView.Model = Model;
 
-        this.contentLayout.Views.splice(this.contentLayout.Views.length-1, 0, userView);
+        invoiceView.Layout = new FlexibleLayout({
+            direction: 0, // x, horizontal
+            ratios: [true, 1] // Done, Title, 
+        });
+        invoiceView.Layout.Views = [];
+
+        // Action button (checkbox)
+        invoiceView.Action = new View();
+        invoiceView.Action.getSize = function(){
+            return [60,60];
+        };
+
+        invoiceView.Action.Toggle = new ToggleButton({
+            size: [40, 40],
+            content: '',
+            classes: ['text-center'],
+            onClasses: ['invoice-toggle', 'circle-toggle', 'toggle-on'],
+            offClasses: ['invoice-toggle', 'circle-toggle', 'toggle-off'],
+
+            // NOT for setting the default toggle state of the button
+            toggleMode: ToggleButton.TOGGLE
+        });
+        invoiceView.Action.Toggle.pipe(that.contentLayout);
+
+        // Handle toggle button click
+        invoiceView.Action.Toggle.on('select', function(m){
+            // console.log('select, saving');
+            // if(that.model.get('scheme.' + Info.scheme_key) !== true){
+            //     var data = {};
+            //     data['scheme.' + Info.scheme_key] = true;
+            //     that.model.save(data,{patch: true});
+            // }
+
+            // // Remove this one!
+            // Timer.setTimeout(function(){
+            //     that.collection.remove(Model.get('_id'));
+            // },500);
+
+        });
+        invoiceView.Action.Toggle.on('deselect', function(){
+            // console.log('deselect, saving');
+            // if(that.model.get('scheme.' + Info.scheme_key) !== false){
+            //     var data = {};
+            //     data['scheme.' + Info.scheme_key] = false;
+            //     that.model.save(data,{patch: true});
+            // }
+        });
+        invoiceView.Action.add(invoiceView.Action.Toggle);
+        invoiceView.Layout.Views.push(invoiceView.Action);
+
+        // Surface
+        invoiceView.Surface = new Surface({
+            content: template({
+                Invoice: Model.toJSON()
+            }),
+            size: [undefined, true],
+            classes: ['invoice-list-item-default']
+        });
+        Utils.dataModelReplaceOnSurface(invoiceView.Surface);
+        Model.on('change', function(){
+            invoiceView.Surface.setContent(template({
+                Invoice: Model.toJSON()
+            }));
+            Utils.dataModelReplaceOnSurface(invoiceView.Surface);
+        });
+        invoiceView.getSize = function(){
+            return [undefined, invoiceView.Surface._size ? invoiceView.Surface._size[1] : 100];
+        };
+        invoiceView.Surface.pipe(that.contentLayout);
+        invoiceView.Surface.on('click', function(){
+            Utils.Notification.Toast('View Invoice');
+            App.history.navigate('invoice/' + Model.get('_id'));
+        });
+
+        invoiceView.Layout.Views.push(invoiceView.Surface);
+        invoiceView.Layout.sequenceFrom(invoiceView.Layout.Views);
+
+        invoiceView.add(invoiceView.Layout);
+
+        this.contentLayout.Views.splice(this.contentLayout.Views.length-1, 0, invoiceView);
         this.collection.infiniteResults += 1;
 
     };
 
+    SubView.prototype.removeOne = function(Model){
+        var that = this;
+
+        // find the view
+        var tmpView = _.find(this.contentLayout.Views, function(tmp){
+            return tmp.Model == Model;
+        });
+
+        if(!tmpView){
+            console.error('no tmpView');
+            return;
+        }
+
+        this.contentLayout.Views = _.without(this.contentLayout.Views, tmpView);
+
+        this.updateCollectionStatus();
+
+    };
+
     SubView.prototype.updateCollectionStatus = function() { 
+        var that = this;
+
         console.info('updateCollectionStatus');
 
-        this.collection.totalResults = this.collection.length; // App.Data.User.get('friends').length;
+        this.collection.totalResults = this.collection.length;
 
         // Update amounts left
         var amount_left = this.collection.totalResults - this.collection.infiniteResults;
@@ -255,9 +346,10 @@ define(function(require, exports, module) {
 
         // Resort the contentLayout.Views
         this.contentLayout.Views = _.sortBy(this.contentLayout.Views, function(v){
-            console.log(v.Model.get('profile.name').toLowerCase());
-            return v.Model.get('profile.name').toLowerCase();
+            console.log(v.Model.get('created'));
+            return v.Model.get('created');
         });
+        this.contentLayout.Views.reverse();
 
         // this.contentLayout.Views.push(popped);
 
@@ -265,6 +357,9 @@ define(function(require, exports, module) {
 
         // Re-sequence?
         this.contentLayout.sequenceFrom(this.contentLayout.Views);
+        Timer.setTimeout(function(){
+            that.contentLayout.sequenceFrom(that.contentLayout.Views);
+        },250);
 
         // Show correct infinity buttons (More, All, etc.)
         this.render_infinity_buttons();
@@ -293,7 +388,7 @@ define(function(require, exports, module) {
 
     SubView.prototype.refresh_any_new = function(){
         // Load any newly-created (since we last loaded) models
-        // - todo...
+        // - invoice...
 
         // bascially like next_page, right?
 

@@ -192,6 +192,7 @@ body {
 
 }
 
+
 /* Select Friends for Sentence */
   
 .select-friends-list-item-default {
@@ -272,6 +273,10 @@ body {
 
   border-bottom: 1px dashed #ddd;
 }
+
+
+
+
 
 
 
@@ -375,7 +380,100 @@ body {
 
 
 
+/* Invoice List - invoices */
+
+.invoice-list-item-default {
+  line-height: 44px;
+  background: white;
+
+  padding: 0px 8px;
+}
+
+.invoice-list-item-default > div:nth-child(1) {
+
+  padding-top: 8px;
+
+  font-size: 28px;
+  line-height: 34px;
+  color: #333;
+}
+
+
+.invoice-list-item-default > div:nth-child(2) {
+  font-size: 14px;
+  line-height: 20px;
+  color: #333;
+
+  padding-bottom: 16px;
+}
+
+
+.invoice-toggle {
+  margin-top: 16px;
+  margin-left: 10px;
+  border: 1px solid #ddd;
+}
+
+.invoice-toggle.toggle-on {
+
+  display: inline-block;
+  font-family: "Ionicons";
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  text-rendering: auto;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  line-height: 40px;
+  font-size: 20px;
+  text-align: center;
+  color: black;
+  /*background: red;*/
+  background: #fefefe;
+}
+.invoice-toggle.toggle-on:before {
+  content: "\f353";
+}
+
+.invoice-toggle.toggle-off {
+  background: none;
+}
+
+
+
+
 /* Todo List */
+
+  
+.todo-list-item-default {
+  line-height: 44px;
+  background: white;
+
+  padding: 0px 8px;
+}
+
+.todo-list-item-default > div:nth-child(1) {
+
+  padding-top: 8px;
+
+  font-size: 28px;
+  line-height: 34px;
+  color: #333;
+}
+
+
+.todo-list-item-default > div:nth-child(2) {
+  font-size: 14px;
+  line-height: 20px;
+  color: #333;
+
+  padding-bottom: 16px;
+}
+
 
 .todo-toggle {
   margin-top: 16px;
@@ -452,6 +550,20 @@ body {
 }
 
 .todo-view-assigned-default.assigned {
+  font-weight: bold;
+}
+
+
+.todo-view-owner-default {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.todo-view-owner-default.no_owner {
+  color: #888;
+}
+
+.todo-view-owner-default.has_owner {
   font-weight: bold;
 }
 
@@ -1039,6 +1151,26 @@ body {
 .header-tab-icon-text-big i {
   font-size: 30px;
   line-height: 60px;
+}
+
+
+/* View User */
+
+.view-user-bio-default {
+  padding: 14px;
+}
+
+.view-user-bio-default > div {
+  padding: 8px;
+  border: 1px solid #eee;
+  background: #fefefe;
+}
+
+.view-user-background-check-default {
+  line-height: 80px;
+  text-align: center;
+
+  font-size: 24px;
 }
 
 

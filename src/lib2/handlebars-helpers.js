@@ -318,6 +318,14 @@
     });
 
 
+    Handlebars.registerHelper('Numeral', function(tmpString, formatString) {
+        // return "3:40pm" or similar
+        
+        return numeral(tmpString).format(formatString);
+        
+    });
+
+
     Handlebars.registerHelper('format_date', function(date, formatString) {
         // return "3:40pm" or similar
         

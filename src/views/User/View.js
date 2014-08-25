@@ -43,6 +43,7 @@ define(function(require, exports, module) {
 
     // Models
     var UserModel = require('models/user');
+    var InvoiceModel = require('models/invoice');
     // var GameModel = require('models/game');
 
     // Subviews
@@ -145,12 +146,14 @@ define(function(require, exports, module) {
                     console.error('Not is_me!');
                     // var my_friend_profile_ids = _.pluck(App.Data.Profiles.toJSON(), '_id');
                     
+                    // that.profileMiddle.Layout.show(that.profileMiddle.Connect);
+                    that.profileMiddle.Layout.hide();
 
-                    // if(_.intersection(that.model.get('related_profile_ids'),my_friend_profile_ids).length > 0){
-                    //     that.profileMiddle.Layout.show(that.profileMiddle.Connected);
-                    // } else {
-                        that.profileMiddle.Layout.show(that.profileMiddle.Connect);
-                    // }
+                    // // if(_.intersection(that.model.get('related_profile_ids'),my_friend_profile_ids).length > 0){
+                    // //     that.profileMiddle.Layout.show(that.profileMiddle.Connected);
+                    // // } else {
+                    //     that.profileMiddle.Layout.show(that.profileMiddle.Connect);
+                    // // }
                 }
 
                 // // compare/against
@@ -280,20 +283,22 @@ define(function(require, exports, module) {
                 // this.headerContent.spacer1,
                 // this.headerContent.Search
             ],
-            backContent: false
+            // backContent: false
         }); 
         this.header._eventOutput.on('back',function(){
             App.history.back();
             // App.history.navigate('game/add',{history: false});
         });
         this.header.navBar.title.on('click',function(){
-            // rewrite the event
-            // that.ProfileGameListView.collection.requestNextPage();
-            if(that.is_me){
-                // App.history.navigate('settings');
-            } else {
-                App.history.back();
-            }
+            App.history.back();
+
+            // // rewrite the event
+            // // that.ProfileGameListView.collection.requestNextPage();
+            // if(that.is_me){
+            //     // App.history.navigate('settings');
+            // } else {
+            //     App.history.back();
+            // }
         });
         this.header.pipe(this._eventInput);
 
@@ -316,7 +321,7 @@ define(function(require, exports, module) {
         var that = this;
 
         // create the content
-        this.contentScrollView = new ModifiedScrollView(App.Defaults.ScrollView);
+        this.contentScrollView = new ScrollView(App.Defaults.ScrollView);
         this.contentScrollView.Views = [];
         this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
 
@@ -432,7 +437,7 @@ define(function(require, exports, module) {
 
             }
         });
-        this.profileTop.ProfileImage.pipe(this.contentScrollView);
+        this.profileTop.ProfileImage.Surface.pipe(this.contentScrollView);
         this.profileTop.Views.push(this.profileTop.ProfileImage);
 
         // Spacer
@@ -461,6 +466,7 @@ define(function(require, exports, module) {
                 textAlign: "center"
             }
         });
+        this.profileTop.ProfileName.Surface.pipe(this.contentScrollView);
         this.profileTop.ProfileName.getSize = function(){
             return [undefined, 50];
         };
@@ -472,12 +478,96 @@ define(function(require, exports, module) {
 
         this.contentScrollView.Views.push(this.profileTop);
 
+        // meta options
+        // - background_check
+        // - recommended (by the viewing user)
+        this.profileMeta = new View();
 
+        this.profileMeta.Layout = new RenderController();
+        this.profileMeta.Layout.getSize = function(){
+            if(this._showing == -1){
+                return [undefined, 1]; // 0 causes error
+            }
+            try {
+                var s = this._renderables[this._showing].getSize(true);
+                if(s){
+                    this.lastSize = [undefined, s[1]];
+                    return [undefined, s[1]];
+                }
+            }catch(err){}
+            // Last Size?
+            if(this.lastSize){
+                return this.lastSize;
+            }
+            return [undefined, true];
+        };
+
+        // BackgroundCheck
+        this.profileMeta.BackgroundCheck = new View();
+        this.profileMeta.BackgroundCheck.StateModifier = new StateModifier({
+            // origin: [0.5, 0]
+        });
+        this.profileMeta.BackgroundCheck.Surface = new Surface({
+            content: '<i class="icon ion-android-star"></i> Background Checked',
+            size: [undefined, 80],
+            classes: ['view-user-background-check-default']
+        });
+        this.profileMeta.BackgroundCheck.Surface.pipe(this.contentScrollView);
+        this.profileMeta.BackgroundCheck.getSize = function(){
+            return [undefined, 80];
+        };
+
+        this.profileMeta.BackgroundCheck.add(this.profileMeta.BackgroundCheck.StateModifier).add(this.profileMeta.BackgroundCheck.Surface);
+        // this.profileMeta.Views.push(this.profileMeta.BackgroundCheck);
+
+        this.contentScrollView.Views.push(this.profileMeta.Layout);
+
+
+        // Profile Bio
+        this.profileBio = new View();
+        this.profileBio.StateModifier = new StateModifier({
+            // origin: [0.5, 0]
+        });
+        this.profileBio.Surface = new Surface({
+            content: '',
+            size: [undefined, true],
+            // size: [undefined,80],
+            classes: ['view-user-bio-default'],
+        });
+        this.profileBio.Surface.pipe(this.contentScrollView);
+        this.profileBio.getSize = function(){
+            return [undefined, that.profileBio.Surface._size ? that.profileBio.Surface._size[1] : undefined];
+        };
+
+        this.profileBio.add(this.profileBio.StateModifier).add(this.profileBio.Surface);
+        // this.profileTop.Views.push(this.profileBio);
+
+
+        this.contentScrollView.Views.push(this.profileBio);
+
+
+
+        // Middle RenderController
+        // - Connect with the person (or are connected already)
         this.profileMiddle = new View();
-
-        // Edit Your Profile
-        // Connect with the person (or are connected already)
         this.profileMiddle.Layout = new RenderController();
+        this.profileMiddle.Layout.getSize = function(){
+            if(this._showing == -1){
+                return [undefined, 1]; // 0 causes error
+            }
+            try {
+                var s = this._renderables[this._showing].getSize(true);
+                if(s){
+                    this.lastSize = [undefined, s[1]];
+                    return [undefined, s[1]];
+                }
+            }catch(err){}
+            // Last Size?
+            if(this.lastSize){
+                return this.lastSize;
+            }
+            return [undefined, true];
+        };
 
         // - Edit Your Profile
         this.profileMiddle.EditProfile = new View();
@@ -485,10 +575,11 @@ define(function(require, exports, module) {
             // origin: [0, 0]
         });
         this.profileMiddle.EditProfile.Surface = new Surface({
-            size: [undefined, 32],
+            size: [undefined, 60],
             content: '<div class="outward-button">Edit Your Profile</div>',
             classes: ['button-outwards-default']
         });
+        this.profileMiddle.EditProfile.Surface.pipe(this.contentScrollView);
         this.profileMiddle.EditProfile.Surface.on('click', function(){
             App.history.navigate('profile/edit');
         });
@@ -497,33 +588,35 @@ define(function(require, exports, module) {
         // - Connect with the person
         this.profileMiddle.Connect = new View();
         this.profileMiddle.Connect.Surface = new Surface({
-            size: [undefined, 32],
+            size: [undefined, 60],
             content: "Not you!",
             properties: {
                 textAlign: 'center',
-                lineHeight: '32px',
+                lineHeight: '60px',
                 fontSize: '14px',
                 color: "#555",
                 backgroundColor: "#f9f9f9",
                 borderRadius: "3px"
             }
         });
+        this.profileMiddle.Connect.Surface.pipe(this.contentScrollView);
         this.profileMiddle.Connect.add(this.profileMiddle.Connect.Surface);
 
         // - Connected with the person
         this.profileMiddle.Connected = new View();
         this.profileMiddle.Connected.Surface = new Surface({
-            size: [undefined, 32],
-            content: "You are Nemeses!",
+            size: [undefined, 60],
+            content: "You are Connected!",
             properties: {
                 textAlign: 'center',
-                lineHeight: '32px',
+                lineHeight: '60px',
                 fontSize: '14px',
                 color: "white",
                 backgroundColor: "#E87B0C",
                 borderRadius: "3px"
             }
         });
+        this.profileMiddle.Connected.Surface.pipe(this.contentScrollView);
         this.profileMiddle.Connected.add(this.profileMiddle.Connected.Surface);
 
         // this.profileMiddle.Layout will .show() the correct one, after the model is loaded
@@ -533,10 +626,79 @@ define(function(require, exports, module) {
         this.contentScrollView.Views.push(this.profileMiddle.Layout);
 
 
-        this.ContentStateModifier = new StateModifier();
+        // Send Invoice
+        this.profileInvoice = new View();
+        this.profileInvoice.Layout = new RenderController();
+        this.profileInvoice.Layout.getSize = function(){
+            if(this._showing == -1){
+                return [undefined, 1]; // 0 causes error
+            }
+            try {
+                var s = this._renderables[this._showing].getSize(true);
+                if(s){
+                    this.lastSize = [undefined, s[1]];
+                    return [undefined, s[1]];
+                }
+            }catch(err){}
+            // Last Size?
+            if(this.lastSize){
+                return this.lastSize;
+            }
+            return [undefined, true];
+        };
+
+        // - Send an Invoice
+        this.profileInvoice.SendInvoice = new View();
+        this.profileInvoice.SendInvoice.StateModifier = new StateModifier({
+            // origin: [0, 0]
+        });
+        this.profileInvoice.SendInvoice.Surface = new Surface({
+            content: '<div class="outward-button"><i class="icon ion-card"></i> Send Invoice</div>',
+            size: [undefined, 60],
+            classes: ['button-outwards-default']
+        });
+        this.profileInvoice.SendInvoice.Surface.pipe(this.contentScrollView);
+        this.profileInvoice.SendInvoice.Surface.on('click', function(){
+            // App.history.navigate('profile/edit');
+
+            Timer.setTimeout(function(){
+
+                var a = prompt('Amount');
+                if(!a){
+                    return;
+                }
+                var p = prompt('Details');
+                if(p && p.trim() != ''){
+
+                    Utils.Notification.Toast('Create a new Invoice!');
+
+                    var newModel = new InvoiceModel.Invoice({
+                        friend_id: that.model.get('_id'),
+                        amount: a,
+                        details: p
+                    });
+
+                    newModel.save()
+                    .then(function(){
+                        // that.AllView.collection.fetch();
+                    });
+
+                }
+
+            },200);
+
+        });
+        this.profileInvoice.SendInvoice.add(this.profileInvoice.SendInvoice.StateModifier).add(this.profileInvoice.SendInvoice.Surface);
+
+        this.contentScrollView.Views.push(this.profileInvoice.Layout);
+
+
 
         // Content Lightbox
         // - waiting for the user to load a bit
+
+        this.ContentStateModifier = new StateModifier();
+
         this.contentLightbox = new RenderController();
         this.loadingUser = new View();
         this.loadingUser.StateModifier = new StateModifier({
@@ -644,7 +806,14 @@ define(function(require, exports, module) {
 
             // name
             if(that.model.get('profile.name')){
-                this.profileTop.ProfileName.Surface.setContent('<span class="ellipsis-all">' + that.model.get('profile.name') + '</span>');
+                this.profileTop.ProfileName.Surface.setContent('<span class="ellipsis-all">' + S(that.model.get('profile.name')) + '</span>');
+            }
+
+            // bio
+            if(that.model.get('profile.bio')){
+                this.profileBio.Surface.setContent('<div>' + S(that.model.get('profile.bio')) + '</div>');
+            } else {
+                this.profileBio.Surface.setContent('<div>&nbsp;</div>');
             }
 
             // Profile Photo
@@ -654,17 +823,33 @@ define(function(require, exports, module) {
                 that.profileTop.ProfileImage.Surface.setContent('img/generic-profile.png');
             }
 
-            // username (header)
-            if(that.model.get('username') !== false){
-                // this.profileLeft.ProfileName.setContent(that.model.get('Profile.name'));
-                that.header.navBar.title.setContent(that.model.get('username') ? that.model.get('username') : '');
+            // Background Check
+            if(that.model.get('profile.background_check')){
+                this.profileMeta.Layout.show(this.profileMeta.BackgroundCheck);
             } else {
-                // not me
-                // - no email set
-                // - not showing any name for them
-                that.header.navBar.title.setContent('');
-                // that.header.navBar.title.setContent(that.model.get('Profile.email') ? that.model.get('email').split('@')[0].split('+')[0] : '');
+                this.profileMeta.Layout.hide();
             }
+
+            // Send Invoice
+            // - must be connected
+            if(that.is_me !== true){
+                console.log(App.Data.UserFriends.toJSON());
+                this.profileInvoice.Layout.show(this.profileInvoice.SendInvoice);
+            } else {
+                this.profileInvoice.Layout.hide();
+            }
+
+            // // username (header)
+            // if(that.model.get('username') !== false){
+            //     // this.profileLeft.ProfileName.setContent(that.model.get('Profile.name'));
+            //     that.header.navBar.title.setContent(that.model.get('username') ? that.model.get('username') : '');
+            // } else {
+            //     // not me
+            //     // - no email set
+            //     // - not showing any name for them
+            //     that.header.navBar.title.setContent('');
+            //     // that.header.navBar.title.setContent(that.model.get('Profile.email') ? that.model.get('email').split('@')[0].split('+')[0] : '');
+            // }
 
             // back button and "settings" link
             if(that.is_me === true){

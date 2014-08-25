@@ -270,7 +270,7 @@ define(function(require, exports, module) {
                 Todo: Model.toJSON()
             }),
             size: [undefined, true],
-            classes: ['select-friends-list-item-default']
+            classes: ['todo-list-item-default']
         });
         Utils.dataModelReplaceOnSurface(todoView.Surface);
         Model.on('change', function(){

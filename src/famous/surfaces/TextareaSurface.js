@@ -98,8 +98,11 @@ define(function(require, exports, module) {
      * @return {string} value of element
      */
     TextareaSurface.prototype.getValue = function getValue() {
-        if (this._currTarget) {
-            return this._currTarget.value;
+        if (this._currentTarget) {
+            return this._currentTarget.value;
+        }
+        else if(this._currTarget){
+            return this._currTarget.value;   
         }
         else {
             return this._value;

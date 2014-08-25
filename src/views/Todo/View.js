@@ -230,7 +230,7 @@ define(function(require, exports, module) {
 
         // Assign/delegate to someone
         this.todoDetails.AssignedSurface = new Surface({
-            content: 'some content',
+            content: '',
             size: [undefined, true],
             classes: ['todo-view-assigned-default']
         });
@@ -239,7 +239,7 @@ define(function(require, exports, module) {
             if(that.model.get('assigned_id')){
                 // already assigned!
                 // - visit that person
-                App.history.navigate('user/' + Model.get('assigned_id'));
+                App.history.navigate('user/' + that.model.get('assigned_id._id'));
                 return;
             }
 
@@ -247,23 +247,34 @@ define(function(require, exports, module) {
                 tag: 'StartAssign'
             });
             App.history.navigate('todo/assign/' + that.model.get('_id'));
-
-            return;
-
-            // Not assigned to anyone, lets go assign/delegate to someone!
-            // App.history.navigate('todo/assign/' + Model.get('_id'));
-            that.model.save({
-                assigned_id: '53fa41f9f7b40e040000a4bb'
-            },{
-                patch: true,
-                success: function(){
-                    console.log('Success');
-                    that.model.fetch();
-                }
-            })
-
         });
         this.todoDetails.Views.push(this.todoDetails.AssignedSurface);
+
+        // owner
+        this.todoDetails.OwnerSurface = new Surface({
+            content: '',
+            size: [undefined, true],
+            classes: ['todo-view-owner-default'],
+            properties: {
+                borderBottom: "1px solid #ddd;"
+            }
+        });
+        this.todoDetails.OwnerSurface.on('click', function(){
+            // Redo assignment
+            if(that.model.get('owner_id') && that.model.get('owner_id._id') != App.Data.User.get('_id')){
+                // already changed owner!
+                // - visit that person
+                App.history.navigate('user/' + that.model.get('owner_id._id'));
+                return;
+            }
+
+            App.history.modifyLast({
+                tag: 'StartOwner'
+            });
+            App.history.navigate('todo/owner/' + that.model.get('_id'));
+        });
+        this.todoDetails.Views.push(this.todoDetails.OwnerSurface);
+
 
         this.todoDetails.sequenceFrom(this.todoDetails.Views);
 
@@ -372,12 +383,24 @@ define(function(require, exports, module) {
             // assigned
             if(that.model.get('assigned_id')){
                 // assigned to someone
-                this.todoDetails.AssignedSurface.setContent(that.model.get('assigned_id.profile.name') || '');
+                this.todoDetails.AssignedSurface.setContent('assigned: ' + that.model.get('assigned_id.profile.name') || '');
                 this.todoDetails.AssignedSurface.setClasses(['todo-view-assigned-default','assigned']);
             } else {
                 // Not assigned
-                this.todoDetails.AssignedSurface.setContent('undelegated');
+                this.todoDetails.AssignedSurface.setContent('not assigned');
                 this.todoDetails.AssignedSurface.setClasses(['todo-view-assigned-default','notassigned']);
+            }
+
+            // owner
+            if(that.model.get('owner_id')){
+                // assigned to someone
+                this.todoDetails.OwnerSurface.setContent('owner: ' + that.model.get('owner_id.profile.name') || '');
+                this.todoDetails.OwnerSurface.setClasses(['todo-view-owner-default','has_owner']);
+            } else {
+                // No owner at the moment
+                this.todoDetails.OwnerSurface.setContent('');
+                this.todoDetails.OwnerSurface.setClasses(['todo-view-owner-default','no_owner']);
+                this.todoDetails.OwnerSurface.setSize([undefined,1]);
             }
 
             return;
