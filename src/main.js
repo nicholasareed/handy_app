@@ -401,7 +401,7 @@ define(function(require, exports, module) {
                     offClasses: ['footer-tabbar-default', 'off']
                 });
                 tmpTabs.defineSection('messages', {
-                    content: '<i class="icon ion-android-inbox"></i><div><span class="ellipsis-all">'+App.t('footer.messages')+'</span></div>',
+                    content: '<i class="icon ion-android-inbox"></i><div><span class="ellipsis-all">Msgs</span></div>',
                     onClasses: ['footer-tabbar-default', 'on'],
                     offClasses: ['footer-tabbar-default', 'off']
                 });

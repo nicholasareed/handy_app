@@ -613,6 +613,25 @@ body {
   padding: 8px 10px;
 }
 
+.todo-view-tags-default {
+  /*background: blue;*/
+
+  border-bottom: 1px solid #ddd;
+}
+
+.todo-view-tags-default > div {
+  padding: 8px;
+}
+
+.todo-view-tags-default span.label {
+  display: inline-block;
+  padding: 2px 4px;
+  background: red;
+
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+}
+
 .todo-view-todocontent-add-button-default {
   padding: 8px;
   background: rgba(255,255,255,0.5);
@@ -651,11 +670,11 @@ body {
 
 .todo-view-owner-default {
   padding: 8px;
-  
+
   font-size: 18px;
   line-height: 24px;
 
-  border-bottom: 1px solid #ddd;
+  /*border-bottom: 1px solid #ddd;*/
 }
 
 .todo-view-owner-default.no_owner {
@@ -1238,8 +1257,12 @@ body {
   line-height: 30px;
 }
 
+.header-tab-icon-text.marked-complete {
+  color: green;
+}
+
 .header-tab-icon-text i {
-  font-size: 20px;
+  font-size: 36px;
   line-height: 24px;
 }
 
@@ -1469,6 +1492,10 @@ body {
   line-height: 20px;
   padding: 10px;
   border-bottom: 1px dashed #ddd;
+}
+
+.action-news-item-default span.type {
+  opacity: 0.7;
 }
 
 .action-news-item-default span[data-replace-model="Player"] {

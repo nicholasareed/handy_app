@@ -252,30 +252,49 @@ define(function(require, exports, module) {
         // - news about the people I'm following
         // - never see "news about a certain person" (from that kind of perspective)
         var content = '',
-            classes = [];
+            classes = [],
+            link = false;
         switch(Action.get('type')){
             case 'joined':
-                // Joined Nemesis (testing)
+                // Joined (testing)
                 content = 'You joined!';
                 classes = ['action-news-item-default'];
                 break;
             case 'new_friend':
-                // Connected with a new Nemesis
-                content = '<span data-replace-id="'+ Action.get('details.nemesis_player_id') +'" data-replace-model="Player" data-replace-field="Profile.name">&nbsp;</span> is your new Nemesis!',
+                // Connected with a new person
+                content = '<span data-replace-id="'+ Action.get('details.friend_id') +'" data-replace-model="Player" data-replace-field="Profile.name">&nbsp;</span> is your new Friend!',
                 classes = ['action-news-item-default'];
+                link = 'user/' + Action.get('details.friend_id');
                 break;
-            case 'todo_updated':
-                content = '<span data-replace-id="'+ Action.get('todo_id') +'" data-replace-model="Todo" data-replace-field="title">&nbsp;</span> was updated',
-                classes = ['action-news-item-default'];
-                break;
+
+
             case 'todo_assigned':
                 // assigned to me?
-                content = '<span data-replace-id="'+ Action.get('todo_id') +'" data-replace-model="Todo" data-replace-field="title">&nbsp;</span> was assigned',
+                content = '<span class="type">todo</span> <span data-replace-id="'+ Action.get('todo_id') +'" data-replace-model="Todo" data-replace-field="title">&nbsp;</span> was assigned',
                 classes = ['action-news-item-default'];
+                link = 'todo/' + Action.get('todo_id');
+                break;
+            case 'todo_owner':
+                // assigned to me?
+                content = '<span class="type">todo</span> <span data-replace-id="'+ Action.get('todo_id') +'" data-replace-model="Todo" data-replace-field="title">&nbsp;</span> owner changed',
+                classes = ['action-news-item-default'];
+                link = 'todo/' + Action.get('todo_id');
+                break;
+            case 'todo_complete':
+                // completed
+                content = '<span class="type">todo</span> <span data-replace-id="'+ Action.get('todo_id') +'" data-replace-model="Todo" data-replace-field="title">&nbsp;</span> was completed',
+                classes = ['action-news-item-default'];
+                link = 'todo/' + Action.get('todo_id');
                 break;
             case 'todo_new_media':
-                content = '<span data-replace-id="'+ Action.get('todo_id') +'" data-replace-model="Todo" data-replace-field="title">&nbsp;</span> has new Media',
+                content = '<span class="type">todo</span> <span data-replace-id="'+ Action.get('todo_id') +'" data-replace-model="Todo" data-replace-field="title">&nbsp;</span> has new Media',
                 classes = ['action-news-item-default'];
+                link = 'todo/' + Action.get('todo_id');
+                break;
+            case 'todo_new_text':
+                content = '<span class="type">todo</span> <span data-replace-id="'+ Action.get('todo_id') +'" data-replace-model="Todo" data-replace-field="title">&nbsp;</span> has new text',
+                classes = ['action-news-item-default'];
+                link = 'todo/' + Action.get('todo_id');
                 break;
             default:
                 console.error('not a recognized action');
@@ -289,81 +308,16 @@ define(function(require, exports, module) {
         var tmpView = new View();
         // tmpView.StateModifier = new StateModifier();
         tmpView.Surface = new Surface({
-            size: [undefined, 40],
+            size: [undefined, true],
             content: content,
-            classes: classes,
-            properties: {
-                // color: "white",
-                // backgroundColor: "hsl(" + ((NotificationIndex + 21) * 360 / 40) + ", 100%, 50%)",
-                // // backgroundColor: "red",
-                // borderBottom: "1px solid #eee",
-                // // backgroundColor: "white",
-                // // overflow: "hidden"
+            classes: classes
+        });
+        tmpView.Surface.on('click', function(){
+            if(link != false){
+                App.history.navigate(link);
             }
         });
         Utils.dataModelReplaceOnSurface(tmpView.Surface);
-
-        // Game.on('change', function(){
-
-        //     var certified = getCertified();
-        //     var content = '',
-        //         classes = [];
-
-        //     switch(certified){
-        //         case null:
-        //             content = Game.get('sport_id.name') + ': Tap to certify game';
-        //             classes = ['certify-game-default', 'certify-game-null'];
-        //             break;
-        //         case true:
-        //             content = Game.get('sport_id.name') + ': Game is certified!';
-        //             classes = ['certify-game-default', 'certify-game-ok'];
-        //             break;
-        //         case false:
-        //             content = Game.get('sport_id.name') + ': you disputed the result of this game!';
-        //             classes = ['certify-game-default', 'certify-game-disputed'];
-        //             break;
-        //         case undefined:
-        //         default:
-        //             console.error('not certified at all');
-        //             console.log(certified);
-        //             return;
-        //     }
-
-        //     tmpView.Surface.setContent(content);
-        //     tmpView.Surface.setClasses(classes);
-
-        // });
-        // tmpView.Surface.on('click', function(){
-        //     // Make ajax request to change status
-
-        //     var certified = getCertified();
-        //     var content = '',
-        //         classes = [];
-
-        //     switch(certified){
-        //         case null:
-        //             // Certify! (or dispute)
-        //             // todo...
-        //             break;
-        //         case true:
-        //             content = Game.get('sport_id.name') + ': Game is certified!';
-        //             classes = ['certify-game-default', 'certify-game-ok'];
-        //             break;
-        //         case false:
-        //             content = Game.get('sport_id.name') + ': you disputed the result of this game!';
-        //             classes = ['certify-game-default', 'certify-game-disputed'];
-        //             break;
-        //         case undefined:
-        //         default:
-        //             console.error('not certified at all');
-        //             console.log(certified);
-        //             return;
-        //     }
-
-        //     tmpView.Surface.setContent(content);
-        //     tmpView.Surface.setClasses(classes);
-
-        // });
 
         tmpView.add(tmpView.Surface);
         tmpView.Model = Action;

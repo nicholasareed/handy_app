@@ -144,13 +144,62 @@ define(function(require, exports, module) {
     PageView.prototype.createHeader = function(){
         var that = this;
         
+        // Icons
+
+        // -- settings/message (lightbox)
+        this.headerContent = new View();
+        this.headerContent.Lightbox = new RenderController();
+        this.headerContent.SizeMod = new StateModifier({
+            size: [80, 60]
+        });
+        this.headerContent.add(this.headerContent.SizeMod).add(this.headerContent.Lightbox);
+        // settings
+        this.headerContent.MarkComplete = new Surface({
+            content: '<i class="icon ion-ios7-checkmark-outline"></i><div>Not Done</div>',
+            size: [80, undefined],
+            classes: ['header-tab-icon-text']
+        });
+        this.headerContent.MarkComplete.on('click', function(){
+            // App.history.navigate('settings');
+
+            var data = {};
+            if(that.model.get('tags').indexOf('complete') === -1){
+                data = {
+                    add_tags: ['complete']
+                }
+            } else {
+                data = {
+                    remove_tags: ['complete']
+                };
+            }
+
+            that.model.save(data,{
+                patch: true,
+                // success: function(){
+                //     that.model.fetch();    
+                // }
+            }).then(function(){
+                // that.model.set({
+                //     assigned_id: App.Data.User.toJSON()
+                // });
+                that.model.fetch();
+                // App.history.backTo('StartAssign');
+            });
+
+        });
+
+
+
         // create the header
         this.header = new StandardHeader({
             content: " ",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             moreClasses: ["normal-header"],
-            moreContent: false // '<span class="icon ion-refresh"></span>'
+            moreSurfaces: [
+                this.headerContent
+            ]
+            // moreContent: false // '<span class="icon ion-refresh"></span>'
         }); 
         this.header._eventOutput.on('back',function(){
             App.history.back();
@@ -297,6 +346,27 @@ define(function(require, exports, module) {
         this.todoDetails.Views.push(this.todoDetails.Owner.Surface);
 
 
+        // // Tags
+        // this.todoDetails.Tags = new View();
+        // this.todoDetails.Tags.Surface = new Surface({
+        //     content: 'no tags',
+        //     size: [window.innerWidth, true],
+        //     classes: ['todo-view-tags-default']
+        // });
+        // this.todoDetails.Tags.Surface.on('click', function(){
+        //     Utils.Popover.Buttons({
+        //         title: 'Add/Remove Tags',
+        //         buttons: [{
+        //             text: 'Add Tag'
+        //         }]
+        //     });
+        // });
+        // // Utils.bindSize(emitter, this.todoDetails.Title, this.todoDetails.Title.Surface);
+        // this.todoDetails.Tags.add(this.todoDetails.Tags.Surface);
+        // this.todoDetails.Views.push(this.todoDetails.Tags.Surface);
+
+
+
         this.todoDetails.getSize = function(){
             var tmpH = 1;
             that.todoDetails.Views.forEach(function(tmp){
@@ -435,6 +505,35 @@ define(function(require, exports, module) {
 
             // title
             this.todoDetails.Title.Surface.setContent(that.model.get('title'));
+
+            console.info('update_content');
+            console.log(that.model.get('tags'));
+
+            // "complete" tag
+            this.headerContent.Lightbox.show(this.headerContent.MarkComplete);
+            if(that.model.get('tags') && that.model.get('tags').indexOf('complete') !== -1){
+                // complete
+                this.headerContent.MarkComplete.setContent('<i class="icon ion-ios7-checkmark"></i><div>Complete</div>');
+                this.headerContent.MarkComplete.setClasses(['header-tab-icon-text','marked-complete']);
+            } else {
+                // Not complete
+                this.headerContent.MarkComplete.setContent('<i class="icon ion-ios7-checkmark-outline"></i><div>Not Done</div>');
+                this.headerContent.MarkComplete.setClasses(['header-tab-icon-text']);
+            }
+
+            // // tags
+            // var tagContent = '';
+            // if(that.model.get('tags') && that.model.get('tags').length > 0){
+            //     tagContent += '<div>';
+            //     that.model.get('tags').forEach(function(tmpTag){
+            //         tagContent += '<span class="label">'+S(tmpTag)+'</span>';
+            //     });
+            // } else {
+            //     tagContent += '<div>';
+            //         tagContent += 'no tags';
+            //     tagContent += '</div>';
+            // }
+            // this.todoDetails.Tags.Surface.setContent(tagContent);
 
             // assigned
             if(that.model.get('assigned_id')){

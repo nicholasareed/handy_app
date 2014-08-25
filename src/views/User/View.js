@@ -195,7 +195,7 @@ define(function(require, exports, module) {
         this.headerContent = new View();
         this.headerContent.Lightbox = new RenderController();
         this.headerContent.SizeMod = new StateModifier({
-            size: [60, 50]
+            size: [60, 60]
         });
         this.headerContent.add(this.headerContent.SizeMod).add(this.headerContent.Lightbox);
         // settings
