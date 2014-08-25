@@ -229,13 +229,14 @@ define(function(require, exports, module) {
             that.model.save({
                 owner_id: Model.get('_id')
             },{
-                patch: true,
-                success: function(){
-                    console.log('Success');
-                    that.model.fetch();
-                    App.history.backTo('StartOwner');
-                }
-            })
+                patch: true
+            }).then(function(){
+                that.model.set({
+                    owner_id: Model.toJSON()
+                });
+                that.model.fetch();
+                App.history.backTo('StartOwner');
+            });
 
             // App.history.navigate('user/' + Model.get('_id'));
         });

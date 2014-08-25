@@ -104,15 +104,30 @@ define(function(require, exports, module) {
             App.history.navigate('friend/add');
         });
 
-        // // Find Friends
-        // this.headerContent.PotentialFriends = new Surface({
-        //     content: '<i class="icon ion-earth"></i>',
-        //     size: [App.Defaults.Header.Icon.w, undefined],
-        //     classes: ['header-tab-icon-text-big']
-        // });
-        // this.headerContent.PotentialFriends.on('click', function(){
-        //     App.history.navigate('friend/potential');
-        // });
+        // Use Myself
+        this.headerContent.UseMe = new Surface({
+            content: '<i class="icon ion-person"></i>',
+            size: [App.Defaults.Header.Icon.w, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.UseMe.on('click', function(){
+            // App.history.navigate('friend/potential');
+
+            // Not assigned to anyone, lets go assign/delegate to someone!
+            // App.history.navigate('todo/assign/' + Model.get('_id'));
+            that.model.save({
+                assigned_id: App.Data.User.get('_id')
+            },{
+                patch: true
+            }).then(function(){
+                that.model.set({
+                    assigned_id: App.Data.User.toJSON()
+                });
+                that.model.fetch();
+                App.history.backTo('StartAssign');
+            });
+
+        });
 
 
         // create the header
@@ -124,7 +139,7 @@ define(function(require, exports, module) {
             // backContent: false,
             // moreClasses: ["normal-header"],
             moreSurfaces: [
-                // this.headerContent.PotentialFriends,
+                this.headerContent.UseMe,
                 this.headerContent.Invite
             ]
             // moreContent: "New", //'<span class="icon ion-navicon-round"></span>'

@@ -229,13 +229,14 @@ define(function(require, exports, module) {
             that.model.save({
                 assigned_id: Model.get('_id')
             },{
-                patch: true,
-                success: function(){
-                    console.log('Success');
-                    that.model.fetch();
-                    App.history.backTo('StartAssign');
-                }
-            })
+                patch: true
+            }).then(function(){
+                that.model.set({
+                    assigned_id: Model.toJSON()
+                });
+                that.model.fetch();
+                App.history.backTo('StartAssign');
+            });
 
             // App.history.navigate('user/' + Model.get('_id'));
         });

@@ -235,13 +235,13 @@ define(function(require, exports, module) {
             classes: ['todo-view-assigned-default']
         });
         this.todoDetails.AssignedSurface.on('click', function(){
-            // Redo assignment
-            if(that.model.get('assigned_id')){
-                // already assigned!
-                // - visit that person
-                App.history.navigate('user/' + that.model.get('assigned_id._id'));
-                return;
-            }
+            // // Redo assignment
+            // if(that.model.get('assigned_id')){
+            //     // already assigned!
+            //     // - visit that person
+            //     App.history.navigate('user/' + that.model.get('assigned_id._id'));
+            //     return;
+            // }
 
             App.history.modifyLast({
                 tag: 'StartAssign'
@@ -260,13 +260,13 @@ define(function(require, exports, module) {
             }
         });
         this.todoDetails.OwnerSurface.on('click', function(){
-            // Redo assignment
-            if(that.model.get('owner_id') && that.model.get('owner_id._id') != App.Data.User.get('_id')){
-                // already changed owner!
-                // - visit that person
-                App.history.navigate('user/' + that.model.get('owner_id._id'));
-                return;
-            }
+            // // Redo owner
+            // if(that.model.get('owner_id') && that.model.get('owner_id._id') != App.Data.User.get('_id')){
+            //     // already changed owner!
+            //     // - visit that person
+            //     App.history.navigate('user/' + that.model.get('owner_id._id'));
+            //     return;
+            // }
 
             App.history.modifyLast({
                 tag: 'StartOwner'
@@ -383,7 +383,7 @@ define(function(require, exports, module) {
             // assigned
             if(that.model.get('assigned_id')){
                 // assigned to someone
-                this.todoDetails.AssignedSurface.setContent('assigned: ' + that.model.get('assigned_id.profile.name') || '');
+                this.todoDetails.AssignedSurface.setContent('assigned: ' + that.model.get('assigned_id.profile.name'));
                 this.todoDetails.AssignedSurface.setClasses(['todo-view-assigned-default','assigned']);
             } else {
                 // Not assigned
@@ -394,7 +394,12 @@ define(function(require, exports, module) {
             // owner
             if(that.model.get('owner_id')){
                 // assigned to someone
-                this.todoDetails.OwnerSurface.setContent('owner: ' + that.model.get('owner_id.profile.name') || '');
+                if(that.model.get('owner_id.profile')){
+                    this.todoDetails.OwnerSurface.setContent('owner: ' + that.model.get('owner_id.profile.name'));
+                } else {
+                    this.todoDetails.OwnerSurface.setContent('owner: <span data-replace-id="' + that.model.get('owner_id') + '" data-replace-model="Profile" data-replace-target="profile.name"/>&nbsp;</span>');
+                    Utils.dataModelReplaceOnSurface(this.todoDetails.OwnerSurface);
+                }
                 this.todoDetails.OwnerSurface.setClasses(['todo-view-owner-default','has_owner']);
             } else {
                 // No owner at the moment
