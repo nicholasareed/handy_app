@@ -358,6 +358,9 @@ define(function(require, exports, module) {
             content: content,
             classes: classes
         });
+        tmpView.getSize = function(){
+            return [undefined, tmpView.Surface._trueSize ? tmpView.Surface._trueSize[1] : undefined];
+        };
         tmpView.Surface.on('click', function(){
             if(link != false){
                 App.history.navigate(link);
