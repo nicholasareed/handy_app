@@ -31,7 +31,11 @@ define(function(require, exports, module) {
 
             // Todos
             App.Data.TodoCollection = new TodoModel.TodoCollection([],{
-                // type: 'friend'
+                '$filter' : {
+                    tags: {
+                        '$ne' : 'complete'
+                    }
+                }
             });
             App.Data.TodoCollection.on('sync', function(){
                 App.Views.MainFooter.Tabs.buttons[0].setOptions({
