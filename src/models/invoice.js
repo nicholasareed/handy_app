@@ -70,18 +70,7 @@ define(function (require) {
               },
 
               // the query field in the request
-              '$filter': function(){
-                var f = {};
-                // if(this.sport_id !== 'all'){
-                //   f.sport_id = this.sport_id;
-                // }
-                if(this.timeframe !== 'all'){
-                  f.created = {
-                      '$gte' : this.timeframe
-                    }
-                }
-                return JSON.stringify(f);
-              },
+              '$filter': '',
 
               // number of items to return per request/page
               '$top': function() { return this.perPage },
@@ -125,6 +114,11 @@ define(function (require) {
                   this.type = options.type;
                 }
 
+                if(options['$filter']){
+                  this.server_api['$filter'] = JSON.stringify(options['$filter']);
+                }
+
+                
                 if(options.project_filter){
                   this.project_filter = options.project_filter;
                 }
