@@ -89,7 +89,11 @@ define(function(require, exports, module) {
         //     options['$filter'] = this.options.filter;
         // }
         this.collection = new TodoModel.TodoCollection([],{
-            // type: 'friend'
+            '$filter' : {
+                tags: {
+                    '$ne' : 'complete'
+                }
+            }
         });
         this.collection.on("sync", that.updateCollectionStatus.bind(this), this);
         this.collection.on("add", this.addOne, this);

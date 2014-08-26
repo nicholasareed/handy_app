@@ -62,6 +62,7 @@ define(function (require) {
             },
 
             // Paginator Server API
+            tags: [],
             timeframe: 'all', // top, local
             server_api: {
 
@@ -70,18 +71,7 @@ define(function (require) {
               },
 
               // the query field in the request
-              '$filter': function(){
-                var f = {};
-                // if(this.sport_id !== 'all'){
-                //   f.sport_id = this.sport_id;
-                // }
-                if(this.timeframe !== 'all'){
-                  f.created = {
-                      '$gte' : this.timeframe
-                    }
-                }
-                return JSON.stringify(f);
-              },
+              '$filter': '',
 
               // number of items to return per request/page
               '$top': function() { return this.perPage },
@@ -129,6 +119,9 @@ define(function (require) {
                   this.project_filter = options.project_filter;
                 }
 
+                if(options['$filter']){
+                  this.server_api['$filter'] = JSON.stringify(options['$filter']);
+                }
                 if(options.timeframe){
                   this.timeframe = options.timeframe;
                 }
