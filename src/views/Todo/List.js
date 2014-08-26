@@ -115,7 +115,7 @@ define(function(require, exports, module) {
 
                     newModel.save()
                     .then(function(){
-                        // that.AllView.collection.fetch();
+                        that.ListContent.Todos.collection.fetch();
                     });
 
                 }
