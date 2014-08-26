@@ -143,13 +143,61 @@ define(function(require, exports, module) {
     PageView.prototype.createHeader = function(){
         var that = this;
         
+        // Icons
+
+        // -- settings/message (lightbox)
+        this.headerContent = new View();
+        this.headerContent.Lightbox = new RenderController();
+        this.headerContent.SizeMod = new StateModifier({
+            size: [80, 60]
+        });
+        this.headerContent.add(this.headerContent.SizeMod).add(this.headerContent.Lightbox);
+        // settings
+        this.headerContent.MarkPaid = new Surface({
+            content: '<i class="icon ion-ios7-checkmark-outline"></i><div>Not Done</div>',
+            size: [80, undefined],
+            classes: ['header-tab-icon-text']
+        });
+        this.headerContent.MarkPaid.on('click', function(){
+            // App.history.navigate('settings');
+
+            var data = {};
+            if(that.model.get('tags').indexOf('paid') === -1){
+                data = {
+                    add_tags: ['paid']
+                }
+            } else {
+                data = {
+                    remove_tags: ['paid']
+                };
+            }
+
+            that.model.save(data,{
+                patch: true,
+                // success: function(){
+                //     that.model.fetch();    
+                // }
+            }).then(function(){
+                // that.model.set({
+                //     assigned_id: App.Data.User.toJSON()
+                // });
+                that.model.fetch();
+                that.invoiceContent.collection.fetch();
+                // App.history.backTo('StartAssign');
+            });
+
+        });
+
         // create the header
         this.header = new StandardHeader({
             content: " ",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
-            moreClasses: ["normal-header"],
-            moreContent: false // '<span class="icon ion-refresh"></span>'
+            moreSurfaces: [
+                this.headerContent
+            ]
+            // moreClasses: ["normal-header"],
+            // moreContent: false // '<span class="icon ion-refresh"></span>'
         }); 
         this.header._eventOutput.on('back',function(){
             App.history.back();
@@ -326,7 +374,7 @@ define(function(require, exports, module) {
         // OptionButtons (add text, etc.)
         this.invoiceButtons = new View();
         this.invoiceButtons.ButtonSurface = new Surface({
-            content: '<div>Add Update</div>',
+            content: '<div>Write Message</div>',
             size: [undefined, true],
             classes: ['invoice-view-invoicecontent-add-button-default']
         });
@@ -405,6 +453,18 @@ define(function(require, exports, module) {
 
         if(that.model != undefined && that.model.hasFetched){
             // pass
+
+            // "paid" tag
+            this.headerContent.Lightbox.show(this.headerContent.MarkPaid);
+            if(that.model.get('tags') && that.model.get('tags').indexOf('paid') !== -1){
+                // complete
+                this.headerContent.MarkPaid.setContent('<i class="icon ion-ios7-checkmark"></i><div>Paid</div>');
+                this.headerContent.MarkPaid.setClasses(['header-tab-icon-text','marked-paid']);
+            } else {
+                // Not complete
+                this.headerContent.MarkPaid.setContent('<i class="icon ion-ios7-checkmark-outline"></i><div>Unpaid</div>');
+                this.headerContent.MarkPaid.setClasses(['header-tab-icon-text']);
+            }
 
             // details/description
             this.invoiceDetails.DetailMarkdown.setContent(S(that.model.get('details')));

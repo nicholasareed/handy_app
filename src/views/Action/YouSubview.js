@@ -233,8 +233,8 @@ define(function(require, exports, module) {
             relativeTime : {
                 future: "in %s",
                 past:   "%s ago",
-                s:  "s",
-                m:  "m",
+                s:  "%ds",
+                m:  "1m",
                 mm: "%dm",
                 h:  "1h",
                 hh: "%dh",
@@ -281,8 +281,12 @@ define(function(require, exports, module) {
                 link = 'todo/' + Action.get('todo_id');
                 break;
             case 'todo_complete':
-                // completed
-                content = '<span class="type">todo</span> <span data-replace-id="'+ Action.get('todo_id') +'" data-replace-model="Todo" data-replace-field="title">&nbsp;</span> was completed',
+                content = '<span class="type">todo</span> <span data-replace-id="'+ Action.get('todo_id') +'" data-replace-model="Todo" data-replace-field="title">&nbsp;</span> is completed',
+                classes = ['action-news-item-default'];
+                link = 'todo/' + Action.get('todo_id');
+                break;
+            case 'todo_incomplete':
+                content = '<span class="type">todo</span> <span data-replace-id="'+ Action.get('todo_id') +'" data-replace-model="Todo" data-replace-field="title">&nbsp;</span> is now incomplete',
                 classes = ['action-news-item-default'];
                 link = 'todo/' + Action.get('todo_id');
                 break;
@@ -295,6 +299,48 @@ define(function(require, exports, module) {
                 content = '<span class="type">todo</span> <span data-replace-id="'+ Action.get('todo_id') +'" data-replace-model="Todo" data-replace-field="title">&nbsp;</span> has new text',
                 classes = ['action-news-item-default'];
                 link = 'todo/' + Action.get('todo_id');
+                break;
+            case 'todo_tags_added':
+                content = '<span class="type">todo</span> <span data-replace-id="'+ Action.get('todo_id') +'" data-replace-model="Todo" data-replace-field="title">&nbsp;</span> had tags added',
+                classes = ['action-news-item-default'];
+                link = 'todo/' + Action.get('todo_id');
+                break;
+            case 'todo_tags_removed':
+                content = '<span class="type">todo</span> <span data-replace-id="'+ Action.get('todo_id') +'" data-replace-model="Todo" data-replace-field="title">&nbsp;</span> had tags removed',
+                classes = ['action-news-item-default'];
+                link = 'todo/' + Action.get('todo_id');
+                break;
+
+
+            case 'invoice_new_media':
+                content = '<span class="type">invoice</span> <span data-replace-id="'+ Action.get('invoice_id') +'" data-replace-model="Invoice" data-replace-field="title">&nbsp;</span> has new Media',
+                classes = ['action-news-item-default'];
+                link = 'invoice/' + Action.get('invoice_id');
+                break;
+            case 'invoice_new_text':
+                content = '<span class="type">invoice</span> <span data-replace-id="'+ Action.get('invoice_id') +'" data-replace-model="Invoice" data-replace-field="title">&nbsp;</span> has new text',
+                classes = ['action-news-item-default'];
+                link = 'invoice/' + Action.get('invoice_id');
+                break;
+            case 'invoice_paid':
+                content = '<span class="type">invoice</span> '+numeral(Action.get('details.amount')).format('$0,0.00')+ ' was marked paid',
+                classes = ['action-news-item-default'];
+                link = 'invoice/' + Action.get('invoice_id');
+                break;
+            case 'invoice_unpaid':
+                content = '<span class="type">invoice</span> '+numeral(Action.get('details.amount')).format('$0,0.00')+' was marked unpaid',
+                classes = ['action-news-item-default'];
+                link = 'invoice/' + Action.get('invoice_id');
+                break;
+            case 'invoice_tags_added':
+                content = '<span class="type">invoice</span> <span data-replace-id="'+ Action.get('invoice_id') +'" data-replace-model="Invoice" data-replace-field="title">&nbsp;</span> had tags added',
+                classes = ['action-news-item-default'];
+                link = 'invoice/' + Action.get('invoice_id');
+                break;
+            case 'invoice_tags_removed':
+                content = '<span class="type">invoice</span> <span data-replace-id="'+ Action.get('invoice_id') +'" data-replace-model="Invoice" data-replace-field="title">&nbsp;</span> had tags removed',
+                classes = ['action-news-item-default'];
+                link = 'invoice/' + Action.get('invoice_id');
                 break;
             default:
                 console.error('not a recognized action');

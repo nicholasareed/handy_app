@@ -32,15 +32,24 @@ define(function(require, exports, module) {
     // Extras
     var Utils = require('utils');
     var numeral = require('lib2/numeral.min');
+    var _ = require('underscore');
 
     // Templates
     var Handlebars          = require('lib2/handlebars-adapter');
     var tpls                = {
-        text: require('text!./tpl/ContentText.html')
+        text: require('text!./tpl/ContentText.html'),
+        mark_complete: require('text!./tpl/ContentMarkComplete.html'),
+        mark_incomplete: require('text!./tpl/ContentMarkIncomplete.html')
     };
-    var templates           = {
-        text: Handlebars.compile(tpls.text)
-    }
+    var templates           = {};
+    _.each(tpls, function(val, key){
+        templates[key] = Handlebars.compile(tpls[key]);
+    });
+
+    // {
+    //     text: Handlebars.compile(tpls.text),
+    //     text: Handlebars.compile(tpls.text)
+    // }
 
     function SubView(options) {
         var that = this;
@@ -221,6 +230,19 @@ define(function(require, exports, module) {
                 // Display some text
                 surfaceVars.content = templates.text(Model.toJSON());
                 surfaceVars.classes.push('todo-content-text-default');
+                break;
+
+            case 'mark_complete':
+                // Display some text
+                surfaceVars.content = templates.mark_complete(Model.toJSON());
+                surfaceVars.classes.push('todo-content-mark-complete-default');
+                break;
+
+            case 'mark_incomplete':
+                // Display some text
+                surfaceVars.content = templates.mark_incomplete(Model.toJSON());
+                surfaceVars.classes.push('todo-content-mark-complete-default');
+                surfaceVars.classes.push('incomplete');
                 break;
 
             default:

@@ -527,6 +527,39 @@ body {
 }
 
 
+.invoice-content-item-default {
+
+}
+
+.invoice-content-paid-status-default {
+  padding: 8px;
+}
+
+.invoice-content-paid-status-default > div {
+  background: rgba(46,204,113,0.2);
+}
+.invoice-content-paid-status-default.unpaid > div {
+  background: rgba(231,76,60,0.2);
+}
+
+.invoice-content-paid-status-default > div {
+  padding: 8px;
+  border: 1px solid #eee;
+}
+
+.invoice-content-paid-status-default > div > div:nth-child(1) {
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.invoice-content-paid-status-default > div > div:nth-child(2) {
+  color: #888;
+
+  font-size: 11px;
+  line-height: 13px;
+}
+
+
 
 
 
@@ -712,6 +745,36 @@ body {
   line-height: 13px;
 }
 
+.todo-content-mark-complete-default {
+  padding: 8px;
+}
+
+.todo-content-mark-complete-default > div {
+  background: rgba(46,204,113,0.2);
+}
+.todo-content-mark-complete-default.incomplete > div {
+  background: rgba(231,76,60,0.2);
+}
+
+.todo-content-mark-complete-default > div {
+  padding: 8px;
+  border: 1px solid #eee;
+}
+
+.todo-content-mark-complete-default > div > div:nth-child(1) {
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.todo-content-mark-complete-default > div > div:nth-child(2) {
+  color: #888;
+
+  font-size: 11px;
+  line-height: 13px;
+}
+
+
+
 
 /* Approve / Deny buttons */
 
@@ -875,8 +938,8 @@ body {
 
 .message-byuser-container-default div:nth-child(1) {
   padding-top: 8px;
-  font-size: 14px;
-  line-height: 16px;
+  font-size: 22px;
+  line-height: 26px;
 }
 
 .message-byuser-container-default > div:last-child {
@@ -890,10 +953,13 @@ body {
 
 .message-text-default {
   padding: 4px 8px;
+  border-left: 8px solid #3498DB;
 }
 
 .message-text-default.from_me {
   text-align: right;
+  border-left: 0px;
+  border-right: 8px solid #E67E22;
 }
 
 .message-text-default span[data-replace-model="Profile"]{
@@ -906,14 +972,14 @@ body {
 }
 
 .message-text-default div:nth-child(1) {
-  padding-top:8px;
+  padding-top:2px;
 
   font-size: 14px;
   line-height: 16px;
 }
 .message-text-default > div:last-child {
   padding-bottom: 8px;
-  border-bottom: 1px dashed #ddd;
+  /*border-bottom: 1px dashed #ddd;*/
 }
 
 
@@ -1257,7 +1323,8 @@ body {
   line-height: 30px;
 }
 
-.header-tab-icon-text.marked-complete {
+.header-tab-icon-text.marked-complete,
+.header-tab-icon-text.marked-paid {
   color: green;
 }
 

@@ -183,6 +183,7 @@ define(function(require, exports, module) {
                 //     assigned_id: App.Data.User.toJSON()
                 // });
                 that.model.fetch();
+                that.todoContent.collection.fetch();
                 // App.history.backTo('StartAssign');
             });
 
@@ -423,7 +424,7 @@ define(function(require, exports, module) {
         // OptionButtons (add text, etc.)
         this.todoButtons = new View();
         this.todoButtons.ButtonSurface = new Surface({
-            content: '<div>Add Update</div>',
+            content: '<div>Write Message</div>',
             size: [undefined, true],
             classes: ['todo-view-todocontent-add-button-default']
         });

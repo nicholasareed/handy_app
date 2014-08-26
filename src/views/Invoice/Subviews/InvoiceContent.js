@@ -36,11 +36,14 @@ define(function(require, exports, module) {
     // Templates
     var Handlebars          = require('lib2/handlebars-adapter');
     var tpls                = {
-        text: require('text!./tpl/ContentText.html')
+        text: require('text!./tpl/ContentText.html'),
+        mark_paid: require('text!./tpl/ContentMarkPaid.html'),
+        mark_unpaid: require('text!./tpl/ContentMarkUnpaid.html')
     };
-    var templates           = {
-        text: Handlebars.compile(tpls.text)
-    }
+    var templates           = {};
+    _.each(tpls, function(val, key){
+        templates[key] = Handlebars.compile(tpls[key]);
+    });
 
     function SubView(options) {
         var that = this;
@@ -221,6 +224,17 @@ define(function(require, exports, module) {
                 // Display some text
                 surfaceVars.content = templates.text(Model.toJSON());
                 surfaceVars.classes.push('invoice-content-text-default');
+                break;
+
+            case 'mark_paid':
+                surfaceVars.content = templates.mark_paid(Model.toJSON());
+                surfaceVars.classes.push('invoice-content-paid-status-default');
+                break;
+
+            case 'mark_unpaid':
+                surfaceVars.content = templates.mark_unpaid(Model.toJSON());
+                surfaceVars.classes.push('invoice-content-paid-status-default');
+                surfaceVars.classes.push('unpaid');
                 break;
 
             default:
