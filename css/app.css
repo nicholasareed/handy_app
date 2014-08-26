@@ -452,6 +452,12 @@ body {
   padding: 8px 10px;
 }
 
+.invoice-view-cost-default {
+  line-height: 30px;
+  font-size: 20px;
+  padding: 8px;
+}
+
 .invoice-view-invoicecontent-add-button-default {
   padding: 8px;
   background: rgba(255,255,255,0.5);
@@ -707,7 +713,7 @@ body {
   font-size: 18px;
   line-height: 24px;
 
-  /*border-bottom: 1px solid #ddd;*/
+  border-bottom: 1px solid #ddd;
 }
 
 .todo-view-owner-default.no_owner {

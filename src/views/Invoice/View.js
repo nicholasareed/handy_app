@@ -283,6 +283,14 @@ define(function(require, exports, module) {
         });
         this.invoiceDetails.Views.push(this.invoiceDetails.DetailMarkdown);
 
+        // Cost
+        this.invoiceDetails.Cost = new Surface({
+            content: '',
+            size: [window.innerWidth, true],
+            classes: ['invoice-view-cost-default']
+        });
+        this.invoiceDetails.Views.push(this.invoiceDetails.Cost);
+
         // To user
         this.invoiceDetails.ToSurface = new Surface({
             content: '',
@@ -468,6 +476,9 @@ define(function(require, exports, module) {
 
             // details/description
             this.invoiceDetails.DetailMarkdown.setContent(S(that.model.get('details')));
+
+            // amount
+            this.invoiceDetails.Cost.setContent(S(numeral(that.model.get('amount')).format('$0,0.00')));
 
             // to
             if(that.model.get('to_user_id')){
