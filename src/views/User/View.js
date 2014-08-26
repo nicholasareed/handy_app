@@ -365,7 +365,7 @@ define(function(require, exports, module) {
             if(that.is_me){
                 // Launch options for photo
 
-                Utils.Notification.Toast('Tap "Edit Your Profile"');
+                // Utils.Notification.Toast('Tap "Edit Your Profile"');
 
                 // Slide to the change screen for the user
                 // that.previousPage = window.location.hash;
@@ -687,6 +687,7 @@ define(function(require, exports, module) {
                     newModel.save()
                     .then(function(){
                         // that.AllView.collection.fetch();
+                        App.history.navigate('invoice/list');
                     });
 
                 }

@@ -160,6 +160,16 @@ define(function(require, exports, module) {
         this.infinityShowMoreSurface.on('click', function(){
             that.next_page();
         });
+
+
+        // Get Recommendation
+        this.GetRecommendationButton = new Surface({
+            content: '<div class="outward-button"><span class="ellipsis-all"><i class="icon ion-android-call"></i> Get a Recommendation</span></div>',
+            size: [undefined, 50],
+            classes: ['']
+        });
+        this.GetRecommendationButton.pipe(this._eventOutput);
+
     };
 
     SubView.prototype.createDefaultLightboxes = function(){

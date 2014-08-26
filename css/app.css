@@ -439,6 +439,33 @@ body {
   content: "\f353";
 }
 
+.header-with-money-sign {
+  display: inline-block; 
+  font-family: "Ionicons"; 
+  speak: none; 
+  font-style: normal; 
+  font-weight: normal; 
+  font-variant: normal; 
+  text-transform: none; 
+  text-rendering: auto; 
+  line-height: 1; 
+  -webkit-font-smoothing: antialiased; 
+  -moz-osx-font-smoothing: grayscale;
+
+  position: absolute;
+  width: 100%;
+  top: 0px;
+  left: 0px;
+  text-align: center;
+  line-height: 60px;
+}
+.header-with-money-sign:before {
+  content: "\f353";
+}
+.header-with-money-sign.white-money {
+  color: white;
+}
+
 .invoice-toggle.toggle-off {
   background: none;
 }

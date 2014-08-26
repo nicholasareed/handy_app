@@ -72,7 +72,7 @@ define(function(require, exports, module) {
         this.selected = true;
         this.arbiter.show(this.onSurface, this.options.inTransition);
 //        this.arbiter.setMode(ToggleButton.ON, this.options.inTransition);
-        this._eventOutput.emit('select');
+        this._eventOutput.emit('select',arguments, false);
     };
 
     /**
@@ -84,7 +84,7 @@ define(function(require, exports, module) {
     ToggleButton.prototype.deselect = function deselect() {
         this.selected = false;
         this.arbiter.show(this.offSurface, this.options.outTransition);
-        this._eventOutput.emit('deselect');
+        this._eventOutput.emit('deselect',arguments, false);
     };
 
     /**

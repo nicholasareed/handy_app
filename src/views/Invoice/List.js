@@ -81,55 +81,93 @@ define(function(require, exports, module) {
         
         // Icons
 
-        // // Invite somebody
-        // this.headerContent = new View();
-        // this.headerContent.Create = new Surface({
-        //     content: '<i class="icon ion-ios7-plus-outline"></i>',
-        //     size: [App.Defaults.Header.Icon.w, undefined],
-        //     classes: ['header-tab-icon-text-big']
-        // });
-        // this.headerContent.Create.on('click', function(){
-        //     // App.Cache.FriendListOptions = {
-        //     //     default: 'outgoing'
-        //     // };
-        //     // App.history.navigate('friend/add');
+        // Create an Invoice
+        this.headerContent = new View();
+        this.headerContent.Create = new Surface({
+            content: '<i class="icon ion-ios7-plus-outline"></i>',
+            size: [App.Defaults.Header.Icon.w, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.Create.on('click', function(){
+            // App.Cache.FriendListOptions = {
+            //     default: 'outgoing'
+            // };
+            // App.history.navigate('friend/add');
 
-        //     Timer.setTimeout(function(){
+            Utils.Notification.Toast('Create from the People page');
 
-        //         var p = prompt('Invoice details');
-        //         var a = prompt('amount');
-        //         if(p && p.trim() != '' && a){
+            return;
 
-        //             Utils.Notification.Toast('Create a new Invoice!');
 
-        //             var newModel = new InvoiceModel.Invoice({
-        //                 amount: a,
-        //                 details: p
-        //             });
+        });
 
-        //             newModel.save()
-        //             .then(function(){
-        //                 that.AllView.collection.fetch();
-        //             });
+        // Todos
+        this.headerContent.Todos = new Surface({
+            content: '<i class="icon ion-android-lightbulb"></i>',
+            size: [App.Defaults.Header.Icon.w, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.Todos.on('click', function(){
+            App.history.navigate('todo/list');
+        });
 
-        //         }
+        // ListContent switcher
+        this.headerContent.FilterSwitcher = new View();
+        this.headerContent.FilterSwitcher.Lightbox = new RenderController();
+        this.headerContent.FilterSwitcher.SizeMod = new StateModifier({
+            size: [80, 60]
+        });
+        this.headerContent.FilterSwitcher.add(this.headerContent.FilterSwitcher.SizeMod).add(this.headerContent.FilterSwitcher.Lightbox);
+        
+        this.headerContent.ShowInvoice = new Surface({
+            content: '<i class="icon ion-ios7-circle-outline"></i>',
+            size: [App.Defaults.Header.Icon.w, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.ShowInvoice.on('click', function(){
+            that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowPaid);
+            that.ListContent.show(that.ListContent.PaidInvoices);
+            that.ListContent.PaidInvoices.collection.fetch();
+        });
+        this.headerContent.ShowPaid = new Surface({
+            content: '<span class="header-with-money-sign"></span><i class="icon ion-ios7-circle-outline"></i>',
+            size: [App.Defaults.Header.Icon.w, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.ShowPaid.on('click', function(){
+            that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowAll);
+            that.ListContent.show(that.ListContent.AllInvoices);
+            that.ListContent.AllInvoices.collection.fetch();
+        });
+        this.headerContent.ShowAll = new Surface({
+            content: '<span class="header-with-money-sign white-money"></span><i class="icon ion-ios7-circle-filled"></i>',
+            size: [App.Defaults.Header.Icon.w, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.ShowAll.on('click', function(){
+            that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowInvoice);
+            that.ListContent.show(that.ListContent.Invoices);
+            that.ListContent.Invoices.collection.fetch();
+        });
 
-        //     },200);
-        // });
+        this.headerContent.FilterSwitcher.Lightbox.show(this.headerContent.ShowInvoice);
+
+
 
 
         // create the header
         this.header = new StandardHeader({
-            content: "Invoice List",
+            content: "Invoices",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
-            moreContent: false
+            // moreContent: false
             // backContent: false,
             // moreClasses: ["normal-header"],
-            // moreSurfaces: [
-            //     // this.headerContent.Invoices,
-            //     this.headerContent.Create
-            // ]
+            moreSurfaces: [
+                this.headerContent.Todos,
+                this.headerContent.Create,
+                this.headerContent.FilterSwitcher,
+            ]
             // moreContent: "New", //'<span class="icon ion-navicon-round"></span>'
         });
         this.header._eventOutput.on('back',function(){
@@ -166,10 +204,48 @@ define(function(require, exports, module) {
         // Content
         this.ContentStateModifier = new StateModifier();
 
-        this.AllView = new AllView();
-        this._subviews.push(this.AllView);
 
-        this.layout.content.add(this.ContentStateModifier).add(this.AllView);
+        // Lists
+        this.ListContent = new RenderController();
+
+        // Invoice 
+        this.ListContent.Invoices = new AllView({
+            // empty_string: 'Add Invoices by tapping the <i class="icon ion-ios7-plus-outline"></i>',
+            empty_string: 'Add Invoices from the People (<i class="icon ion-android-friends"></i>) page',
+            filter: {
+                tags: {
+                    '$ne' : 'paid'
+                }
+            }
+        });
+        // this.ListContent.Invoices.View = new View();
+        // this.ListContent.Invoices.add(this.ListContent.Invoices.View);
+        this._subviews.push(this.ListContent.Invoices);
+
+        // Paid 
+        this.ListContent.PaidInvoices = new AllView({
+            empty_string: "None Paid",
+            filter: {
+                tags: 'paid'
+            }
+        });
+        // this.ListContent.PaidInvoices.View = new View();
+        // this.ListContent.PaidInvoices.add(this.ListContent.PaidInvoices.View);
+        this._subviews.push(this.ListContent.PaidInvoices);
+
+        // All 
+        this.ListContent.AllInvoices = new AllView({
+            empty_string: "You have not created any Invoices, ever!",
+            filter: {}
+        });
+        // this.ListContent.AllInvoices.View = new View();
+        // this.ListContent.AllInvoices.add(this.ListContent.AllInvoices.View);
+        this._subviews.push(this.ListContent.AllInvoices);
+
+        // Show "Invoices" by default
+        this.ListContent.show(this.ListContent.Invoices);
+
+        this.layout.content.add(this.ContentStateModifier).add(this.ListContent);
 
 
         return;

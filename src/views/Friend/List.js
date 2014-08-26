@@ -94,6 +94,17 @@ define(function(require, exports, module) {
             App.history.navigate('friend/add');
         });
 
+        // Find Recommendations
+        this.headerContent.GetRecommendation = new Surface({
+            content: '<i class="icon ion-android-microphone"></i>',
+            size: [App.Defaults.Header.Icon.w, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.GetRecommendation.on('click', function(){
+            // App.history.navigate('friend/potential');
+            Utils.Notification.Toast('Concierge Service Unavailable');
+        });
+
         // // Find Friends
         // this.headerContent.PotentialFriends = new Surface({
         //     content: '<i class="icon ion-earth"></i>',
@@ -115,6 +126,7 @@ define(function(require, exports, module) {
             // moreClasses: ["normal-header"],
             moreSurfaces: [
                 // this.headerContent.PotentialFriends,
+                this.headerContent.GetRecommendation,
                 this.headerContent.Invite
             ]
             // moreContent: "New", //'<span class="icon ion-navicon-round"></span>'

@@ -81,20 +81,13 @@ define(function(require, exports, module) {
     SubView.prototype.loadModels = function(player_id){
         var that = this;
 
-        // App.Data.User contains friends
 
-        // Create collection of Games for player_id
         var options = {};
-        // if(this.options && this.options.filter){
-        //     options['$filter'] = this.options.filter;
-        // }
-        this.collection = new InvoiceModel.InvoiceCollection([],{
-            '$filter' : {
-                tags: {
-                    '$ne' : 'paid'
-                }
-            }
-        });
+        if(this.options && this.options.filter){
+            options['$filter'] = this.options.filter;
+        }
+
+        this.collection = new InvoiceModel.InvoiceCollection([],options);
         this.collection.on("sync", that.updateCollectionStatus.bind(this), this);
         this.collection.on("add", this.addOne, this);
         this.collection.on("remove", this.removeOne, this);
@@ -131,7 +124,7 @@ define(function(require, exports, module) {
         });
         this.loadingSurface.pipe(this._eventOutput);
         this.emptyListSurface = new Surface({
-            content: "No Invoices",
+            content: this.options.empty_string,
             size: [undefined, 100],
             classes: ['empty-list-surface-default'],
             properties: {
@@ -244,18 +237,16 @@ define(function(require, exports, module) {
         invoiceView.Action.Toggle.pipe(that.contentLayout);
 
         // Handle toggle button click
-        invoiceView.Action.Toggle.on('select', function(m){
-            // console.log('select, saving');
-            // if(that.model.get('scheme.' + Info.scheme_key) !== true){
-            //     var data = {};
-            //     data['scheme.' + Info.scheme_key] = true;
-            //     that.model.save(data,{patch: true});
-            // }
+        invoiceView.Action.Toggle.on('select', function(args){
 
-            // // Remove this one!
-            // Timer.setTimeout(function(){
-            //     that.collection.remove(Model.get('_id'));
-            // },500);
+            // extract arguments to "expected" arguments
+            args = Array.prototype.slice.call(args);
+            var skipLogic = args.shift(),
+                arg2 = args.shift();
+
+            if(skipLogic === false){
+                return;
+            }
 
 
             var data = {
@@ -278,13 +269,16 @@ define(function(require, exports, module) {
 
 
         });
-        invoiceView.Action.Toggle.on('deselect', function(){
-            // console.log('deselect, saving');
-            // if(that.model.get('scheme.' + Info.scheme_key) !== false){
-            //     var data = {};
-            //     data['scheme.' + Info.scheme_key] = false;
-            //     that.model.save(data,{patch: true});
-            // }
+        invoiceView.Action.Toggle.on('deselect', function(args){
+            
+            // extract arguments to "expected" arguments
+            args = Array.prototype.slice.call(args);
+            var skipLogic = args.shift(),
+                arg2 = args.shift();
+
+            if(skipLogic === false){
+                return;
+            }
 
             var data = {
                 remove_tags: ['paid']
@@ -317,11 +311,27 @@ define(function(require, exports, module) {
             classes: ['invoice-list-item-default']
         });
         Utils.dataModelReplaceOnSurface(invoiceView.Surface);
+
+        // set correct tag
+        if(Model.get('tags') && Model.get('tags').indexOf('paid') !== -1){
+            invoiceView.Action.Toggle.select(false);
+        } else {
+            invoiceView.Action.Toggle.deselect(false);
+        }
+
         Model.on('change', function(){
             invoiceView.Surface.setContent(template({
                 Invoice: Model.toJSON()
             }));
             Utils.dataModelReplaceOnSurface(invoiceView.Surface);
+
+            // set correct tag
+            if(Model.get('tags') && Model.get('tags').indexOf('paid') !== -1){
+                invoiceView.Action.Toggle.select(false);
+            } else {
+                invoiceView.Action.Toggle.deselect(false);
+            }
+            
         });
         invoiceView.getSize = function(){
             return [undefined, invoiceView.Surface._size ? invoiceView.Surface._size[1] : 100];

@@ -71,7 +71,9 @@ define(function (require) {
               },
 
               // the query field in the request
-              '$filter': '',
+              '$filter': function(){
+                return JSON.stringify(this.filter);
+              },
 
               // number of items to return per request/page
               '$top': function() { return this.perPage },
@@ -120,7 +122,10 @@ define(function (require) {
                 }
 
                 if(options['$filter']){
-                  this.server_api['$filter'] = JSON.stringify(options['$filter']);
+                  this.filter = options['$filter'];
+                  // this.server_api['$filter'] = JSON.stringify(options['$filter']);
+                  // console.log(this.server_api['$filter']);
+                  // debugger;
                 }
                 if(options.timeframe){
                   this.timeframe = options.timeframe;

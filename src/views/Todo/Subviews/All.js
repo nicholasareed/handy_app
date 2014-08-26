@@ -85,16 +85,14 @@ define(function(require, exports, module) {
 
         // Create collection of Games for player_id
         var options = {};
-        // if(this.options && this.options.filter){
-        //     options['$filter'] = this.options.filter;
-        // }
-        this.collection = new TodoModel.TodoCollection([],{
-            '$filter' : {
-                tags: {
-                    '$ne' : 'complete'
-                }
-            }
-        });
+        if(this.options && this.options.filter){
+            options['$filter'] = this.options.filter;
+        }
+
+        console.log(options);
+        // debugger;
+
+        this.collection = new TodoModel.TodoCollection([],options);
         this.collection.on("sync", that.updateCollectionStatus.bind(this), this);
         this.collection.on("add", this.addOne, this);
         this.collection.on("remove", this.removeOne, this);
@@ -130,7 +128,7 @@ define(function(require, exports, module) {
         });
         this.loadingSurface.pipe(this._eventOutput);
         this.emptyListSurface = new Surface({
-            content: "No Todos!",
+            content: this.options.empty_string,
             size: [undefined, 100],
             classes: ['empty-list-surface-default'],
             properties: {
@@ -234,8 +232,8 @@ define(function(require, exports, module) {
             size: [40, 40],
             content: '',
             classes: ['text-center'],
-            onClasses: ['todo-toggle', 'square-toggle', 'toggle-on'],
-            offClasses: ['todo-toggle', 'square-toggle', 'toggle-off'],
+            onClasses: ['todo-toggle', 'circle-toggle', 'toggle-on'],
+            offClasses: ['todo-toggle', 'circle-toggle', 'toggle-off'],
 
             // NOT for setting the default toggle state of the button
             toggleMode: ToggleButton.TOGGLE
@@ -243,13 +241,16 @@ define(function(require, exports, module) {
         todoView.Action.Toggle.pipe(that.contentLayout);
 
         // Handle toggle button click
-        todoView.Action.Toggle.on('select', function(m){
-            // console.log('select, saving');
-            // if(that.model.get('scheme.' + Info.scheme_key) !== true){
-            //     var data = {};
-            //     data['scheme.' + Info.scheme_key] = true;
-            //     that.model.save(data,{patch: true});
-            // }
+        todoView.Action.Toggle.on('select', function(args){
+
+            // extract arguments to "expected" arguments
+            args = Array.prototype.slice.call(args);
+            var skipLogic = args.shift(),
+                arg2 = args.shift();
+
+            if(skipLogic === false){
+                return;
+            }
 
             var data = {
                 add_tags: ['complete']
@@ -270,8 +271,18 @@ define(function(require, exports, module) {
             });
 
         });
-        todoView.Action.Toggle.on('deselect', function(){
+        todoView.Action.Toggle.on('deselect', function(args){
             
+            // extract arguments to "expected" arguments
+            args = Array.prototype.slice.call(args);
+            var skipLogic = args.shift(),
+                arg2 = args.shift();
+
+            if(skipLogic === false){
+                return;
+            }
+
+
             var data = {
                 remove_tags: ['complete']
             };
@@ -291,6 +302,7 @@ define(function(require, exports, module) {
             });
 
         });
+
         todoView.Action.add(todoView.Action.Toggle);
         todoView.Layout.Views.push(todoView.Action);
 
@@ -304,12 +316,25 @@ define(function(require, exports, module) {
             classes: ['todo-list-item-default']
         });
         Utils.dataModelReplaceOnSurface(todoView.Surface);
+
+        // set correct tag
+        if(Model.get('tags') && Model.get('tags').indexOf('complete') !== -1){
+            todoView.Action.Toggle.select(false);
+        } else {
+            todoView.Action.Toggle.deselect(false);
+        }
+
         Model.on('change', function(){
             todoView.Surface.setContent(template({
                 Todo: Model.toJSON(),
                 User: App.Data.User.toJSON()
             }));
             Utils.dataModelReplaceOnSurface(todoView.Surface);
+            if(Model.get('tags') && Model.get('tags').indexOf('complete') !== -1){
+                todoView.Action.Toggle.select(false);
+            } else {
+                todoView.Action.Toggle.deselect(false);
+            }
         });
         todoView.getSize = function(){
             return [undefined, todoView.Surface._size ? todoView.Surface._size[1] : 100];
@@ -382,7 +407,7 @@ define(function(require, exports, module) {
 
         // Resort the contentLayout.Views
         this.contentLayout.Views = _.sortBy(this.contentLayout.Views, function(v){
-            console.log(v.Model.get('created'));
+            // console.log(v.Model.get('created'));
             return v.Model.get('created');
         });
         this.contentLayout.Views.reverse();

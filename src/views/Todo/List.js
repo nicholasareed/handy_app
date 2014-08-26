@@ -75,7 +75,6 @@ define(function(require, exports, module) {
         this._eventOutput.on('inOutTransition', function(args){
             // 0 = direction
             if(args[0] == 'showing'){
-                // that.AllView.collection.fetch();
                 App.Data.TodoCollection.fetch();
             }
         });
@@ -90,7 +89,7 @@ define(function(require, exports, module) {
         
         // Icons
 
-        // Invite somebody
+        // Create a Todo
         this.headerContent = new View();
         this.headerContent.Create = new Surface({
             content: '<i class="icon ion-ios7-plus-outline"></i>',
@@ -116,7 +115,7 @@ define(function(require, exports, module) {
 
                     newModel.save()
                     .then(function(){
-                        that.AllView.collection.fetch();
+                        // that.AllView.collection.fetch();
                     });
 
                 }
@@ -137,9 +136,51 @@ define(function(require, exports, module) {
         });
 
 
+        // ListContent switcher
+        this.headerContent.FilterSwitcher = new View();
+        this.headerContent.FilterSwitcher.Lightbox = new RenderController();
+        this.headerContent.FilterSwitcher.SizeMod = new StateModifier({
+            size: [80, 60]
+        });
+        this.headerContent.FilterSwitcher.add(this.headerContent.FilterSwitcher.SizeMod).add(this.headerContent.FilterSwitcher.Lightbox);
+        
+        this.headerContent.ShowTodo = new Surface({
+            content: '<i class="icon ion-ios7-circle-outline"></i>',
+            size: [App.Defaults.Header.Icon.w, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.ShowTodo.on('click', function(){
+            that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowComplete);
+            that.ListContent.show(that.ListContent.CompleteTodos);
+            that.ListContent.CompleteTodos.collection.fetch();
+        });
+        this.headerContent.ShowComplete = new Surface({
+            content: '<i class="icon ion-ios7-checkmark-outline"></i>',
+            size: [App.Defaults.Header.Icon.w, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.ShowComplete.on('click', function(){
+            that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowAll);
+            that.ListContent.show(that.ListContent.AllTodos);
+            that.ListContent.AllTodos.collection.fetch();
+        });
+        this.headerContent.ShowAll = new Surface({
+            content: '<i class="icon ion-ios7-checkmark"></i>',
+            size: [App.Defaults.Header.Icon.w, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.ShowAll.on('click', function(){
+            that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowTodo);
+            that.ListContent.show(that.ListContent.Todos);
+            that.ListContent.Todos.collection.fetch();
+        });
+
+        this.headerContent.FilterSwitcher.Lightbox.show(this.headerContent.ShowTodo);
+
+
         // create the header
         this.header = new StandardHeader({
-            content: "Todo List",
+            content: "Todos",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             // moreContent: false
@@ -147,7 +188,8 @@ define(function(require, exports, module) {
             // moreClasses: ["normal-header"],
             moreSurfaces: [
                 this.headerContent.Invoices,
-                this.headerContent.Create
+                this.headerContent.Create,
+                this.headerContent.FilterSwitcher,
             ]
             // moreContent: "New", //'<span class="icon ion-navicon-round"></span>'
         });
@@ -185,10 +227,46 @@ define(function(require, exports, module) {
         // Content
         this.ContentStateModifier = new StateModifier();
 
-        this.AllView = new AllView();
-        this._subviews.push(this.AllView);
+        // Lists
+        this.ListContent = new RenderController();
 
-        this.layout.content.add(this.ContentStateModifier).add(this.AllView);
+        // Todo 
+        this.ListContent.Todos = new AllView({
+            empty_string: 'Add Todos by tapping the <i class="icon ion-ios7-plus-outline"></i>',
+            filter: {
+                tags: {
+                    '$ne' : 'complete'
+                }
+            }
+        });
+        // this.ListContent.Todos.View = new View();
+        // this.ListContent.Todos.add(this.ListContent.Todos.View);
+        this._subviews.push(this.ListContent.Todos);
+
+        // Complete 
+        this.ListContent.CompleteTodos = new AllView({
+            empty_string: "None Completed",
+            filter: {
+                tags: 'complete'
+            }
+        });
+        // this.ListContent.CompleteTodos.View = new View();
+        // this.ListContent.CompleteTodos.add(this.ListContent.CompleteTodos.View);
+        this._subviews.push(this.ListContent.CompleteTodos);
+
+        // All 
+        this.ListContent.AllTodos = new AllView({
+            empty_string: "You have not created any Todos, ever!",
+            filter: {}
+        });
+        // this.ListContent.AllTodos.View = new View();
+        // this.ListContent.AllTodos.add(this.ListContent.AllTodos.View);
+        this._subviews.push(this.ListContent.AllTodos);
+
+        // Show "Todos" by default
+        this.ListContent.show(this.ListContent.Todos);
+
+        this.layout.content.add(this.ContentStateModifier).add(this.ListContent);
 
 
         return;
