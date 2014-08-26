@@ -81,6 +81,15 @@ define(function(require, exports, module) {
         this.add(this.layout);
 
 
+        // Listen for 'showing' events
+        this._eventOutput.on('inOutTransition', function(args){
+            // 0 = direction
+            if(args[0] == 'showing'){
+                that.YouView.collection.fetch();
+                App.Data.ActionCollection.fetch();
+            }
+        });
+
     }
 
     PageView.prototype = Object.create(View.prototype);

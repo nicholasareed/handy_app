@@ -167,6 +167,7 @@ define(function(require, exports, module) {
         this.ContentStateModifier = new StateModifier();
 
         this.AllView = new AllView();
+        this._subviews.push(this.AllView);
 
         this.layout.content.add(this.ContentStateModifier).add(this.AllView);
 

@@ -109,7 +109,7 @@ define(function(require, exports, module) {
         this._eventInput.on('inOutTransition', function(args){
             // 0 = direction
             if(args[0] == 'showing'){
-                // that.collection.fetch();
+                that.collection.fetch();
             }
         });
 
@@ -130,7 +130,7 @@ define(function(require, exports, module) {
         });
         this.loadingSurface.pipe(this._eventOutput);
         this.emptyListSurface = new Surface({
-            content: "None to Show",
+            content: "No Todos!",
             size: [undefined, 100],
             classes: ['empty-list-surface-default'],
             properties: {
@@ -251,19 +251,45 @@ define(function(require, exports, module) {
             //     that.model.save(data,{patch: true});
             // }
 
-            // Remove this one!
-            Timer.setTimeout(function(){
-                that.collection.remove(Model.get('_id'));
-            },500);
+            var data = {
+                add_tags: ['complete']
+            };
+
+            todoView.Model.save(data,{
+                patch: true,
+                // success: function(){
+                //     that.model.fetch();    
+                // }
+            }).then(function(){
+                // that.model.set({
+                //     assigned_id: App.Data.User.toJSON()
+                // });
+                todoView.Model.fetch();
+                // that.invoiceContent.collection.fetch();
+                // App.history.backTo('StartAssign');
+            });
 
         });
         todoView.Action.Toggle.on('deselect', function(){
-            // console.log('deselect, saving');
-            // if(that.model.get('scheme.' + Info.scheme_key) !== false){
-            //     var data = {};
-            //     data['scheme.' + Info.scheme_key] = false;
-            //     that.model.save(data,{patch: true});
-            // }
+            
+            var data = {
+                remove_tags: ['complete']
+            };
+
+            todoView.Model.save(data,{
+                patch: true,
+                // success: function(){
+                //     that.model.fetch();    
+                // }
+            }).then(function(){
+                // that.model.set({
+                //     assigned_id: App.Data.User.toJSON()
+                // });
+                todoView.Model.fetch();
+                // that.invoiceContent.collection.fetch();
+                // App.history.backTo('StartAssign');
+            });
+
         });
         todoView.Action.add(todoView.Action.Toggle);
         todoView.Layout.Views.push(todoView.Action);
@@ -307,6 +333,8 @@ define(function(require, exports, module) {
     SubView.prototype.removeOne = function(Model){
         var that = this;
 
+        this.collection.infiniteResults -= 1;
+
         // find the view
         var tmpView = _.find(this.contentLayout.Views, function(tmp){
             return tmp.Model == Model;
@@ -315,6 +343,8 @@ define(function(require, exports, module) {
         if(!tmpView){
             console.error('no tmpView');
             return;
+        } else {
+            console.error('removed!');
         }
 
         this.contentLayout.Views = _.without(this.contentLayout.Views, tmpView);
@@ -336,7 +366,7 @@ define(function(require, exports, module) {
         this.infinityLoadedAllSurface.setContent(this.collection.totalResults + ' total');
 
         var nextRenderable;
-        if(this.collection.length == 0 && this.collection.infiniteResults == 0){
+        if(this.collection.length == 0){ // && this.collection.infiniteResults == 0){
             nextRenderable = this.emptyListSurface;
         } else {
             nextRenderable = this.contentLayout;

@@ -71,6 +71,15 @@ define(function(require, exports, module) {
 
         this.add(this.layout);
 
+        // Listen for 'showing' events
+        this._eventOutput.on('inOutTransition', function(args){
+            // 0 = direction
+            if(args[0] == 'showing'){
+                // that.AllView.collection.fetch();
+                App.Data.TodoCollection.fetch();
+            }
+        });
+
     }
 
     PageView.prototype = Object.create(View.prototype);
@@ -177,6 +186,7 @@ define(function(require, exports, module) {
         this.ContentStateModifier = new StateModifier();
 
         this.AllView = new AllView();
+        this._subviews.push(this.AllView);
 
         this.layout.content.add(this.ContentStateModifier).add(this.AllView);
 

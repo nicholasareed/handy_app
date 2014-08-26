@@ -514,12 +514,12 @@ define(function(require, exports, module) {
             this.headerContent.Lightbox.show(this.headerContent.MarkComplete);
             if(that.model.get('tags') && that.model.get('tags').indexOf('complete') !== -1){
                 // complete
-                this.headerContent.MarkComplete.setContent('<i class="icon ion-ios7-checkmark"></i><div>Complete</div>');
-                this.headerContent.MarkComplete.setClasses(['header-tab-icon-text','marked-complete']);
+                this.headerContent.MarkComplete.setContent('<i class="icon ion-ios7-checkmark"></i>');
+                this.headerContent.MarkComplete.setClasses(['header-tab-icon-text-big','marked-complete']);
             } else {
                 // Not complete
-                this.headerContent.MarkComplete.setContent('<i class="icon ion-ios7-checkmark-outline"></i><div>Not Done</div>');
-                this.headerContent.MarkComplete.setClasses(['header-tab-icon-text']);
+                this.headerContent.MarkComplete.setContent('<i class="icon ion-ios7-checkmark-outline"></i>');
+                this.headerContent.MarkComplete.setClasses(['header-tab-icon-text-big']);
             }
 
             // // tags

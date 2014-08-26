@@ -140,7 +140,8 @@ define(function(require, exports, module) {
                 // - determine is_me
                 if(that.model.get('_id') == App.Data.User.get('_id')){
                     console.error('is_me!');
-                    that.profileMiddle.Layout.show(that.profileMiddle.EditProfile);
+                    // that.profileMiddle.Layout.show(that.profileMiddle.EditProfile);
+                    that.profileMiddle.Layout.hide();
                 } else {
                     that.is_me = false;
                     console.error('Not is_me!');
@@ -200,32 +201,23 @@ define(function(require, exports, module) {
         this.headerContent.add(this.headerContent.SizeMod).add(this.headerContent.Lightbox);
         // settings
         this.headerContent.Settings = new Surface({
-            content: '<i class="icon ion-gear-a"></i><div>Settings</div>',
+            content: '<i class="icon ion-gear-a"></i>',
             size: [60, undefined],
-            classes: ['header-tab-icon-text']
+            classes: ['header-tab-icon-text-big']
         });
         this.headerContent.Settings.on('click', function(){
             App.history.navigate('settings');
         });
         // message
         this.headerContent.Message = new Surface({
-            content: '<i class="icon ion-ios7-chatboxes"></i><div>Msg</div>',
+            content: '<i class="icon ion-ios7-chatboxes"></i>',
             size: [60, undefined],
-            classes: ['header-tab-icon-text']
+            classes: ['header-tab-icon-text-big']
         });
         this.headerContent.Message.on('click', function(){
             App.history.navigate('inbox/' + that.profile_id);
         });
 
-
-
-
-        // - spacer1
-        this.headerContent.spacer1 = new Surface({
-            content: '<span></span>',
-            size: [16, undefined],
-            classes: ['header-tab-spacer-default']
-        });
 
         // - search (always visible)
         this.headerContent.Search = new Surface({
@@ -254,9 +246,9 @@ define(function(require, exports, module) {
 
         // - Connections
         this.headerContent.Friends = new Surface({
-            content: '<i class="icon ion-android-friends"></i><div>People</div>',
+            content: '<i class="icon ion-android-friends"></i>',
             size: [App.Defaults.Header.Icon.w, undefined],
-            classes: ['header-tab-icon-text']
+            classes: ['header-tab-icon-text-big']
         });
         this.headerContent.Friends.on('click', function(){
             // App.Cache.FriendListOptions = {
@@ -265,6 +257,20 @@ define(function(require, exports, module) {
             // App.history.navigate('friend/list');
             App.history.navigate('friend/list');
         });
+
+        // // - Availability
+        // this.headerContent.Availability = new Surface({
+        //     content: '<i class="icon ion-android-friends"></i><div>People</div>',
+        //     size: [App.Defaults.Header.Icon.w, undefined],
+        //     classes: ['header-tab-icon-text']
+        // });
+        // this.headerContent.Availability.on('click', function(){
+        //     // App.Cache.FriendListOptions = {
+        //     //     default: 'outgoing'
+        //     // };
+        //     // App.history.navigate('friend/list');
+        //     App.history.navigate('friend/list');
+        // });
 
 
         // create the header

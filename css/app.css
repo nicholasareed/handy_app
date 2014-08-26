@@ -1329,8 +1329,8 @@ body {
   line-height: 30px;
 }
 
-.header-tab-icon-text.marked-complete,
-.header-tab-icon-text.marked-paid {
+.header-tab-icon-text-big.marked-complete,
+.header-tab-icon-text-big.marked-paid {
   color: green;
 }
 

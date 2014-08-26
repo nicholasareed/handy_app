@@ -167,17 +167,17 @@ define(function(require, exports, module) {
             //     href: 'welcome'
             // },
 
-            {
-                title: '<i class="ion-android-friends"></i> Friends', // (' + friend_count + ')',
-                desc: 'Invite new people',
-                href: 'friend/list'
-            },
+            // {
+            //     title: '<i class="ion-android-friends"></i> Friends', // (' + friend_count + ')',
+            //     desc: 'Invite new people',
+            //     href: 'friend/list'
+            // },
             
-            {
-                title: '<i class="ion-ios7-plus-outline"></i> Add Friend', // (' + friend_count + ')',
-                desc: 'Choose from contacts',
-                href: 'friend/add'
-            },
+            // {
+            //     title: '<i class="ion-ios7-plus-outline"></i> Add Friend', // (' + friend_count + ')',
+            //     desc: 'Choose from contacts',
+            //     href: 'friend/add'
+            // },
 
             {
                 title: '<i class="ion-edit"></i> Edit Your Profile',

@@ -154,9 +154,9 @@ define(function(require, exports, module) {
         this.headerContent.add(this.headerContent.SizeMod).add(this.headerContent.Lightbox);
         // settings
         this.headerContent.MarkPaid = new Surface({
-            content: '<i class="icon ion-ios7-checkmark-outline"></i><div>Not Done</div>',
+            content: '<i class="icon ion-ios7-checkmark-outline"></i>',
             size: [80, undefined],
-            classes: ['header-tab-icon-text']
+            classes: ['header-tab-icon-text-big']
         });
         this.headerContent.MarkPaid.on('click', function(){
             // App.history.navigate('settings');
@@ -466,12 +466,12 @@ define(function(require, exports, module) {
             this.headerContent.Lightbox.show(this.headerContent.MarkPaid);
             if(that.model.get('tags') && that.model.get('tags').indexOf('paid') !== -1){
                 // complete
-                this.headerContent.MarkPaid.setContent('<i class="icon ion-ios7-checkmark"></i><div>Paid</div>');
-                this.headerContent.MarkPaid.setClasses(['header-tab-icon-text','marked-paid']);
+                this.headerContent.MarkPaid.setContent('<i class="icon ion-social-usd"></i>');
+                this.headerContent.MarkPaid.setClasses(['header-tab-icon-text-big','marked-paid']);
             } else {
                 // Not complete
-                this.headerContent.MarkPaid.setContent('<i class="icon ion-ios7-checkmark-outline"></i><div>Unpaid</div>');
-                this.headerContent.MarkPaid.setClasses(['header-tab-icon-text']);
+                this.headerContent.MarkPaid.setContent('<i class="icon ion-social-usd-outline"></i>');
+                this.headerContent.MarkPaid.setClasses(['header-tab-icon-text-big']);
             }
 
             // details/description
