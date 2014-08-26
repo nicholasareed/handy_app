@@ -240,6 +240,16 @@ define(function(require, exports, module) {
 
         this.collection.fetch({prefill: true});
 
+
+        // Listen for 'showing' events
+        this._eventInput.on('inOutTransition', function(args){
+            // 0 = direction
+            if(args[0] == 'showing'){
+                debugger;
+                that.collection.fetch();
+            }
+        });
+
     }
 
     SubView.prototype.addOne = function(UserMessage) { 

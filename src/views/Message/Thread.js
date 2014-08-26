@@ -128,8 +128,11 @@ define(function(require, exports, module) {
 
         this.collection.fetch({prefill: true});
         
-        this._eventOutput.on('inOutTransition', function(tmp){
-            if(tmp[0] == 'showing'){
+
+        // Listen for 'showing' events
+        this._eventOutput.on('inOutTransition', function(args){
+            // 0 = direction
+            if(args[0] == 'showing'){
                 that.collection.fetch();
             }
         });
