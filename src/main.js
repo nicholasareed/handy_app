@@ -106,7 +106,7 @@ var App = {},
 define(function(require, exports, module) {
     'use strict';
 
-    var FastClick = require('famous/inputs/FastClick');
+    // var FastClick = require('famous/inputs/FastClick');
 
     // import dependencies
     var Engine = require('famous/core/Engine');
@@ -467,7 +467,7 @@ define(function(require, exports, module) {
                 App.Views.MainFooter.hide = function(transition){
                     transition = transition || {
                         duration: 250,
-                        curve: Easing.itExpo
+                        curve: Easing.inExpo
                     };
                     App.Views.MainFooter.positionMod.setTransform(Transform.translate(0,1000,0), transition);
                 };

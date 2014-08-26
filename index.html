@@ -15,6 +15,7 @@
 
         <script type="text/javascript" src="cordova.js"></script>
 
+        <script type="text/javascript" src="src/lib2/fastclick.js"></script>
         <script type="text/javascript" src="src/lib/functionPrototypeBind.js"></script>
         <script type="text/javascript" src="src/lib/classList.js"></script>
         <script type="text/javascript" src="src/lib/requestAnimationFrame.js"></script>
@@ -23,6 +24,10 @@
         <script type="text/javascript">
             var GLOBAL_onReady = false;
 
+            window.addEventListener('load', function() {
+                FastClick.attach(document.body);
+            }, false);
+                        
             // track.js customer id
             var _trackJs = { 
                 customer: '2138571d0e004d109396748e01e291a0'

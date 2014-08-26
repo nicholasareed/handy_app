@@ -58,6 +58,8 @@ define(function(require, exports, module) {
         for (var i in recentlyDispatched) {
             var previousEvent = recentlyDispatched[i];
             if (currTime - i < clickWindow) {
+                // event.stopPropagation();
+                // if (event.target === previousEvent.target) event.stopPropagation();
                 if (event instanceof window.MouseEvent && event.target === previousEvent.target) event.stopPropagation();
             }
             else delete recentlyDispatched[i];
