@@ -204,7 +204,7 @@ define(function(require, exports, module) {
             },
 
             {
-                title: '<i class="ion-ios7-email-outline"></i> Feedback / Contact',
+                title: '<i class="ion-ios7-email-outline"></i> Feedback / Contact ('+App.ConfigImportant.Version+')',
                 desc: 'Please tell us how to improve!' + ' v' + App.ConfigImportant.Version,
                 href: 'feedback/settings'
             },
