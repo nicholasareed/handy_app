@@ -520,7 +520,7 @@ define(function(require, exports, module) {
             listData.push({
                 text: '<i class="icon ion-plus"></i> Add new card',
                 success: function(){
-                    App.history.navigate('payment_source/add');
+                    App.history.navigate('payment_source/add/creditcard');
                 }
             });
 
