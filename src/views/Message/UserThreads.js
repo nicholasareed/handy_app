@@ -217,7 +217,7 @@ define(function(require, exports, module) {
         this.emptyListSurface.pipe(this._eventOutput);
         this.emptyListSurfaceNoFriends = new Surface({
             // content: "You should add some friends to hang out with!",
-            content: "You've invited all your friends on ulu!",
+            content: "You've invited all your friends on handy!",
             size: [undefined, 100],
             classes: ['empty-list-surface-default'],
             properties: {

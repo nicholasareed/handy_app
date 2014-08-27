@@ -1053,16 +1053,6 @@ define(function (require) {
                     });
                     
                     break;
-                case 'friend_hangout_match':
-                    Utils.Popover.Buttons({
-                        title: 'A friend can hang',
-                        buttons: [
-                            {
-                                text: 'OK'
-                            }
-                        ]
-                    });
-                    break;
                 default:
                     Utils.Notification.Toast('Updates Available');
                     // alert('Unknown type');

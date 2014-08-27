@@ -148,7 +148,7 @@ define(function(require, exports, module) {
         // Instructions
         this.instructionsSurface = new View();
         this.instructionsSurface.Surface = new Surface({
-            content: 'Have a friend scan the code from within Hang, or use one of the buttons below. <br />After they finish scanning, press the Back button to refresh your friend list',
+            content: 'Have a friend scan the code from within handy, or use one of the buttons below. <br />After they finish scanning, press the Back button to refresh your friend list',
             size: [undefined, true],
             properties: {
                 padding: "20px 8px",
@@ -217,7 +217,7 @@ define(function(require, exports, module) {
 
     SubView.prototype.share_by_sms = function(){
         try {
-            window.plugins.socialsharing.shareViaSMS('Hang code: ' + this.model.get('code').toUpperCase(), null);
+            window.plugins.socialsharing.shareViaSMS('handy code: ' + this.model.get('code').toUpperCase(), null);
         }catch(err){
             console.error('Failed launching SMS sender');
             console.error(err);
