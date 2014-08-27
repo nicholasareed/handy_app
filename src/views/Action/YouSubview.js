@@ -327,6 +327,11 @@ define(function(require, exports, module) {
                 classes = ['action-news-item-default'];
                 link = 'invoice/' + Action.get('invoice_id');
                 break;
+            case 'invoice_paid_by_card':
+                content = '<span class="type">invoice</span> '+numeral(Action.get('details.amount')).format('$0,0.00')+ ' was paid by credit card',
+                classes = ['action-news-item-default'];
+                link = 'invoice/' + Action.get('invoice_id');
+                break;
             case 'invoice_unpaid':
                 content = '<span class="type">invoice</span> '+numeral(Action.get('details.amount')).format('$0,0.00')+' was marked unpaid',
                 classes = ['action-news-item-default'];
