@@ -54,7 +54,7 @@ define(function(require, exports, module) {
             if(that._now == now && this.longTapped !== true){
                 that._eventInput.trigger('touchmove', null);
             }
-        },timeToWait);
+        },timeToWait+1);
 
     };
 
