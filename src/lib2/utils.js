@@ -1035,9 +1035,10 @@ define(function (require) {
                     });
                     break;
                 default:
-                    alert('Unknown type');
-                    alert(payload.type);
-                    alert(JSON.stringify(payload));
+                    Utils.Notification.Toast('Updates Available');
+                    // alert('Unknown type');
+                    // alert(payload.type);
+                    // alert(JSON.stringify(payload));
                     return;
             }
 
