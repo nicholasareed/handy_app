@@ -60,7 +60,7 @@ define(function(require, exports, module) {
             origin: [0, 0.5]
         });
         this.contentView.Surface = new Surface({
-            content: '<i class="icon ion-asterisk"></i><div><h3>ulu in one sentence</h3><p>ulu is simple way of setting a time-limited availability to certain friends, with a suggestion on what you might like to do. </p></div>',
+            content: '<i class="icon ion-asterisk"></i><div><h3>People helping People</h3><p>handy helps you find a recommended person for your Todo, easily communicate with that person, and perhaps hire them again in the future! </p></div>',
             size: [undefined, true],
             classes: ['explore-surface-temp'],
             properties: {
