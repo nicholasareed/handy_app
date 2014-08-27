@@ -15,6 +15,9 @@ define(function(require, exports, module) {
     var Transform = require('famous/core/Transform');
     var Matrix = require('famous/core/Transform');
     var RenderNode         = require('famous/core/RenderNode')
+    
+    var LongTapSync = require("views/common/LongTapSync");
+        
 
     var Utility = require('famous/utilities/Utility');
     var Timer = require('famous/utilities/Timer');
@@ -96,11 +99,20 @@ define(function(require, exports, module) {
             size: [App.Defaults.Header.Icon.w, undefined],
             classes: ['header-tab-icon-text-big']
         });
+        this.headerContent.Create.on('longtap', function(){
+            Utils.IconHelp('todo_plus');
+            this.longTap = true;
+        });
         this.headerContent.Create.on('click', function(){
             // App.Cache.FriendListOptions = {
             //     default: 'outgoing'
             // };
             // App.history.navigate('friend/add');
+
+            if(this.longTap === true){
+                this.longTap = false;
+                return;
+            }
 
             Timer.setTimeout(function(){
 
@@ -116,6 +128,12 @@ define(function(require, exports, module) {
                     newModel.save()
                     .then(function(){
                         that.ListContent.Todos.collection.fetch();
+
+                        // show new todos
+                        that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowTodo);
+                        that.ListContent.show(that.ListContent.Todos);
+                        that.ListContent.Todos.collection.fetch();
+
                     });
 
                 }
@@ -131,7 +149,15 @@ define(function(require, exports, module) {
             size: [App.Defaults.Header.Icon.w, undefined],
             classes: ['header-tab-icon-text-big']
         });
+        this.headerContent.Invoices.on('longtap', function(){
+            Utils.IconHelp('todo_invoices');
+            this.longTap = true;
+        });
         this.headerContent.Invoices.on('click', function(){
+            if(this.longTap === true){
+                this.longTap = false;
+                return;
+            }
             App.history.navigate('invoice/list');
         });
 
@@ -149,7 +175,15 @@ define(function(require, exports, module) {
             size: [App.Defaults.Header.Icon.w, undefined],
             classes: ['header-tab-icon-text-big']
         });
+        this.headerContent.ShowTodo.on('longtap', function(){
+            Utils.IconHelp('todo_circle_checkmark');
+            this.longTap = true;
+        });
         this.headerContent.ShowTodo.on('click', function(){
+            if(this.longTap === true){
+                this.longTap = false;
+                return;
+            }
             that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowComplete);
             that.ListContent.show(that.ListContent.CompleteTodos);
             that.ListContent.CompleteTodos.collection.fetch();
@@ -159,7 +193,15 @@ define(function(require, exports, module) {
             size: [App.Defaults.Header.Icon.w, undefined],
             classes: ['header-tab-icon-text-big']
         });
+        this.headerContent.ShowComplete.on('longtap', function(){
+            Utils.IconHelp('todo_circle_checkmark');
+            this.longTap = true;
+        });
         this.headerContent.ShowComplete.on('click', function(){
+            if(this.longTap === true){
+                this.longTap = false;
+                return;
+            }
             that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowAll);
             that.ListContent.show(that.ListContent.AllTodos);
             that.ListContent.AllTodos.collection.fetch();
@@ -169,7 +211,15 @@ define(function(require, exports, module) {
             size: [App.Defaults.Header.Icon.w, undefined],
             classes: ['header-tab-icon-text-big']
         });
+        this.headerContent.ShowAll.on('longtap', function(){
+            Utils.IconHelp('todo_circle_checkmark');
+            this.longTap = true;
+        });
         this.headerContent.ShowAll.on('click', function(){
+            if(this.longTap === true){
+                this.longTap = false;
+                return;
+            }
             that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowTodo);
             that.ListContent.show(that.ListContent.Todos);
             that.ListContent.Todos.collection.fetch();

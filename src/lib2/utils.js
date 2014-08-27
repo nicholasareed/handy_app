@@ -228,6 +228,35 @@ define(function (require) {
             },
         },
 
+        IconHelp: function(key){
+
+            var opts = {
+                todo_invoices : {
+                    title: 'Switch to Invoices',
+                    body: 'Tapping this will switch to a view of Invoices'
+                },
+
+                todo_circle_checkmark : {
+                    title: 'Cycle between Todos',
+                    body: 'Tapping this will switch between 3 todo types:<br />' + 
+                          '<p><i class="icon ion-ios7-circle-outline"></i> Todo</p>' + 
+                          '<p><i class="icon ion-ios7-checkmark-outline"></i> Complete</p>' + 
+                          '<p><i class="icon ion-ios7-checkmark"></i> All</p>'
+                }
+                
+            };
+
+            if(opts[key] === undefined){
+                Utils.Popover.Help({
+                    title: 'Help Option Unavailable',
+                    body: "I'm sorry, this help page isn't ready yet!"
+                });
+                return;
+            }
+
+            Utils.Popover.Help(opts[key]);
+        },
+
         Contacts: {
 
             // // find all contacts with 'Bob' in any name field

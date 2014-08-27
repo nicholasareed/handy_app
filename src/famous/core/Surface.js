@@ -10,6 +10,8 @@
 define(function(require, exports, module) {
     var ElementOutput = require('./ElementOutput');
 
+    var LongTapSync = require("views/common/LongTapSync");
+
     /**
      * A base class for viewable content and event
      *   targets inside a Famo.us application, containing a renderable document
@@ -257,6 +259,14 @@ define(function(require, exports, module) {
         this._contentDirty = true;
         this._originDirty = true;
         this._transformDirty = true;
+
+        // var ltSync = new LongTapSync();
+        // ltSync.on('longtap', function(event){
+        //     alert('lt');
+        //     that._eventOutput.emit('longtap',event);
+        // });
+        // this.pipe(ltSync);
+
     };
 
     /**

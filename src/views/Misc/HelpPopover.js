@@ -208,10 +208,13 @@ define(function(require, exports, module) {
         // title
         this.titleView = new View(); 
         this.titleView.Surface = new Surface({
-            size: [undefined, 60],
+            size: [undefined, true],
             content: this.params.passed.title,
             classes: ['modal-option-help-popover-title-default']
         });
+        this.titleView.getSize = function(){
+            return [undefined, that.titleView.Surface._trueSize ? that.titleView.Surface._trueSize[1] : 60];
+        };
         this.titleView.add(this.titleView.Surface);
         this.titleView.Surface.pipe(that.contentScrollView);
         this.titleView.Surface.on('click', function(){
@@ -225,10 +228,13 @@ define(function(require, exports, module) {
         // body
         this.bodyView = new View(); 
         this.bodyView.Surface = new Surface({
-            size: [undefined, 60],
+            size: [undefined, true],
             content: this.params.passed.body,
             classes: ['modal-option-help-popover-body-default']
         });
+        this.bodyView.getSize = function(){
+            return [undefined, that.bodyView.Surface._trueSize ? that.bodyView.Surface._trueSize[1] : 60];
+        };
         this.bodyView.add(this.bodyView.Surface);
         this.bodyView.Surface.pipe(that.contentScrollView);
         this.bodyView.Surface.on('click', function(){

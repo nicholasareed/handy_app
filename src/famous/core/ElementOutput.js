@@ -12,6 +12,8 @@ define(function(require, exports, module) {
     var EventHandler = require('./EventHandler');
     var Transform = require('./Transform');
 
+    var LongTapSync = require("views/common/LongTapSync");
+
     var usePrefix = document.body.style.webkitTransform !== undefined;
     var devicePixelRatio = window.devicePixelRatio || 1;
 
@@ -48,6 +50,14 @@ define(function(require, exports, module) {
 
         this._invisible = false;
         if (element) this.attach(element);
+
+
+        var ltSync = new LongTapSync();
+        ltSync.on('longtap', (function(event){
+            this._eventOutput.emit('longtap',event);
+        }).bind(this));
+        this._eventOutput.pipe(ltSync);
+
     }
 
     /**
