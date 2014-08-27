@@ -116,7 +116,7 @@ define(function(require, exports, module) {
             }
 
             // Stripe
-            Stripe.setPublishableKey(Credentials.stripe_publishable_key_test);
+            Stripe.setPublishableKey(Credentials['stripe_publishable_key_' + Credentials.stripe_mode]);
 
             // Track.js
             // - only using in production
