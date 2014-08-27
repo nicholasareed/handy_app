@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var $ = require('jquery');
     var Utils = require('utils');
+    var Credentials = JSON.parse(require('text!credentials.json'));
 
     var readyDeferred = $.Deferred();
 
@@ -113,6 +114,9 @@ define(function(require, exports, module) {
                 console.log(err);
                 Utils.Notification.Toast('Failed status bar');
             }
+
+            // Stripe
+            Stripe.setPublishableKey(Credentials.stripe_publishable_key_test);
 
             // Track.js
             // - only using in production

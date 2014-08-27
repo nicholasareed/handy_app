@@ -192,6 +192,12 @@ define(function(require, exports, module) {
             },
 
             {
+                title: '<i class="ion-card"></i> Payment',
+                desc: 'Manage cards and bank accounts',
+                href: 'payment_source/list'
+            },
+
+            {
                 title: '<i class="ion-alert"></i> Push Notifications',
                 desc: 'Finer control',
                 href: 'settings/push'

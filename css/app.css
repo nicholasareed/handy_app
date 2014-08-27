@@ -380,6 +380,39 @@ body {
 
 
 
+
+/* Payment Sources  - credit card list */
+
+.payment-source-list-item-default {
+  line-height: 44px;
+  background: white;
+
+  padding: 0px 8px;
+
+  border-bottom: 1px dashed #ddd;
+}
+
+.payment-source-list-item-default > div:nth-child(1) {
+
+  padding-top: 8px;
+
+  font-size: 28px;
+  line-height: 34px;
+  color: #333;
+}
+
+
+.payment-source-list-item-default > div:nth-child(2) {
+  font-size: 14px;
+  line-height: 20px;
+  color: #333;
+
+  padding-bottom: 16px;
+}
+
+
+
+
 /* Invoice List - invoices */
 
 .invoice-list-item-default {
@@ -1887,6 +1920,12 @@ textarea {
 
 .settings-list-item {
 
+}
+
+.settings-list-item i {
+  padding: 0 0 0 8px;
+  display: inline-block;
+  width: 24px;
 }
 
 .settings-list-item > div:last-child {

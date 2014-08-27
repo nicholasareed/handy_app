@@ -213,6 +213,16 @@ define(function(require, exports, module) {
                     defaultRoute('InvoiceView', 'Invoice/View', arguments);
                 },
 
+                'payment_source/list' : function(){
+                    defaultRoute('PaymentSourceList', 'PaymentSource/List', arguments);
+                },
+                'payment_source/add/creditcard' : function(){
+                    defaultRoute('PaymentSourceAddCreditCard', 'PaymentSource/AddCreditCard', arguments, {cache: false});
+                },
+                'payment_source/:id' : function(){
+                    defaultRoute('PaymentSourceView', 'PaymentSource/View', arguments);
+                },
+
 
                 'todo/list' : function(){
                     App.Views.MainFooter.route_show = true;

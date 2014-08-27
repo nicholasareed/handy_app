@@ -17,7 +17,6 @@ define(function(require, exports, module) {
     var RenderNode         = require('famous/core/RenderNode')
 
     var Utility = require('famous/utilities/Utility');
-    var Timer = require('famous/utilities/Timer');
 
     // Helpers
     var Utils = require('utils');
@@ -41,13 +40,13 @@ define(function(require, exports, module) {
 
     // Notifications SubView
     var AllView      = require('./Subviews/All');
+    // var RecommendedView      = require('./Subviews/Recommended');
     // var PotentialView      = require('./Subviews/Potential');
     // var IncomingView      = require('./Subviews/Incoming');
     // var OutgoingView      = require('./Subviews/Outgoing');
     
-    // Models
-    var MediaModel = require('models/media');
-    var TodoModel = require('models/todo');
+    // // Models
+    // var MediaModel = require('models/media');
 
     function PageView(params) {
         var that = this;
@@ -64,20 +63,12 @@ define(function(require, exports, module) {
 
         this._subviews = [];
 
-        // // Wait for User to be resolved
-        // App.Data.User.populated().then((function(){
+        // Wait for User to be resolved
+        App.Data.User.populated().then((function(){
             this.createContent();
-        // }).bind(this));
+        }).bind(this));
 
         this.add(this.layout);
-
-        // Listen for 'showing' events
-        this._eventOutput.on('inOutTransition', function(args){
-            // 0 = direction
-            if(args[0] == 'showing'){
-                App.Data.TodoCollection.fetch();
-            }
-        });
 
     }
 
@@ -89,7 +80,7 @@ define(function(require, exports, module) {
         
         // Icons
 
-        // Create a Todo
+        // Invite somebody
         this.headerContent = new View();
         this.headerContent.Create = new Surface({
             content: '<i class="icon ion-ios7-plus-outline"></i>',
@@ -100,96 +91,43 @@ define(function(require, exports, module) {
             // App.Cache.FriendListOptions = {
             //     default: 'outgoing'
             // };
-            // App.history.navigate('friend/add');
-
-            Timer.setTimeout(function(){
-
-                var p = prompt('Todo title');
-                if(p && p.trim() != ''){
-
-                    Utils.Notification.Toast('Create a new Todo!');
-
-                    var newModel = new TodoModel.Todo({
-                        title: p
-                    });
-
-                    newModel.save()
-                    .then(function(){
-                        that.ListContent.Todos.collection.fetch();
-                    });
-
-                }
-
-            },200);
-
-
+            App.history.navigate('payment_source/add/creditcard');
         });
 
-        // Invoices
-        this.headerContent.Invoices = new Surface({
-            content: '<i class="icon ion-social-usd"></i>',
-            size: [App.Defaults.Header.Icon.w, undefined],
-            classes: ['header-tab-icon-text-big']
-        });
-        this.headerContent.Invoices.on('click', function(){
-            App.history.navigate('invoice/list');
-        });
+        // // Find Recommendations
+        // this.headerContent.GetRecommendation = new Surface({
+        //     content: '<i class="icon ion-android-microphone"></i>',
+        //     size: [App.Defaults.Header.Icon.w, undefined],
+        //     classes: ['header-tab-icon-text-big']
+        // });
+        // this.headerContent.GetRecommendation.on('click', function(){
+        //     // App.history.navigate('friend/potential');
+        //     Utils.Notification.Toast('Concierge Service Unavailable');
+        // });
 
-
-        // ListContent switcher
-        this.headerContent.FilterSwitcher = new View();
-        this.headerContent.FilterSwitcher.Lightbox = new RenderController();
-        this.headerContent.FilterSwitcher.SizeMod = new StateModifier({
-            size: [80, 60]
-        });
-        this.headerContent.FilterSwitcher.add(this.headerContent.FilterSwitcher.SizeMod).add(this.headerContent.FilterSwitcher.Lightbox);
-        
-        this.headerContent.ShowTodo = new Surface({
-            content: '<i class="icon ion-ios7-circle-outline"></i>',
-            size: [App.Defaults.Header.Icon.w, undefined],
-            classes: ['header-tab-icon-text-big']
-        });
-        this.headerContent.ShowTodo.on('click', function(){
-            that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowComplete);
-            that.ListContent.show(that.ListContent.CompleteTodos);
-            that.ListContent.CompleteTodos.collection.fetch();
-        });
-        this.headerContent.ShowComplete = new Surface({
-            content: '<i class="icon ion-ios7-checkmark-outline"></i>',
-            size: [App.Defaults.Header.Icon.w, undefined],
-            classes: ['header-tab-icon-text-big']
-        });
-        this.headerContent.ShowComplete.on('click', function(){
-            that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowAll);
-            that.ListContent.show(that.ListContent.AllTodos);
-            that.ListContent.AllTodos.collection.fetch();
-        });
-        this.headerContent.ShowAll = new Surface({
-            content: '<i class="icon ion-ios7-checkmark"></i>',
-            size: [App.Defaults.Header.Icon.w, undefined],
-            classes: ['header-tab-icon-text-big']
-        });
-        this.headerContent.ShowAll.on('click', function(){
-            that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowTodo);
-            that.ListContent.show(that.ListContent.Todos);
-            that.ListContent.Todos.collection.fetch();
-        });
-
-        this.headerContent.FilterSwitcher.Lightbox.show(this.headerContent.ShowTodo);
+        // // Find Friends
+        // this.headerContent.PotentialFriends = new Surface({
+        //     content: '<i class="icon ion-earth"></i>',
+        //     size: [App.Defaults.Header.Icon.w, undefined],
+        //     classes: ['header-tab-icon-text-big']
+        // });
+        // this.headerContent.PotentialFriends.on('click', function(){
+        //     App.history.navigate('friend/potential');
+        // });
 
 
         // create the header
         this.header = new StandardHeader({
-            content: "Todos",
+            content: "Payment",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             // moreContent: false
-            backContent: false,
+            // backContent: false,
             // moreClasses: ["normal-header"],
             moreSurfaces: [
-                this.headerContent.Invoices,
-                this.headerContent.Create,
-                this.headerContent.FilterSwitcher,
+                // this.headerContent.PotentialFriends,
+                // this.headerContent.GetRecommendation,
+                this.headerContent.Create
             ]
             // moreContent: "New", //'<span class="icon ion-navicon-round"></span>'
         });
@@ -203,11 +141,6 @@ define(function(require, exports, module) {
         this._eventOutput.on('inOutTransition', function(args){
             this.header.inOutTransition.apply(this.header, args);
         })
-
-        // // Node for Modifier and background
-        // this.HeaderNode = new RenderNode();
-        // this.HeaderNode.add(this.headerBg);
-        // this.HeaderNode.add(this.header.StateModifier).add(this.header);
 
         // Attach header to the layout        
         this.layout.header.add(this.header);
@@ -227,46 +160,10 @@ define(function(require, exports, module) {
         // Content
         this.ContentStateModifier = new StateModifier();
 
-        // Lists
-        this.ListContent = new RenderController();
+        this.AllView = new AllView();
+        this._subviews.push(this.AllView);
 
-        // Todo 
-        this.ListContent.Todos = new AllView({
-            empty_string: 'Add Todos by tapping the <i class="icon ion-ios7-plus-outline"></i>',
-            filter: {
-                tags: {
-                    '$ne' : 'complete'
-                }
-            }
-        });
-        // this.ListContent.Todos.View = new View();
-        // this.ListContent.Todos.add(this.ListContent.Todos.View);
-        this._subviews.push(this.ListContent.Todos);
-
-        // Complete 
-        this.ListContent.CompleteTodos = new AllView({
-            empty_string: "None Completed",
-            filter: {
-                tags: 'complete'
-            }
-        });
-        // this.ListContent.CompleteTodos.View = new View();
-        // this.ListContent.CompleteTodos.add(this.ListContent.CompleteTodos.View);
-        this._subviews.push(this.ListContent.CompleteTodos);
-
-        // All 
-        this.ListContent.AllTodos = new AllView({
-            empty_string: "You have not created any Todos, ever!",
-            filter: {}
-        });
-        // this.ListContent.AllTodos.View = new View();
-        // this.ListContent.AllTodos.add(this.ListContent.AllTodos.View);
-        this._subviews.push(this.ListContent.AllTodos);
-
-        // Show "Todos" by default
-        this.ListContent.show(this.ListContent.Todos);
-
-        this.layout.content.add(this.ContentStateModifier).add(this.ListContent);
+        this.layout.content.add(this.ContentStateModifier).add(this.AllView);
 
 
         return;
@@ -283,13 +180,13 @@ define(function(require, exports, module) {
         };
         this.TopTabs.add(Utils.usePlane('contentTabs')).add(this.TopTabs.BarSizeMod).add(this.TopTabs.Bar);
 
-        this.TopTabs.Bar.defineSection('all', {
-            content: '<i class="icon ion-android-friends"></i><div>All</div>',
+        this.TopTabs.Bar.defineSection('connected', {
+            content: '<i class="icon ion-arrow-swap"></i><div>Connected</div>',
             onClasses: ['friend-list-tabbar-default', 'on'],
             offClasses: ['friend-list-tabbar-default', 'off']
         });
-        this.TopTabs.Bar.defineSection('potential', {
-            content: '<i class="icon ion-android-social"></i><div>Potential</div>',
+        this.TopTabs.Bar.defineSection('recommended', {
+            content: '<i class="icon ion-thumbsup"></i><div>Recommended</div>',
             onClasses: ['friend-list-tabbar-default', 'on'],
             offClasses: ['friend-list-tabbar-default', 'off']
         });
@@ -310,17 +207,29 @@ define(function(require, exports, module) {
         // Tab content
         this.TopTabs.Content = new RenderController();
 
-        // All 
-        this.TopTabs.Content.AllFriends = new View();
-        this.TopTabs.Content.AllFriends.View = new AllView();
-        this.TopTabs.Content.AllFriends.add(this.TopTabs.Content.AllFriends.View);
-        this._subviews.push(this.TopTabs.Content.AllFriends.View);
+        // Connected 
+        this.TopTabs.Content.Connected = new View();
+        this.TopTabs.Content.Connected.View = new ConnectedView();
+        this.TopTabs.Content.Connected.add(this.TopTabs.Content.Connected.View);
+        this._subviews.push(this.TopTabs.Content.Connected.View);
 
-        // Potential 
-        this.TopTabs.Content.PotentialFriends = new View();
-        this.TopTabs.Content.PotentialFriends.View = new PotentialView();
-        this.TopTabs.Content.PotentialFriends.add(this.TopTabs.Content.PotentialFriends.View);
-        this._subviews.push(this.TopTabs.Content.PotentialFriends.View);
+        // Recommended 
+        this.TopTabs.Content.Recommended = new View();
+        this.TopTabs.Content.Recommended.View = new RecommendedView();
+        this.TopTabs.Content.Recommended.add(this.TopTabs.Content.Recommended.View);
+        this._subviews.push(this.TopTabs.Content.Recommended.View);
+
+        // // All 
+        // this.TopTabs.Content.AllFriends = new View();
+        // this.TopTabs.Content.AllFriends.View = new AllView();
+        // this.TopTabs.Content.AllFriends.add(this.TopTabs.Content.AllFriends.View);
+        // this._subviews.push(this.TopTabs.Content.AllFriends.View);
+
+        // // Potential 
+        // this.TopTabs.Content.PotentialFriends = new View();
+        // this.TopTabs.Content.PotentialFriends.View = new PotentialView();
+        // this.TopTabs.Content.PotentialFriends.add(this.TopTabs.Content.PotentialFriends.View);
+        // this._subviews.push(this.TopTabs.Content.PotentialFriends.View);
 
         // // Incoming
         // this.TopTabs.Content.IncomingInvites = new View();
@@ -340,6 +249,16 @@ define(function(require, exports, module) {
         // Listeners for Tabs
         this.TopTabs.Bar.on('select', function(result){
             switch(result.id){
+
+                case 'connected':
+                    that.TopTabs.Content.show(that.TopTabs.Content.Connected);
+                    // that.TopTabs.Content.AllFriends.View.collection.fetch();
+                    break;
+
+                case 'recommended':
+                    that.TopTabs.Content.show(that.TopTabs.Content.Recommended);
+                    // that.TopTabs.Content.AllFriends.View.collection.fetch();
+                    break;
 
                 case 'all':
                     that.TopTabs.Content.show(that.TopTabs.Content.AllFriends);
@@ -368,7 +287,7 @@ define(function(require, exports, module) {
         });
 
         // This depends on the previously selected! 
-        var default_selected = 'all';
+        var default_selected = 'connected';
         // try {
         //     default_selected = App.Cache.FriendListOptions.default || 'all';
         // }catch(err){console.error(err);}
@@ -412,10 +331,13 @@ define(function(require, exports, module) {
                         // Overwriting and using default identity
                         transitionOptions.outTransform = Transform.identity;
 
-                        Timer.setTimeout(function(){
+                        window.setTimeout(function(){
+
+                            // // Fade header
+                            // that.header.StateModifier.setOpacity(0, transitionOptions.outTransition);
 
                             // Slide down
-                            that.ContentStateModifier.setTransform(Transform.translate(window.innerWidth, 0,0), transitionOptions.outTransition);
+                            // that.ContentStateModifier.setTransform(Transform.translate(0, window.innerHeight,0), transitionOptions.outTransition);
 
                         }, delayShowing);
 
@@ -439,24 +361,49 @@ define(function(require, exports, module) {
                         // // Default header opacity
                         // that.header.StateModifier.setOpacity(0);
 
-                        // Default position
-                        if(goingBack){
-                            that.ContentStateModifier.setTransform(Transform.translate(window.innerWidth * -1,0,0));
-                        } else {
-                            that.ContentStateModifier.setTransform(Transform.translate(window.innerWidth + 100,0,0));
-                        }
-                        that.ContentStateModifier.setTransform(Transform.translate(0, window.innerHeight, 0));
+                        // // Default position
+                        // if(goingBack){
+                        //     that.ContentStateModifier.setTransform(Transform.translate(window.innerWidth * -1,0,0));
+                        // } else {
+                        //     that.ContentStateModifier.setTransform(Transform.translate(window.innerWidth + 100,0,0));
+                        // }
+                        // that.ContentStateModifier.setTransform(Transform.translate(0, window.innerHeight, 0));
 
+                        // Header
+                        window.setTimeout(function(){
+
+                            // // Change header opacity
+                            // that.header.StateModifier.setOpacity(1, transitionOptions.outTransition);
+
+
+                        }, delayShowing);
 
                         // Content
                         // - extra delay
-                        Timer.setTimeout(function(){
+                        window.setTimeout(function(){
 
-                            // Bring content back
-                            that.ContentStateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
+                            // // Bring content back
+                            // that.ContentStateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
 
                         }, delayShowing + transitionOptions.outTransition.duration);
 
+                        // //Fade out the header
+                        // // var previousTransform = transitionOptions.outTransform;
+                        // transitionOptions.outTransform = Transform.identity;
+
+                        // // Move the content to the left
+                        // // - not the footer
+                        // // console.log(transitionOptions.outTransform);
+                        // // debugger;
+                        // window.setTimeout(function(){
+
+                        //     // Bring map content back
+                        //     that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
+
+                        //     // Bring Footer Up
+                        //     that.layout.footer.StateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.outTransition);
+
+                        // }, delayShowing);
 
                         break;
                 }

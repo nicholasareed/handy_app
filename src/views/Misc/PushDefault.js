@@ -173,11 +173,11 @@ define(function(require, exports, module) {
                 desc: 'Every time you befriend someone',
                 scheme_key: 'new_friend'
             },
-            {
-                title: 'Friend Matches',
-                desc: 'You and a friend match',
-                scheme_key: 'friend_hangout_match'
-            }
+            // {
+            //     title: 'Friend Matches',
+            //     desc: 'You and a friend match',
+            //     scheme_key: 'friend_hangout_match'
+            // }
 
 
             // {
