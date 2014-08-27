@@ -607,6 +607,9 @@ body {
 .invoice-content-paid-status-default.unpaid > div {
   background: rgba(231,76,60,0.2);
 }
+.invoice-content-paid-status-default.card-paid > div {
+  background: rgba(46,204,113,0.2);
+}
 
 .invoice-content-paid-status-default > div {
   padding: 8px;
@@ -624,6 +627,20 @@ body {
   font-size: 11px;
   line-height: 13px;
 }
+
+.invoice-content-paid-status-default.card-paid > div > div:nth-child(2) {
+  color: #444;
+  font-size: 13px;
+  line-height: 15px;
+}
+.invoice-content-paid-status-default.card-paid > div > div:nth-child(3) {
+  color: #888;
+
+  font-size: 11px;
+  line-height: 13px;
+}
+
+
 
 
 
@@ -982,9 +999,25 @@ body {
   background: white;
   line-height: 30px;
   font-size: 16px;
-  padding: 15px 0 0 10px;
+  padding: 10px 8px;
   border-bottom: 1px solid #eee;
 }
+
+
+/* Payment Source modal/select */
+.modal-option-list-default.card-line-default {
+  padding: 10px 8px;
+}
+
+.modal-option-list-default.card-line-default > div:nth-child(1) {
+  font-size: 22px;
+  line-height: 28px;
+}
+
+.modal-option-list-default.card-line-default > div:nth-child(2) {
+  font-size: 12px;
+  line-height: 20px;
+} 
 
 
 /* By User Messages (see all the users) */

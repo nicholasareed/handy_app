@@ -38,7 +38,8 @@ define(function(require, exports, module) {
     var tpls                = {
         text: require('text!./tpl/ContentText.html'),
         mark_paid: require('text!./tpl/ContentMarkPaid.html'),
-        mark_unpaid: require('text!./tpl/ContentMarkUnpaid.html')
+        mark_unpaid: require('text!./tpl/ContentMarkUnpaid.html'),
+        card_paid: require('text!./tpl/ContentCardPaid.html')
     };
     var templates           = {};
     _.each(tpls, function(val, key){
@@ -235,6 +236,12 @@ define(function(require, exports, module) {
                 surfaceVars.content = templates.mark_unpaid(Model.toJSON());
                 surfaceVars.classes.push('invoice-content-paid-status-default');
                 surfaceVars.classes.push('unpaid');
+                break;
+
+            case 'card_paid':
+                surfaceVars.content = templates.card_paid(Model.toJSON());
+                surfaceVars.classes.push('invoice-content-paid-status-default');
+                surfaceVars.classes.push('card-paid');
                 break;
 
             default:

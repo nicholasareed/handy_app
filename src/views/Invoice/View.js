@@ -42,7 +42,7 @@ define(function(require, exports, module) {
     var crypto = require('lib2/crypto');
 
     // Models
-    var PlayerModel = require('models/player');
+    var PaymentSourceModel = require('models/payment_source');
     var InvoiceModel = require('models/invoice');
     var InvoiceContentModel = require('models/invoice_content');
 
@@ -145,13 +145,13 @@ define(function(require, exports, module) {
         
         // Icons
 
-        // -- settings/message (lightbox)
+        // -- mark as paid (lightbox)
         this.headerContent = new View();
-        this.headerContent.Lightbox = new RenderController();
+        this.headerContent.PaidLightbox = new RenderController();
         this.headerContent.SizeMod = new StateModifier({
             size: [80, 60]
         });
-        this.headerContent.add(this.headerContent.SizeMod).add(this.headerContent.Lightbox);
+        this.headerContent.add(this.headerContent.SizeMod).add(this.headerContent.PaidLightbox);
         // settings
         this.headerContent.MarkPaid = new Surface({
             content: '<i class="icon ion-ios7-checkmark-outline"></i>',
@@ -188,12 +188,32 @@ define(function(require, exports, module) {
 
         });
 
+        // Pay using Payment Source/Method
+        this.headerContent.PaymentView = new View();
+        this.headerContent.PaymentLightbox = new RenderController();
+        this.headerContent.PaymentView.SizeMod = new StateModifier({
+            size: [80, 60]
+        });
+        this.headerContent.PaymentView.add(this.headerContent.PaymentView.SizeMod).add(this.headerContent.PaymentLightbox);
+        this.headerContent.MakePayment = new Surface({
+            content: '<i class="icon ion-card"></i>',
+            size: [80, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.MakePayment.on('click', function(){
+            // App.history.navigate('settings');
+
+            that.make_payment();
+
+        });
+
         // create the header
         this.header = new StandardHeader({
             content: " ",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             moreSurfaces: [
+                this.headerContent.PaymentView,
                 this.headerContent
             ]
             // moreClasses: ["normal-header"],
@@ -446,6 +466,72 @@ define(function(require, exports, module) {
 
     };
 
+    PageView.prototype.make_payment = function() {
+        var that = this;
+
+        // Gather PaymentSources
+
+        var PaymentSources = new PaymentSourceModel.PaymentSourceCollection([],{
+            
+        });
+        PaymentSources.fetch();
+
+        PaymentSources.populated().then(function(){
+            var listData = [];
+
+            PaymentSources.toJSON().forEach(function(payment){
+                listData.push({
+                    text: '<div>'+S(payment.name) + '</div><div>*'+S(payment.last4)+'</div>',
+                    classes: ['modal-option-list-default','card-line-default'],
+                    value: payment,
+                    success: function(option){
+                        // Make payment
+                        console.log('making payment');
+                        console.log(option);
+
+                        $.ajax({
+                            url: Credentials.server_root + 'invoice/pay/' + that.model.get('_id'),
+                            cache: false,
+                            method: 'POST',
+                            data: {
+                                payment_source_id: option.value._id // PaymentSource._id
+                            },
+                            success: function(response){
+                                // Succeeded paying for Invoice!
+                                console.log(response);
+
+                                Utils.Notification.Toast('Succeeded making payment!');
+
+                                // Update InvoiceContent (subview) collection
+                                that.invoiceContent.collection.fetch();
+                            },
+                            error: function(err){
+                                if(err.responseJSON.msg){
+                                    alert(err.responseJSON.msg);
+                                }
+                            }
+                        });
+
+
+                    }
+                });
+            });
+
+            listData.push({
+                text: '<i class="icon ion-plus"></i> Add new card',
+                success: function(){
+                    App.history.navigate('payment_source/add');
+                }
+            });
+
+            Utils.Popover.List({
+                list: listData
+            });
+
+        });
+
+    };
+
     PageView.prototype.refreshData = function() {
         try {
             this.model.fetch();
@@ -462,8 +548,20 @@ define(function(require, exports, module) {
         if(that.model != undefined && that.model.hasFetched){
             // pass
 
+            // Make payment using PaymentSource
+            this.headerContent.PaymentLightbox.show(this.headerContent.MakePayment);
+            // if(that.model.get('tags') && that.model.get('tags').indexOf('paid') !== -1){
+            //     // complete
+            //     this.headerContent.MarkPaid.setContent('<i class="icon ion-social-usd"></i>');
+            //     this.headerContent.MarkPaid.setClasses(['header-tab-icon-text-big','marked-paid']);
+            // } else {
+            //     // Not complete
+            //     this.headerContent.MarkPaid.setContent('<i class="icon ion-social-usd-outline"></i>');
+            //     this.headerContent.MarkPaid.setClasses(['header-tab-icon-text-big']);
+            // }
+
             // "paid" tag
-            this.headerContent.Lightbox.show(this.headerContent.MarkPaid);
+            this.headerContent.PaidLightbox.show(this.headerContent.MarkPaid);
             if(that.model.get('tags') && that.model.get('tags').indexOf('paid') !== -1){
                 // complete
                 this.headerContent.MarkPaid.setContent('<i class="icon ion-social-usd"></i>');

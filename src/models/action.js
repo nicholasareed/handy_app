@@ -61,8 +61,15 @@ define(function (require) {
 
             // Paginator Server API
             server_api: {
+              
               // the query field in the request
-              '$filter': '',
+              '$filter': function(){
+                if(this['$filter']){
+                  return JSON.stringify(this['$filter']);
+                }
+                return '';
+              },
+
 
               // number of items to return per request/page
               '$top': function() { return this.perPage },
@@ -100,6 +107,11 @@ define(function (require) {
                   this.url = this.urlRoot + 'actions/todo/' + options.todo_id;
                 }
 
+
+                if(options['$filter']){
+                  this['$filter'] = options['$filter'];
+                }
+
                 // if(options.player_id){
                 //     // Viewing actions for an individual player (what everybody would see about that Player)
                 //     // - used for what I see about myself, and news/actions about other individual players
@@ -114,7 +126,7 @@ define(function (require) {
             },
 
             comparator: function(model){
-                return -1 * moment(model.get('created')); // 20131106T230554+0000
+                return -1 * moment(model.get('created')).format('X'); // 20131106T230554+0000
             },
 
             findByLastAction: function(){

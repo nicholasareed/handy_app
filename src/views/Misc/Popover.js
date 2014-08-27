@@ -220,10 +220,13 @@ define(function(require, exports, module) {
 
             var optionSurface = new View(); 
             optionSurface.Surface = new Surface({
-                size: [undefined, 60],
+                size: [undefined, true],
                 content: listOption.text,
-                classes: ['modal-option-list-default']
+                classes: listOption.classes || ['modal-option-list-default']
             });
+            optionSurface.getSize = function(){
+                return [undefined, optionSurface.Surface._trueSize ? optionSurface.Surface._trueSize[1] : 60];
+            };
             optionSurface.add(optionSurface.Surface);
             optionSurface.Surface.pipe(that.contentScrollView.SeqLayout);
             optionSurface.Surface.on('click', function(){
@@ -232,6 +235,7 @@ define(function(require, exports, module) {
                 that.closePopover();
                 if(returnResult.success){
                     returnResult.success(listOption);
+                    return;
                 }
                 if(that.params.passed.on_choose){
                     that.params.passed.on_choose(returnResult);

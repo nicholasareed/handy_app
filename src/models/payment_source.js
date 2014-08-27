@@ -40,19 +40,6 @@ define(function (require) {
                 if(options.payment_source_id){
                     this.url = this.urlRoot + '/' + options.payment_source_id;
                 }
-            },
-
-            comparator: function(model){
-                if(model.get('Profile.name')){
-                    return model.get('Profile.name').toString().toLowerCase();
-                } else {
-                    return model.get('name').toString().toLowerCase();
-                }
-            },
-
-            findMe: function(){
-                // console.log( this.findWhere({is_me: true}));
-                return this.findWhere({is_me: true});
             }
 
         });

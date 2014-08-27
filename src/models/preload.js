@@ -59,7 +59,10 @@ define(function(require, exports, module) {
 
             // Unread Messages
             App.Data.MessageCollection = new MessageModel.MessageCollection([],{
-                // type: 'friend'
+                '$filter' : {
+                    to_user_id: App.Data.User.get('_id'),
+                    read: false
+                }
             });
             App.Data.MessageCollection.on('sync', function(){
                 App.Views.MainFooter.Tabs.buttons[2].setOptions({
