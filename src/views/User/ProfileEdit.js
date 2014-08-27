@@ -354,12 +354,10 @@ define(function(require, exports, module) {
                 // alert('complete');
                 // alert('upload succeeded');
                 Utils.Notification.Toast('Upload succeeded');
-
-                Utils.Notification.Toast('Refreshing');
+                Utils.Notification.Toast('~30 seconds to process');
 
                 // update collection
                 Timer.setTimeout(function(){
-                    Utils.Notification.Toast('Refreshing');
                     that.model.fetch();
                 },5000);
 
