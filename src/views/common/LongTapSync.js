@@ -12,7 +12,7 @@ define(function(require, exports, module) {
 
     var Timer = require('famous/utilities/Timer');
 
-    var timeToWait = 1000;
+    var timeToWait = 300;
 
     /**
      * Helper to PinchSync, RotateSync, and ScaleSync.  Generalized handling of
