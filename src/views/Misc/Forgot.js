@@ -170,7 +170,6 @@ define(function(require, exports, module) {
         // Try sending a reset email
         $.ajax({
             url: Credentials.server_root + 'forgot',
-            // url: 'https://wehicleapp.com/forgot',
             method: 'POST',
             data: dataBody,
             error: function(err){

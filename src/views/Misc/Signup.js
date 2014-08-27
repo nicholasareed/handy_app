@@ -215,7 +215,7 @@ define(function(require, exports, module) {
             error: function(err){
                 // invalid login
 
-                Utils.Notification.Toast('Failed creating Nemesis account');
+                Utils.Notification.Toast('Failed creating handy account');
                 that.submitButtonSurface.setContent('Signup');
                 that.checking = false;
 
