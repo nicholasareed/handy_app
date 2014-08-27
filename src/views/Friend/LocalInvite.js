@@ -88,7 +88,7 @@ define(function(require, exports, module) {
             // Wait for model to be populated before loading Surfaces
             newRCode.populated().then(function(){
 
-                Utils.Clipboard.copyTo('get handy at handyapp.com/i/' + newRCode.get('code'));
+                Utils.Clipboard.copyTo('get handy at thehandyapp.com/i/' + newRCode.get('code'));
 
                 // var nada = prompt('Code has been copied','get handy at handyapp.com/i/' + newRCode.get('code'));
 
@@ -487,7 +487,7 @@ define(function(require, exports, module) {
         // Wait for model to be populated before loading Surfaces
         newRCode.populated().then(function(){
 
-            var sentence = "get handy! I'm on it now. handyapp.com/i/" + newRCode.get('code');
+            var sentence = "get handy! thehandyapp.com/i/" + newRCode.get('code');
             console.log(sentence);
             window.plugins.socialsharing.shareViaSMS(sentence, phone_number, function(msg) {console.log('ok: ' + msg)}, function(msg) {Utils.Notification.Toast('error: ' + msg)})
 
