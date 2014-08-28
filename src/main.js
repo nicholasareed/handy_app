@@ -24,7 +24,7 @@ require.config({
         backbone: '../src/lib2/backbone',
         moment: '../src/lib2/moment',
         // history: '../src/lib2/history',
-        utils: '../src/lib2/utils',
+        utils: '../src/utils',
         handlebars: '../src/lib2/handlebars',
         'backbone-adapter' : '../src/lib2/backbone-adapter',
         'jquery-adapter' : '../src/lib2/jquery-adapter'
