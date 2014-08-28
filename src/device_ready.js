@@ -85,8 +85,6 @@ define(function(require, exports, module) {
 
         onReady: function(){
 
-            Utils.Notification.Toast('Is Ready');
-
             if(this.isReady === true){
                 return;
             }
