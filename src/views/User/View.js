@@ -265,6 +265,9 @@ define(function(require, exports, module) {
             size: [App.Defaults.Header.Icon.w, undefined],
             classes: ['header-tab-icon-text-big']
         });
+        this.headerContent.Friends.on('longtap', function(){
+            Utils.IconHelp('User/View/Friends');
+        });
         this.headerContent.Friends.on('click', function(){
             // App.Cache.FriendListOptions = {
             //     default: 'outgoing'
