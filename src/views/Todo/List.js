@@ -104,7 +104,7 @@ define(function(require, exports, module) {
             Utils.IconHelp('todo_plus');
         });
         this.headerContent.Create.on('click', function(){
-            
+
             // Timer.setTimeout(function(){
 
             var p = prompt('Todo title');
@@ -453,7 +453,7 @@ define(function(require, exports, module) {
         // },2000);
         
         var node = this.filterTabs.add(this.filterTabs.SizeMod);
-        node.add(Utils.usePlane('contentTabs'),-1).add(this.filterTabs.BgSurface);
+        node.add(Utils.usePlane('contentTabs',-1)).add(this.filterTabs.BgSurface);
         node.add(Utils.usePlane('contentTabs')).add(this.filterTabs.Layout);
 
         this.contentScrollView.Views.push(this.filterTabs);
