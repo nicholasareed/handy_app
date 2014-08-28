@@ -248,7 +248,7 @@ define(function(require, exports, module) {
 
     };
 
-    PageView.prototype.backbuttonhandler = function(){
+    PageView.prototype.backbuttonHandler = function(){
         return false;
     };
 
