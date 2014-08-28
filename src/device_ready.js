@@ -19,8 +19,6 @@ define(function(require, exports, module) {
         init: function(){
             var that = this;
 
-            alert('init');
-
             // phonegap/cordova usage
             App.Data.usePg = false;
             if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
@@ -71,30 +69,23 @@ define(function(require, exports, module) {
             //     }
             // }());
 
-            alert('about');
             if(GLOBAL_onReady === true){
                 // alert('is already onReady');
-                alert('is already onReady');
                 setTimeout(function(){
                     that.onReady();
                 },100);
             } else {
                 document.addEventListener("deviceready", function(){
-                    alert('deviceready ready 324');
+                    // alert('deviceready ready 324');
                     that.onReady();
                 }, false);
             }
-            alert('done');
 
         },
 
         onReady: function(){
 
             Utils.Notification.Toast('Is Ready');
-
-            // window.addEventListener('load', function() {
-                FastClick.attach(document.body);
-            // }, false);
 
             if(this.isReady === true){
                 return;
