@@ -75,7 +75,9 @@ define(function(require, exports, module) {
             if(GLOBAL_onReady === true){
                 // alert('is already onReady');
                 alert('is already onReady');
-                that.onReady();
+                setTimeout(function(){
+                    that.onReady();
+                },100);
             } else {
                 document.addEventListener("deviceready", function(){
                     alert('deviceready ready 324');
