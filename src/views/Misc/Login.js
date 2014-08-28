@@ -248,6 +248,10 @@ define(function(require, exports, module) {
 
     };
 
+    PageView.prototype.backbuttonhandler = function(){
+        return false;
+    };
+
     PageView.DEFAULT_OPTIONS = {
     };
 
