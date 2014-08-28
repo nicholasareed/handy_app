@@ -19,6 +19,8 @@ define(function(require, exports, module) {
         init: function(){
             var that = this;
 
+            alert('init');
+
             // phonegap/cordova usage
             App.Data.usePg = false;
             if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
@@ -34,6 +36,7 @@ define(function(require, exports, module) {
 
             // Browser (development)
             if(!App.Data.usePg){
+                alert('using browser');
                 console.log('Using Browser');
                 console.log(that);
                 that.onReady();
@@ -83,6 +86,8 @@ define(function(require, exports, module) {
         },
 
         onReady: function(){
+
+            Utils.Notification.Toast('Is Ready');
 
             if(this.isReady === true){
                 return;

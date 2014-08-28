@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget 
     id="com.handy.app.pub" 
-    version="0.0.1.12" 
+    version="0.0.1.13" 
     xmlns="http://www.w3.org/ns/widgets" 
     xmlns:gap="http://phonegap.com/ns/1.0" 
     xmlns:android="http://schemas.android.com/apk/res/android" 
@@ -42,7 +42,7 @@
     <preference name="StatusBarStyle" value="lightcontent" />
 
     <preference name="URL_SCHEME" value="http" />
-    <preference name="URL_HOST" value="handyapp.com" />
+    <preference name="URL_HOST" value="thehandyapp.com" />
 
 
     <gap:plugin name="org.apache.cordova.device" />
