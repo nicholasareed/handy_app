@@ -97,6 +97,9 @@ define(function(require, exports, module) {
             size: [App.Defaults.Header.Icon.w, undefined],
             classes: ['header-tab-icon-text-big']
         });
+        this.headerContent.Invite.on('longtap', function(){
+            Utils.IconHelp('Todo/AssignList/Invite');
+        });
         this.headerContent.Invite.on('click', function(){
             // App.Cache.FriendListOptions = {
             //     default: 'outgoing'
@@ -109,6 +112,9 @@ define(function(require, exports, module) {
             content: '<i class="icon ion-person"></i>',
             size: [App.Defaults.Header.Icon.w, undefined],
             classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.UseMe.on('longtap', function(){
+            Utils.IconHelp('Todo/AssignList/UseMe');
         });
         this.headerContent.UseMe.on('click', function(){
             // App.history.navigate('friend/potential');

@@ -88,6 +88,9 @@ define(function(require, exports, module) {
             size: [App.Defaults.Header.Icon.w, undefined],
             classes: ['header-tab-icon-text-big']
         });
+        this.headerContent.Create.on('longtap', function(){
+            Utils.IconHelp('Invoice/List/Create');
+        });
         this.headerContent.Create.on('click', function(){
             // App.Cache.FriendListOptions = {
             //     default: 'outgoing'
@@ -107,6 +110,9 @@ define(function(require, exports, module) {
             size: [App.Defaults.Header.Icon.w, undefined],
             classes: ['header-tab-icon-text-big']
         });
+        this.headerContent.Todos.on('longtap', function(){
+            Utils.IconHelp('Invoice/List/Todos');
+        });
         this.headerContent.Todos.on('click', function(){
             App.history.navigate('todo/list');
         });
@@ -124,6 +130,9 @@ define(function(require, exports, module) {
             size: [App.Defaults.Header.Icon.w, undefined],
             classes: ['header-tab-icon-text-big']
         });
+        this.headerContent.ShowInvoice.on('longtap', function(){
+            Utils.IconHelp('Invoice/List/Series');
+        });
         this.headerContent.ShowInvoice.on('click', function(){
             that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowPaid);
             that.ListContent.show(that.ListContent.PaidInvoices);
@@ -134,6 +143,9 @@ define(function(require, exports, module) {
             size: [App.Defaults.Header.Icon.w, undefined],
             classes: ['header-tab-icon-text-big']
         });
+        this.headerContent.ShowPaid.on('longtap', function(){
+            Utils.IconHelp('Invoice/List/Series');
+        });
         this.headerContent.ShowPaid.on('click', function(){
             that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowAll);
             that.ListContent.show(that.ListContent.AllInvoices);
@@ -143,6 +155,9 @@ define(function(require, exports, module) {
             content: '<span class="header-with-money-sign white-money"></span><i class="icon ion-ios7-circle-filled"></i>',
             size: [App.Defaults.Header.Icon.w, undefined],
             classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.ShowAll.on('longtap', function(){
+            Utils.IconHelp('Invoice/List/Series');
         });
         this.headerContent.ShowAll.on('click', function(){
             that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowInvoice);

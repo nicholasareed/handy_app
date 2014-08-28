@@ -205,6 +205,9 @@ define(function(require, exports, module) {
             size: [60, undefined],
             classes: ['header-tab-icon-text-big']
         });
+        this.headerContent.Settings.on('longtap', function(){
+            Utils.IconHelp('User/View/Settings');
+        });
         this.headerContent.Settings.on('click', function(){
             App.history.navigate('settings');
         });
@@ -213,6 +216,9 @@ define(function(require, exports, module) {
             content: '<i class="icon ion-ios7-chatboxes"></i>',
             size: [60, undefined],
             classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.Message.on('longtap', function(){
+            Utils.IconHelp('User/View/Message');
         });
         this.headerContent.Message.on('click', function(){
             App.history.navigate('inbox/' + that.profile_id);

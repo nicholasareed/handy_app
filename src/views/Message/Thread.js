@@ -151,6 +151,9 @@ define(function(require, exports, module) {
             size: [App.Defaults.Header.Icon.w, undefined],
             classes: ['header-tab-icon-text-big']
         });
+        this.headerContent.NewMessage.on('longtap', function(){
+            Utils.IconHelp('Message/Thread/NewMessage');
+        });
         this.headerContent.NewMessage.on('click', function(){
             // App.Cache.FriendListOptions = {
             //     default: 'outgoing'

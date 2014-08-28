@@ -87,6 +87,9 @@ define(function(require, exports, module) {
             size: [App.Defaults.Header.Icon.w, undefined],
             classes: ['header-tab-icon-text-big']
         });
+        this.headerContent.Invite.on('longtap', function(){
+            Utils.IconHelp('Friend/List/Invite');
+        });
         this.headerContent.Invite.on('click', function(){
             // App.Cache.FriendListOptions = {
             //     default: 'outgoing'
@@ -99,6 +102,9 @@ define(function(require, exports, module) {
             content: '<i class="icon ion-android-microphone"></i>',
             size: [App.Defaults.Header.Icon.w, undefined],
             classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.GetRecommendation.on('longtap', function(){
+            Utils.IconHelp('Friend/List/GetRecommendation');
         });
         this.headerContent.GetRecommendation.on('click', function(){
             // App.history.navigate('friend/potential');

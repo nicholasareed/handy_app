@@ -231,6 +231,7 @@ define(function (require) {
         IconHelp: function(key){
 
             var opts = {
+
                 todo_invoices : {
                     title: 'Switch to Invoices',
                     body: 'Tapping this will switch to a view of Invoices'
@@ -249,7 +250,7 @@ define(function (require) {
             if(opts[key] === undefined){
                 Utils.Popover.Help({
                     title: 'Help Option Unavailable',
-                    body: "I'm sorry, this help page isn't ready yet!"
+                    body: "I'm sorry, this help page isn't ready yet! <br />" + key
                 });
                 return;
             }

@@ -177,13 +177,8 @@ define(function(require, exports, module) {
         });
         this.headerContent.ShowTodo.on('longtap', function(){
             Utils.IconHelp('todo_circle_checkmark');
-            this.longTap = true;
         });
         this.headerContent.ShowTodo.on('click', function(){
-            if(this.longTap === true){
-                this.longTap = false;
-                return;
-            }
             that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowComplete);
             that.ListContent.show(that.ListContent.CompleteTodos);
             that.ListContent.CompleteTodos.collection.fetch();
@@ -195,13 +190,8 @@ define(function(require, exports, module) {
         });
         this.headerContent.ShowComplete.on('longtap', function(){
             Utils.IconHelp('todo_circle_checkmark');
-            this.longTap = true;
         });
         this.headerContent.ShowComplete.on('click', function(){
-            if(this.longTap === true){
-                this.longTap = false;
-                return;
-            }
             that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowAll);
             that.ListContent.show(that.ListContent.AllTodos);
             that.ListContent.AllTodos.collection.fetch();
@@ -213,13 +203,8 @@ define(function(require, exports, module) {
         });
         this.headerContent.ShowAll.on('longtap', function(){
             Utils.IconHelp('todo_circle_checkmark');
-            this.longTap = true;
         });
         this.headerContent.ShowAll.on('click', function(){
-            if(this.longTap === true){
-                this.longTap = false;
-                return;
-            }
             that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowTodo);
             that.ListContent.show(that.ListContent.Todos);
             that.ListContent.Todos.collection.fetch();

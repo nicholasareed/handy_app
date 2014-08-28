@@ -158,6 +158,9 @@ define(function(require, exports, module) {
             size: [80, undefined],
             classes: ['header-tab-icon-text-big']
         });
+        this.headerContent.MarkPaid.on('longtap', function(){
+            Utils.IconHelp('Invoice/View/MarkPaid');
+        });
         this.headerContent.MarkPaid.on('click', function(){
             // App.history.navigate('settings');
 
@@ -199,6 +202,9 @@ define(function(require, exports, module) {
             content: '<i class="icon ion-card"></i>',
             size: [80, undefined],
             classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.MakePayment.on('longtap', function(){
+            Utils.IconHelp('Invoice/View/MakePayment');
         });
         this.headerContent.MakePayment.on('click', function(){
             // App.history.navigate('settings');

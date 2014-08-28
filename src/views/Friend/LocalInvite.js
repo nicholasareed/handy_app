@@ -76,6 +76,9 @@ define(function(require, exports, module) {
             size: [60, undefined],
             classes: ['header-tab-icon-text-big']
         });
+        this.headerContent.CopyCode.on('longtap', function(){
+            Utils.IconHelp('Friend/LocalInvite/CopyCode');
+        });
         this.headerContent.CopyCode.on('click', function(){
 
             Utils.Notification.Toast('Getting Code');
@@ -105,6 +108,9 @@ define(function(require, exports, module) {
             content: '<i class="icon ion-edit">',
             size: [60, undefined],
             classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.CopyCode.on('longtap', function(){
+            Utils.IconHelp('Friend/LocalInvite/EnterCode');
         });
         this.headerContent.EnterCode.on('click', function(){
             Timer.setTimeout(function(){

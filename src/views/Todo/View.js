@@ -159,6 +159,9 @@ define(function(require, exports, module) {
             size: [80, undefined],
             classes: ['header-tab-icon-text']
         });
+        this.headerContent.MarkComplete.on('longtap', function(){
+            Utils.IconHelp('Todo/View/MarkComplete');
+        });
         this.headerContent.MarkComplete.on('click', function(){
             // App.history.navigate('settings');
 

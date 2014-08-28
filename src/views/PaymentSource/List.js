@@ -87,6 +87,9 @@ define(function(require, exports, module) {
             size: [App.Defaults.Header.Icon.w, undefined],
             classes: ['header-tab-icon-text-big']
         });
+        this.headerContent.Create.on('longtap', function(){
+            Utils.IconHelp('PaymentSource/List/Create');
+        });
         this.headerContent.Create.on('click', function(){
             // App.Cache.FriendListOptions = {
             //     default: 'outgoing'
