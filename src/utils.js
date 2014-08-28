@@ -243,6 +243,13 @@ define(function (require) {
                           '<p><i class="icon ion-ios7-circle-outline"></i> Todo</p>' + 
                           '<p><i class="icon ion-ios7-checkmark-outline"></i> Complete</p>' + 
                           '<p><i class="icon ion-ios7-checkmark"></i> All</p>'
+                },
+
+                'PaymentSource/List/BankDetails' : {
+                    title: 'Accept Payments',
+                    body: "To accept payments, we'll need a few more details from you. " + 
+                          "Please email us (or use the feedback form from the Settings menu) and we'll get you set up!<br /><br />" +
+                          "We apologize for the inconvenience!"
                 }
                 
             };

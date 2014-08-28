@@ -97,26 +97,19 @@ define(function(require, exports, module) {
             App.history.navigate('payment_source/add/creditcard');
         });
 
-        // // Find Recommendations
-        // this.headerContent.GetRecommendation = new Surface({
-        //     content: '<i class="icon ion-android-microphone"></i>',
-        //     size: [App.Defaults.Header.Icon.w, undefined],
-        //     classes: ['header-tab-icon-text-big']
-        // });
-        // this.headerContent.GetRecommendation.on('click', function(){
-        //     // App.history.navigate('friend/potential');
-        //     Utils.Notification.Toast('Concierge Service Unavailable');
-        // });
-
-        // // Find Friends
-        // this.headerContent.PotentialFriends = new Surface({
-        //     content: '<i class="icon ion-earth"></i>',
-        //     size: [App.Defaults.Header.Icon.w, undefined],
-        //     classes: ['header-tab-icon-text-big']
-        // });
-        // this.headerContent.PotentialFriends.on('click', function(){
-        //     App.history.navigate('friend/potential');
-        // });
+        // Accept payments (banking details)
+        this.headerContent.BankDetails = new Surface({
+            content: '<i class="icon ion-cash"></i>',
+            size: [App.Defaults.Header.Icon.w, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.BankDetails.on('longtap', function(){
+            Utils.IconHelp('PaymentSource/List/BankDetails');
+        });
+        this.headerContent.BankDetails.on('click', function(){
+            Utils.IconHelp('PaymentSource/List/BankDetails');
+            // App.history.navigate('payment_source/add/creditcard');
+        });
 
 
         // create the header
@@ -130,6 +123,7 @@ define(function(require, exports, module) {
             moreSurfaces: [
                 // this.headerContent.PotentialFriends,
                 // this.headerContent.GetRecommendation,
+                this.headerContent.BankDetails,
                 this.headerContent.Create
             ]
             // moreContent: "New", //'<span class="icon ion-navicon-round"></span>'
