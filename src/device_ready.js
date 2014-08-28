@@ -36,7 +36,6 @@ define(function(require, exports, module) {
 
             // Browser (development)
             if(!App.Data.usePg){
-                alert('using browser');
                 console.log('Using Browser');
                 console.log(that);
                 that.onReady();
@@ -72,22 +71,28 @@ define(function(require, exports, module) {
             //     }
             // }());
 
-
+            alert('about');
             if(GLOBAL_onReady === true){
                 // alert('is already onReady');
+                alert('is already onReady');
                 that.onReady();
             } else {
                 document.addEventListener("deviceready", function(){
-                    // alert('deviceready ready 324');
+                    alert('deviceready ready 324');
                     that.onReady();
                 }, false);
             }
+            alert('done');
 
         },
 
         onReady: function(){
 
             Utils.Notification.Toast('Is Ready');
+
+            // window.addEventListener('load', function() {
+                FastClick.attach(document.body);
+            // }, false);
 
             if(this.isReady === true){
                 return;
