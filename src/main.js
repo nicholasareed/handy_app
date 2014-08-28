@@ -490,7 +490,7 @@ define(function(require, exports, module) {
                 App.Views.Popover.frontMod = new StateModifier({
                     transform: Transform.inFront
                 });
-                App.MainContext.add(App.Views.Popover.frontMod).add(App.Views.Popover);
+                App.MainContext.add(Utils.usePlane('popover')).add(App.Views.Popover);
 
             };
             createPopover();
