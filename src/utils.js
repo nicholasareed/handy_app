@@ -246,7 +246,7 @@ define(function (require) {
                 },
 
                 'PaymentSource/List/BankDetails' : {
-                    title: 'Accept Payments',
+                    title: 'Accepting Payments',
                     body: "To accept payments, we'll need a few more details from you. " + 
                           "Please email us (or use the feedback form from the Settings menu) and we'll get you set up!<br /><br />" +
                           "We apologize for the inconvenience!"
