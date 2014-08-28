@@ -66,12 +66,19 @@ define(function(require, exports, module) {
         this._cachedLengths = [];
         this._cachedTransforms = [];
 
+        // hack/fix for setRatio with true surfaces
+        // - should instead have the FlexibleLayout check for a "still dirty" surface or getSize and wait for it to not be "null"
+
+        var still_dirty = false;
+
         for (i = 0; i < ratios.length; i++){
             ratio = ratios[i];
             node = this._nodes[i];
-
+            if(node.getSize() === null){
+                still_dirty = true;
+            }
             if (typeof ratio !== 'number')
-                flexLength -= node.getSize()[direction] || 0;
+                flexLength -= (node.getSize() ? node.getSize()[direction] : 0) || 0;
             else
                 ratioSum += ratio;
         }
@@ -80,9 +87,13 @@ define(function(require, exports, module) {
             node = this._nodes[i];
             ratio = ratios[i];
 
+            if(node.getSize() === null){
+                still_dirty = true;
+            }
+
             length = (typeof ratio === 'number')
                 ? flexLength * ratio / ratioSum
-                : node.getSize()[direction];
+                : (node.getSize() ? node.getSize()[direction] : 0);
 
             currTransform = (direction === FlexibleLayout.DIRECTION_X)
                 ? Transform.translate(translation, 0, 0)
@@ -93,6 +104,18 @@ define(function(require, exports, module) {
 
             translation += length;
         }
+
+        if(still_dirty){
+            // Trigger a _reflow in a moment, after surfaces have rendered
+            // debugger;
+            var that = this;
+            setTimeout(function(){
+                // this._ratiosDirty = true;
+                // console.log(that.options.ratios);
+                that.setRatios(that.options.ratios);
+            },5);
+        }
+
     }
 
     /**
@@ -142,6 +165,7 @@ define(function(require, exports, module) {
     FlexibleLayout.prototype.setRatios = function setRatios(ratios, transition, callback) {
         if (transition === undefined) transition = this.options.transition;
         var currRatios = this._ratios;
+        this.options.ratios = ratios;
         if (currRatios.get().length === 0) transition = undefined;
         if (currRatios.isActive()) currRatios.halt();
         currRatios.set(ratios, transition, callback);

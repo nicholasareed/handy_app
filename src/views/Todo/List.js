@@ -44,6 +44,7 @@ define(function(require, exports, module) {
 
     // Notifications SubView
     var AllView      = require('./Subviews/All');
+    var FilterView      = require('./Subviews/All');
     // var PotentialView      = require('./Subviews/Potential');
     // var IncomingView      = require('./Subviews/Incoming');
     // var OutgoingView      = require('./Subviews/Outgoing');
@@ -101,44 +102,34 @@ define(function(require, exports, module) {
         });
         this.headerContent.Create.on('longtap', function(){
             Utils.IconHelp('todo_plus');
-            this.longTap = true;
         });
         this.headerContent.Create.on('click', function(){
-            // App.Cache.FriendListOptions = {
-            //     default: 'outgoing'
-            // };
-            // App.history.navigate('friend/add');
+            
+            // Timer.setTimeout(function(){
 
-            if(this.longTap === true){
-                this.longTap = false;
-                return;
+            var p = prompt('Todo title');
+            if(p && p.trim() != ''){
+
+                Utils.Notification.Toast('Create a new Todo!');
+
+                var newModel = new TodoModel.Todo({
+                    title: p
+                });
+
+                newModel.save()
+                .then(function(){
+                    that.ListContent.Todos.collection.fetch();
+
+                    // show new todos
+                    that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowTodo);
+                    that.ListContent.show(that.ListContent.Todos);
+                    that.ListContent.Todos.collection.fetch();
+
+                });
+
             }
 
-            Timer.setTimeout(function(){
-
-                var p = prompt('Todo title');
-                if(p && p.trim() != ''){
-
-                    Utils.Notification.Toast('Create a new Todo!');
-
-                    var newModel = new TodoModel.Todo({
-                        title: p
-                    });
-
-                    newModel.save()
-                    .then(function(){
-                        that.ListContent.Todos.collection.fetch();
-
-                        // show new todos
-                        that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowTodo);
-                        that.ListContent.show(that.ListContent.Todos);
-                        that.ListContent.Todos.collection.fetch();
-
-                    });
-
-                }
-
-            },200);
+            // },200);
 
 
         });
@@ -224,7 +215,7 @@ define(function(require, exports, module) {
             moreSurfaces: [
                 this.headerContent.Invoices,
                 this.headerContent.Create,
-                this.headerContent.FilterSwitcher,
+                // this.headerContent.FilterSwitcher,
             ]
             // moreContent: "New", //'<span class="icon ion-navicon-round"></span>'
         });
@@ -248,13 +239,238 @@ define(function(require, exports, module) {
         this.layout.header.add(this.header);
 
     };
+
+    PageView.prototype.tab_change = function(name){
+        var that = this;
+
+        // Determine the filter we'll use for this ListView
+        var filter = {};
+
+        // 
+        switch(this.tabs.todos_complete){
+            case 'notcomplete':
+                filter.tags = {
+                    '$ne' : 'complete'
+                };
+                break;
+            case 'complete':
+                filter.tags = 'complete';
+                break;
+            case 'all':
+                break;
+        }
+
+        switch(this.tabs.todos_assigned){
+            case 'all':
+                // filter.assigned_id = App.Data.User.get('_id');
+                break;
+            case 'me':
+                filter.assigned_id = App.Data.User.get('_id');
+                break;
+            case 'other':
+                filter.assigned_id = {
+                    '$nin' : [null, App.Data.User.get('_id')]
+                }
+                break;
+        }
+
+        console.log(JSON.stringify(filter));
+
+        // is filter already created (JSON.stringify and check as a key)
+        var cachedView = this._cachedViews[JSON.stringify(filter)];
+
+        // Create the ListView if it doesn't exist
+        if(!cachedView){
+            cachedView = new FilterView({
+                empty_string: 'No todos to show',
+                filter: filter
+            });
+
+            this._cachedViews[JSON.stringify(filter)] = cachedView;
+            this._subviews.push(cachedView);
+
+        }
+
+        // Show the ListView
+        this.ListContent.show(cachedView);
+
+
+    };
+
+    PageView.prototype.createTabs = function(){
+        var that = this;
+
+        this.tabs = {
+            todos_complete: 'notcomplete',
+            todos_assigned: 'all'
+        }
+        this._cachedViews = {};
+
+        this.filterTabs = new View();
+        this.filterTabs.getSize = function(){
+            return [undefined, 60];
+        };
+        this.filterTabs.BgSurface = new Surface({
+            size: [undefined, undefined],
+            properties: {
+                backgroundColor: 'rgba(255,255,255,0.5)'
+            }
+        });
+        this.filterTabs.Layout = new FlexibleLayout({
+            direction: 0, //FlexibleLayout.DIRECTION_X,
+            ratios: [true,true,true, 1, true,true,true]
+        });
+        this.filterTabs.Views = [];
+        this.filterTabs.SizeMod = new StateModifier({
+            size: [undefined, 60]
+        });
+
+
+        // All the tab options that could be clicked
+        // - and a spacer
+
+        this.filterTabs.TodosNotComplete = new Surface({
+            content: '<i class="icon ion-ios7-circle-outline"></i>',
+            size: [50, undefined],
+            classes: ['todo-filter-tabs-item-default']
+        });
+        this.filterTabs.TodosNotComplete.group = 'TodosComplete';
+        this.filterTabs.TodosNotComplete.on('click', function(){
+            that.tabs.todos_complete = 'notcomplete';
+            that.tab_change();
+            that.filterTabs.Views.forEach(function(tmpView){
+                if(tmpView.group == 'TodosComplete'){
+                    tmpView.setClasses(['todo-filter-tabs-item-default']);
+                }
+            });
+            this.setClasses(['todo-filter-tabs-item-default','selected']);
+        });
+        this.filterTabs.Views.push(this.filterTabs.TodosNotComplete);
+
+        this.filterTabs.TodosComplete = new Surface({
+            content: '<i class="icon ion-ios7-checkmark-outline"></i>',
+            size: [50, undefined],
+            classes: ['todo-filter-tabs-item-default']
+        });
+        this.filterTabs.TodosComplete.group = 'TodosComplete';
+        this.filterTabs.TodosComplete.on('click', function(){
+            that.tabs.todos_complete = 'complete';
+            that.tab_change();
+            that.filterTabs.Views.forEach(function(tmpView){
+                if(tmpView.group == 'TodosComplete'){
+                    tmpView.setClasses(['todo-filter-tabs-item-default']);
+                }
+            });
+            this.setClasses(['todo-filter-tabs-item-default','selected']);
+        });
+        this.filterTabs.Views.push(this.filterTabs.TodosComplete);
+
+        this.filterTabs.TodosAll = new Surface({
+            content: 'All',
+            size: [50, undefined],
+            classes: ['todo-filter-tabs-item-default']
+        });
+        this.filterTabs.TodosAll.group = 'TodosComplete';
+        this.filterTabs.TodosAll.on('click', function(){
+            that.tabs.todos_complete = 'all';
+            that.tab_change();
+            that.filterTabs.Views.forEach(function(tmpView){
+                if(tmpView.group == 'TodosComplete'){
+                    tmpView.setClasses(['todo-filter-tabs-item-default']);
+                }
+            });
+            this.setClasses(['todo-filter-tabs-item-default','selected']);
+        });
+        this.filterTabs.Views.push(this.filterTabs.TodosAll);
+
+        // spacer
+        this.filterTabs.Spacer = new Surface({
+            size: [undefined, undefined]
+        });
+        this.filterTabs.Views.push(this.filterTabs.Spacer);
+
+        this.filterTabs.TodosAssignedMe = new Surface({
+            content: 'Me',
+            size: [50, undefined],
+            classes: ['todo-filter-tabs-item-default']
+        });
+        this.filterTabs.TodosAssignedMe.group = 'TodosAssigned';
+        this.filterTabs.TodosAssignedMe.on('click', function(){
+            that.tabs.todos_assigned = 'me';
+            that.tab_change();
+            that.filterTabs.Views.forEach(function(tmpView){
+                if(tmpView.group == 'TodosAssigned'){
+                    tmpView.setClasses(['todo-filter-tabs-item-default']);
+                }
+            });
+            this.setClasses(['todo-filter-tabs-item-default','selected']);
+        });
+        this.filterTabs.Views.push(this.filterTabs.TodosAssignedMe);
+
+        this.filterTabs.TodosAssignedOther = new Surface({
+            content: 'Other',
+            size: [50, undefined],
+            classes: ['todo-filter-tabs-item-default']
+        });
+        this.filterTabs.TodosAssignedOther.group = 'TodosAssigned';
+        this.filterTabs.TodosAssignedOther.on('click', function(){
+            that.tabs.todos_assigned = 'other';
+            that.tab_change();
+            that.filterTabs.Views.forEach(function(tmpView){
+                if(tmpView.group == 'TodosAssigned'){
+                    tmpView.setClasses(['todo-filter-tabs-item-default']);
+                }
+            });
+            this.setClasses(['todo-filter-tabs-item-default','selected']);
+        });
+        this.filterTabs.Views.push(this.filterTabs.TodosAssignedOther);
+
+        this.filterTabs.TodosAssignedAll = new Surface({
+            content: 'All',
+            size: [50, undefined],
+            classes: ['todo-filter-tabs-item-default']
+        });
+        this.filterTabs.TodosAssignedAll.group = 'TodosAssigned';
+        this.filterTabs.TodosAssignedAll.on('click', function(){
+            that.tabs.todos_assigned = 'all';
+            that.tab_change();
+            that.filterTabs.Views.forEach(function(tmpView){
+                if(tmpView.group == 'TodosAssigned'){
+                    tmpView.setClasses(['todo-filter-tabs-item-default']);
+                }
+            });
+            this.setClasses(['todo-filter-tabs-item-default','selected']);
+        });
+        this.filterTabs.Views.push(this.filterTabs.TodosAssignedAll);
+
+        this.filterTabs.Layout.sequenceFrom(this.filterTabs.Views);
+
+        // hack/fix for setRatio with true surfaces
+        // - should instead have the FlexibleLayout check for a "still dirty" surface or getSize and wait for it to not be "null"
+        // Timer.setTimeout(function(){
+        //     console.log(1);
+        //     that.filterTabs.Layout.setRatios(theRatio);
+        // },2000);
+        
+        var node = this.filterTabs.add(this.filterTabs.SizeMod);
+        node.add(Utils.usePlane('contentTabs'),-1).add(this.filterTabs.BgSurface);
+        node.add(Utils.usePlane('contentTabs')).add(this.filterTabs.Layout);
+
+        this.contentScrollView.Views.push(this.filterTabs);
+
+        // Select Defaults
+        this.filterTabs.TodosNotComplete._eventOutput.trigger('click');
+        this.filterTabs.TodosAssignedAll._eventOutput.trigger('click');
+
+    };
+
     
     PageView.prototype.createContent = function(){
         var that = this;
 
-        // this.contentScrollView = new ScrollView(App.Defaults.ScrollView);
+        // this.contentScrollView = new SequentialLayout();
         this.contentScrollView = new FlexibleLayout({
-            direction: FlexibleLayout.DIRECTION_Y,
+            direction: 1, //FlexibleLayout.DIRECTION_Y,
             ratios: [true, 1]
         });
         this.contentScrollView.Views = [];
@@ -298,10 +514,31 @@ define(function(require, exports, module) {
         // this.ListContent.AllTodos.add(this.ListContent.AllTodos.View);
         this._subviews.push(this.ListContent.AllTodos);
 
-        // Show "Todos" by default
-        this.ListContent.show(this.ListContent.Todos);
+        // // Show "Todos" by default
+        // this.ListContent.show(this.ListContent.Todos);
 
-        this.layout.content.add(this.ContentStateModifier).add(this.ListContent);
+        // this.layout.content.add(this.ContentStateModifier).add(this.ListContent);
+
+
+
+
+        // // Filter 
+        // this.ListContent.FilterTodos = new FilterView({
+        //     empty_string: "You have not created any Todos, ever!",
+        //     filter: {}
+        // });
+        // this._subviews.push(this.ListContent.AllTodos);
+
+        this.createTabs();
+
+        // // Show "Todos" by default
+        // this.ListContent.show(this.ListContent.Todos);
+        // this.contentScrollView.Views.push(this.ListContent);
+        this.contentScrollView.Views.push(this.ListContent);
+
+        this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
+
+        this.layout.content.add(this.ContentStateModifier).add(this.contentScrollView);
 
 
         return;

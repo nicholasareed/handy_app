@@ -937,6 +937,22 @@ body {
 
 
 
+
+/* Todo Filter Tabs Items */
+
+.todo-filter-tabs-item-default {
+  line-height: 60px;
+  text-align: center;
+}
+
+.todo-filter-tabs-item-default.selected {
+  background: #037fde;
+  color: white;
+}
+
+
+
+
 /* Certify Games */
 .certify-game-default {
   border-bottom: 1px solid #eee;

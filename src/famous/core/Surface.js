@@ -415,6 +415,12 @@ define(function(require, exports, module) {
     Surface.prototype.getSize = function getSize() {
         return this._size;
     };
+    Surface.prototype.getTrueSize = function getTrueSize() {
+        if(!this._trueSize){
+            return [undefined, undefined];
+        }
+        return this._trueSize;
+    };
 
     /**
      * Set x and y dimensions of the surface.
