@@ -381,6 +381,30 @@ body {
 
 
 
+/* Recommendation button */
+
+.is-recommended-button-default {
+  padding: 8px;
+}
+
+.is-recommended-button-default > div {
+  background: #27AE60;
+  color: white;
+  text-align: center;
+
+  /*line-height: 40px;*/
+  font-size: 24px;
+
+}
+
+.is-recommended-button-default i {
+  font-size: 24px;
+  line-height: 40px;
+}
+
+
+
+
 /* Payment Sources  - credit card list */
 
 .payment-source-list-item-default {
@@ -1791,6 +1815,9 @@ body {
   line-height: 30px;
   /*padding-top: 4px;*/
 }
+.outward-button.with-icon i:before {
+  vertical-align: middle;
+}
 
 .outward-button {
   border: 0;
@@ -1821,12 +1848,12 @@ body {
   -webkit-transform: translate(2px, 2px);
   box-shadow: 1px 0px #1E2A36, 0px 1px #2C3E50, 2px 1px #1E2A36, 1px 2px #2C3E50, 3px 2px #1E2A36, 2px 3px #2C3E50, 4px 3px #1E2A36, 3px 4px #2C3E50;
 }
+
 /*.outward-button:active {
   transform: translate(4px, 4px);
   -webkit-transform: translate(4px, 4px);
   box-shadow: 1px 0px #3a587f, 0px 1px #4171ae, 2px 1px #3a587f, 1px 2px #4171ae;
 }*/
-
 
 
 input[type="text"],

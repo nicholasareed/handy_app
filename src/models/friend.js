@@ -12,13 +12,15 @@ define(function (require) {
             
             urlRoot: Credentials.server_root + "friend",
 
-            initialize: function (opts) {
+            initialize: function (model, opts) {
                 // set ids,etc
                 this.url = this.urlRoot + '';
-                if(this.id){
-                  this.url = this.urlRoot + '/' + this.id;
-                } else {
-                  this.url = this.urlRoot;
+                
+                if(model.friend_id){
+                  this.url = this.urlRoot + '/' + model.friend_id;
+                }
+                if(model.id){
+                  this.url = this.urlRoot + '/' + model.id;
                 }
                 // console.log(this.url);
             }

@@ -43,7 +43,9 @@ define(function(require, exports, module) {
 
     // Models
     var UserModel = require('models/user');
+    var FriendModel = require('models/friend');
     var InvoiceModel = require('models/invoice');
+
     // var GameModel = require('models/game');
 
     // Subviews
@@ -120,6 +122,12 @@ define(function(require, exports, module) {
             });
             that.model.fetch({prefill: true});
 
+            // Get Friend relationship
+            that.friend_model = new FriendModel.Friend({
+                friend_id: profile_id
+            });
+            that.friend_model.fetch({prefill: true});
+
             // Listen for 'showing' events
             that._eventInput.on('inOutTransition', function(args){
                 // 0 = direction
@@ -171,6 +179,7 @@ define(function(require, exports, module) {
 
                 // update going forward
                 that.update_content();
+                that.friend_model.on('change', that.update_content.bind(that));
                 that.model.on('change', that.update_content.bind(that));
 
             });
@@ -665,7 +674,7 @@ define(function(require, exports, module) {
             // origin: [0, 0]
         });
         this.profileInvoice.SendInvoice.Surface = new Surface({
-            content: '<div class="outward-button"><i class="icon ion-card"></i> Send Invoice</div>',
+            content: '<div class="outward-button with-icon"><i class="icon ion-card"></i> &nbsp; Send Invoice</div>',
             size: [undefined, 60],
             classes: ['button-outwards-default']
         });
@@ -704,6 +713,81 @@ define(function(require, exports, module) {
         this.profileInvoice.SendInvoice.add(this.profileInvoice.SendInvoice.StateModifier).add(this.profileInvoice.SendInvoice.Surface);
 
         this.contentScrollView.Views.push(this.profileInvoice.Layout);
+
+
+        // Recommend this person
+        // - must be a Friend
+        this.recommendView = new View();
+        this.recommendView.Layout = new RenderController();
+        this.recommendView.Layout.getSize = function(){
+            if(this._showing == -1){
+                return [undefined, 1]; // 0 causes error
+            }
+            try {
+                var s = this._renderables[this._showing].getSize(true);
+                if(s){
+                    this.lastSize = [undefined, s[1]];
+                    return [undefined, s[1]];
+                }
+            }catch(err){}
+            // Last Size?
+            if(this.lastSize){
+                return this.lastSize;
+            }
+            return [undefined, true];
+        };
+
+        // Buttons for recommendation
+        this.recommendView.NotRecommended = new View();
+        this.recommendView.NotRecommended.StateModifier = new StateModifier({
+            // origin: [0, 0]
+        });
+        this.recommendView.NotRecommended.Surface = new Surface({
+            content: '<div class="outward-button with-icon"><i class="icon ion-thumbsup"></i> &nbsp; Recommend</div>',
+            size: [undefined, 60],
+            classes: ['button-outwards-default']
+        });
+        this.recommendView.NotRecommended.Surface.pipe(this.contentScrollView);
+        this.recommendView.NotRecommended.Surface.on('click', function(){
+            that.friend_model.save({
+                recommend: true
+            },{
+                patch: true
+            }).then(function(){
+                that.friend_model.fetch();
+            });
+        });
+        this.recommendView.NotRecommended.add(this.recommendView.NotRecommended.StateModifier).add(this.recommendView.NotRecommended.Surface);
+
+
+        // Buttons for removing a recommendation
+        this.recommendView.Recommended = new View();
+        this.recommendView.Recommended.StateModifier = new StateModifier({
+            // origin: [0, 0]
+        });
+        this.recommendView.Recommended.Surface = new Surface({
+            content: '<div><span class="ellipsis-all"><i class="icon ion-thumbsup"></i> Recommended By You!</span></div>',
+            size: [undefined, 60],
+            classes: ['is-recommended-button-default']
+        });
+        this.recommendView.Recommended.getSize = function(){
+            return [undefined, that.recommendView.Recommended.Surface._trueSize ? that.recommendView.Recommended.Surface._trueSize[1] : 60];
+        }
+        this.recommendView.Recommended.Surface.pipe(this.contentScrollView);
+        this.recommendView.Recommended.Surface.on('click', function(){
+            that.friend_model.save({
+                recommend: false
+            },{
+                patch: true
+            }).then(function(){
+                that.friend_model.fetch();
+            });
+        });
+        this.recommendView.Recommended.add(this.recommendView.Recommended.StateModifier).add(this.recommendView.Recommended.Surface);
+
+        this.contentScrollView.Views.push(this.recommendView.Layout);
+
+
 
 
 
@@ -881,6 +965,31 @@ define(function(require, exports, module) {
             }
 
         }
+
+        this.update_friend_content();
+
+    };
+
+    PageView.prototype.update_friend_content = function(){
+        var that = this;
+
+        // Everything ready
+        if(this.model != undefined && this.model.hasFetched && this.friend_model != undefined && this.friend_model.get('_id')){
+
+            // Recommended this person already?
+            // - must be connected
+            if(that.is_me !== true){
+                if(that.friend_model.get('recommend') === true){
+                    this.recommendView.Layout.show(this.recommendView.Recommended);
+                } else {
+                    this.recommendView.Layout.show(this.recommendView.NotRecommended);
+                }
+            } else {
+                this.recommendView.Layout.hide();
+            }
+
+        }
+
 
     };
 
