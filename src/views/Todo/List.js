@@ -314,9 +314,7 @@ define(function(require, exports, module) {
         };
         this.filterTabs.BgSurface = new Surface({
             size: [undefined, undefined],
-            properties: {
-                backgroundColor: 'rgba(255,255,255,0.5)'
-            }
+            classes: ['todo-filter-tabs-bg-default']
         });
         this.filterTabs.Layout = new FlexibleLayout({
             direction: 0, //FlexibleLayout.DIRECTION_X,

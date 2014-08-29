@@ -948,6 +948,12 @@ body {
 
 /* Todo Filter Tabs Items */
 
+.todo-filter-tabs-bg-default {
+  background: rgba(255,255,255,0.5);
+  border-top: 1px solid #037fde;
+  border-bottom: 1px solid #037fde;
+}
+
 .todo-filter-tabs-item-default {
   line-height: 60px;
   text-align: center;
@@ -961,13 +967,20 @@ body {
 
 /* Todo Filter Tabs Items */
 
+.invoice-filter-tabs-bg-default {
+  background: rgba(255,255,255,0.5);
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+}
+
 .invoice-filter-tabs-item-default {
   line-height: 60px;
   text-align: center;
 }
 
 .invoice-filter-tabs-item-default.selected {
-  background: #037fde;
+  /*background: #037fde;*/
+  background: #000;
   color: white;
 }
 
