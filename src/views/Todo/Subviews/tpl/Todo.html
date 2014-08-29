@@ -8,8 +8,18 @@
 
 	<!-- Assigned? -->
 	{{#if Todo.assigned_id}}
+		{{#compare Todo.asigned_id._id "!=" User._id}}
+	        <span class="assigned">
+	        	Me
+	        </span>
+	    {{else}}
+	        <span class="assigned">
+	        	<span data-replace-id="{{Todo.assigned_id._id}}" data-replace-model="Profile" data-replace-field="profile.name">&nbsp;</span>
+	        </span>
+	    {{/compare}}
+    {{else}}
         <span class="assigned">
-        	<span data-replace-id="{{Todo.assigned_id._id}}" data-replace-model="Profile" data-replace-field="profile.name">&nbsp;</span>
+        	Not Assigned
         </span>
 	{{/if}}
 
@@ -17,7 +27,7 @@
 	{{#if Todo.owner_id}}
 		{{#compare Todo.owner_id._id "!=" User._id}}
 	        <span class="owner">
-	        	<span data-replace-id="{{Todo.owner_id._id}}" data-replace-model="Profile" data-replace-field="profile.name">&nbsp;</span>
+	        	for <span data-replace-id="{{Todo.owner_id._id}}" data-replace-model="Profile" data-replace-field="profile.name">&nbsp;</span>
 	        </span>
 	    {{/compare}}
 	{{/if}}
