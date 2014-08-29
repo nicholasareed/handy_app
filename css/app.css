@@ -949,14 +949,19 @@ body {
 /* Todo Filter Tabs Items */
 
 .todo-filter-tabs-bg-default {
+  font-family: Helvetica, sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  
   background: rgba(255,255,255,0.5);
   border-top: 1px solid #037fde;
   border-bottom: 1px solid #037fde;
 }
 
 .todo-filter-tabs-item-default {
-  line-height: 60px;
-  text-align: center;
+  line-height: 40px;
+  text-align: left;
+  padding-left: 8px;
 }
 
 .todo-filter-tabs-item-default.selected {
@@ -968,14 +973,19 @@ body {
 /* Todo Filter Tabs Items */
 
 .invoice-filter-tabs-bg-default {
+  font-family: Helvetica, sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  
   background: rgba(255,255,255,0.5);
   border-top: 1px solid #000;
   border-bottom: 1px solid #000;
 }
 
 .invoice-filter-tabs-item-default {
-  line-height: 60px;
-  text-align: center;
+  line-height: 40px;
+  text-align: left;
+  padding-left: 8px;
 }
 
 .invoice-filter-tabs-item-default.selected {

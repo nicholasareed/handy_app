@@ -8,7 +8,7 @@
 
 	<!-- Assigned? -->
 	{{#if Todo.assigned_id}}
-		{{#compare Todo.asigned_id._id "!=" User._id}}
+		{{#compare Todo.assigned_id._id "==" User._id}}
 	        <span class="assigned">
 	        	Me
 	        </span>

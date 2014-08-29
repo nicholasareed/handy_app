@@ -227,33 +227,59 @@ define(function(require, exports, module) {
         // Determine the filter we'll use for this ListView
         var filter = {};
 
-        // 
-        switch(this.tabs.invoices_paid){
-            case 'notcomplete':
-                filter.tags = {
-                    '$ne' : 'paid'
+        // create correct filter
+
+        switch(this.tabs.invoices){
+            case 'unpaid':
+                
+                filter = {
+                    tags: {
+                        '$ne' : 'paid'
+                    }
                 };
                 break;
-            case 'complete':
-                filter.tags = 'paid';
+
+            case 'paid':
+                
+                filter = {
+                    tags: 'paid'
+                };
                 break;
-            case 'all':
+
+            default:
+                return;
                 break;
         }
 
-        switch(this.tabs.invoices_recipient){
-            case 'all':
-                // filter.assigned_id = App.Data.User.get('_id');
-                break;
-            case 'to':
-                filter.to_user_id = App.Data.User.get('_id');
-                break;
-            case 'from':
-                filter.from_user_id = App.Data.User.get('_id');
-                break;
-        }
+        var key = this.tabs.invoices;
 
-        var key = this.tabs.invoices_paid + '_' +  this.tabs.invoices_recipient;
+        // // 
+        // switch(this.tabs.invoices_paid){
+        //     case 'notcomplete':
+        //         filter.tags = {
+        //             '$ne' : 'paid'
+        //         };
+        //         break;
+        //     case 'complete':
+        //         filter.tags = 'paid';
+        //         break;
+        //     case 'all':
+        //         break;
+        // }
+
+        // switch(this.tabs.invoices_recipient){
+        //     case 'all':
+        //         // filter.assigned_id = App.Data.User.get('_id');
+        //         break;
+        //     case 'to':
+        //         filter.to_user_id = App.Data.User.get('_id');
+        //         break;
+        //     case 'from':
+        //         filter.from_user_id = App.Data.User.get('_id');
+        //         break;
+        // }
+
+        // var key = this.tabs.invoices_paid + '_' +  this.tabs.invoices_recipient;
 
         // is filter already created (JSON.stringify and check as a key)
         var cachedView = this._cachedViews[key];
@@ -282,14 +308,15 @@ define(function(require, exports, module) {
         var that = this;
 
         this.tabs = {
-            invoices_paid: 'notcomplete',
-            invoices_recipient: 'all'
+            invoices: '',
+            // invoices_paid: 'notcomplete',
+            // invoices_recipient: 'all'
         }
         this._cachedViews = {};
 
         this.filterTabs = new View();
         this.filterTabs.getSize = function(){
-            return [undefined, 60];
+            return [undefined, 40];
         };
         this.filterTabs.BgSurface = new Surface({
             size: [undefined, undefined],
@@ -297,12 +324,71 @@ define(function(require, exports, module) {
         });
         this.filterTabs.Layout = new FlexibleLayout({
             direction: 0, //FlexibleLayout.DIRECTION_X,
-            ratios: [true,true,true, 1, true,true,true]
+            // ratios: [true,true,true, 1, true,true,true]
+            ratios: [true, 1]
         });
         this.filterTabs.Views = [];
         this.filterTabs.SizeMod = new StateModifier({
-            size: [undefined, 60]
+            size: [undefined, 40]
         });
+
+
+        // All the tab options that could be clicked
+        // - and a spacer
+
+        // Unpaid
+        this.filterTabs.UnpaidInvoices = new Surface({
+            content: 'Unpaid',
+            size: [100, undefined],
+            classes: ['invoice-filter-tabs-item-default']
+        });
+        this.filterTabs.UnpaidInvoices.group = 'Invoices';
+        this.filterTabs.UnpaidInvoices.on('click', function(){
+            that.tabs.invoices = 'unpaid';
+            that.tab_change();
+            that.filterTabs.Views.forEach(function(tmpView){
+                if(tmpView.group == 'Invoices'){
+                    tmpView.setClasses(['invoice-filter-tabs-item-default']);
+                }
+            });
+            this.setClasses(['invoice-filter-tabs-item-default','selected']);
+        });
+        this.filterTabs.Views.push(this.filterTabs.UnpaidInvoices);
+
+        // Paid
+        this.filterTabs.PaidInvoices = new Surface({
+            content: 'Paid',
+            size: [undefined, undefined],
+            classes: ['invoice-filter-tabs-item-default']
+        });
+        this.filterTabs.PaidInvoices.group = 'Invoices';
+        this.filterTabs.PaidInvoices.on('click', function(){
+            that.tabs.invoices = 'paid';
+            that.tab_change();
+            that.filterTabs.Views.forEach(function(tmpView){
+                if(tmpView.group == 'Invoices'){
+                    tmpView.setClasses(['invoice-filter-tabs-item-default']);
+                }
+            });
+            this.setClasses(['invoice-filter-tabs-item-default','selected']);
+        });
+        this.filterTabs.Views.push(this.filterTabs.PaidInvoices);
+
+        this.filterTabs.Layout.sequenceFrom(this.filterTabs.Views);
+        
+        var node = this.filterTabs.add(this.filterTabs.SizeMod);
+        node.add(Utils.usePlane('contentTabs',-1)).add(this.filterTabs.BgSurface);
+        node.add(Utils.usePlane('contentTabs')).add(this.filterTabs.Layout);
+
+        this.contentScrollView.Views.push(this.filterTabs);
+
+        // Select Defaults
+        this.filterTabs.UnpaidInvoices._eventOutput.trigger('click');
+        // this.filterTabs.TodosAssignedAll._eventOutput.trigger('click');
+
+
+        return;
+
 
 
         // All the tab options that could be clicked

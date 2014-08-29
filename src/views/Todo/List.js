@@ -118,12 +118,15 @@ define(function(require, exports, module) {
 
                 newModel.save()
                 .then(function(){
-                    that.ListContent.Todos.collection.fetch();
+                    // that.ListContent.Todos.collection.fetch();
+                    that._subviews.forEach(function(sv){
+                        sv.collection.fetch();
+                    });
 
-                    // show new todos
-                    that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowTodo);
-                    that.ListContent.show(that.ListContent.Todos);
-                    that.ListContent.Todos.collection.fetch();
+                    // // show new todos
+                    // that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowTodo);
+                    // that.ListContent.show(that.ListContent.Todos);
+                    // that.ListContent.Todos.collection.fetch();
 
                 });
 
@@ -246,35 +249,87 @@ define(function(require, exports, module) {
         // Determine the filter we'll use for this ListView
         var filter = {};
 
-        // 
-        switch(this.tabs.todos_complete){
-            case 'notcomplete':
-                filter.tags = {
-                    '$ne' : 'complete'
+        // create correct filter
+
+        switch(this.tabs.todos){
+            case 'my':
+                // todos I am responsible for completing
+                filter = {
+                    tags: {
+                        '$ne' : 'complete'
+                    },
+
+                    // assigned to me
+                    '$or' : [{
+                        assigned_id: App.Data.User.get('_id')
+                    },
+
+                    // created by me, and not assigned to somebody
+                    {
+                        owner_id: App.Data.User.get('_id'),
+                        assigned_id: null
+                    },
+
+                    // created by me, and not assigned to somebody
+                    {
+                        user_id: App.Data.User.get('_id'),
+                        assigned_id: null
+                    }]
                 };
                 break;
+
+            case 'assigned':
+                
+                // todos that are assigned that you know about
+                filter = {
+                    tags: {
+                        '$ne' : 'complete'
+                    },
+
+                    // not assigned to me
+                    // is assigned to somebody though!
+                    assigned_id: {
+                        '$ne' : App.Data.User.get('_id'),
+                        '$type' : 7
+                    }
+                };
+                break;
+
             case 'complete':
-                filter.tags = 'complete';
-                break;
-            case 'all':
-                break;
-        }
-
-        switch(this.tabs.todos_assigned){
-            case 'all':
-                // filter.assigned_id = App.Data.User.get('_id');
-                break;
-            case 'me':
-                filter.assigned_id = App.Data.User.get('_id');
-                break;
-            case 'other':
-                filter.assigned_id = {
-                    '$nin' : [null, App.Data.User.get('_id')]
-                }
+                filter = {
+                    tags: 'complete'
+                };
                 break;
         }
 
-        var key = this.tabs.todos_complete + '_' +  this.tabs.todos_assigned;
+        // switch(this.tabs.todos_complete){
+        //     case 'notcomplete':
+        //         filter.tags = {
+        //             '$ne' : 'complete'
+        //         };
+        //         break;
+        //     case 'complete':
+        //         filter.tags = 'complete';
+        //         break;
+        //     case 'all':
+        //         break;
+        // }
+
+        // switch(this.tabs.todos_assigned){
+        //     case 'all':
+        //         // filter.assigned_id = App.Data.User.get('_id');
+        //         break;
+        //     case 'me':
+        //         filter.assigned_id = App.Data.User.get('_id');
+        //         break;
+        //     case 'other':
+        //         filter.assigned_id = {
+        //             '$nin' : [null, App.Data.User.get('_id')]
+        //         }
+        //         break;
+        // }
+
+        var key = this.tabs.todos; //_complete + '_' +  this.tabs.todos_assigned;
 
         // is filter already created (JSON.stringify and check as a key)
         var cachedView = this._cachedViews[key];
@@ -303,27 +358,106 @@ define(function(require, exports, module) {
         var that = this;
 
         this.tabs = {
-            todos_complete: 'notcomplete',
-            todos_assigned: 'all'
+            todos: '',
+            // todos_complete: 'notcomplete',
+            // todos_assigned: 'all'
         }
         this._cachedViews = {};
 
         this.filterTabs = new View();
         this.filterTabs.getSize = function(){
-            return [undefined, 60];
+            return [undefined, 40];
         };
         this.filterTabs.BgSurface = new Surface({
             size: [undefined, undefined],
             classes: ['todo-filter-tabs-bg-default']
         });
         this.filterTabs.Layout = new FlexibleLayout({
-            direction: 0, //FlexibleLayout.DIRECTION_X,
-            ratios: [true,true,true, 1, true,true,true]
+            direction: 0, //x
+            // ratios: [true,true,true, 1, true,true,true]
+            ratios: [true, true,1]
         });
         this.filterTabs.Views = [];
         this.filterTabs.SizeMod = new StateModifier({
-            size: [undefined, 60]
+            size: [undefined, 40]
         });
+
+
+
+        // All the tab options that could be clicked
+        // - and a spacer
+
+        // My
+        this.filterTabs.MyTodos = new Surface({
+            content: 'My Todos',
+            size: [100, undefined],
+            classes: ['todo-filter-tabs-item-default']
+        });
+        this.filterTabs.MyTodos.group = 'Todos';
+        this.filterTabs.MyTodos.on('click', function(){
+            that.tabs.todos = 'my';
+            that.tab_change();
+            that.filterTabs.Views.forEach(function(tmpView){
+                if(tmpView.group == 'Todos'){
+                    tmpView.setClasses(['todo-filter-tabs-item-default']);
+                }
+            });
+            this.setClasses(['todo-filter-tabs-item-default','selected']);
+        });
+        this.filterTabs.Views.push(this.filterTabs.MyTodos);
+
+        // Assigned
+        this.filterTabs.AssignedTodos = new Surface({
+            content: 'Assigned',
+            size: [100, undefined],
+            classes: ['todo-filter-tabs-item-default']
+        });
+        this.filterTabs.AssignedTodos.group = 'Todos';
+        this.filterTabs.AssignedTodos.on('click', function(){
+            that.tabs.todos = 'assigned';
+            that.tab_change();
+            that.filterTabs.Views.forEach(function(tmpView){
+                if(tmpView.group == 'Todos'){
+                    tmpView.setClasses(['todo-filter-tabs-item-default']);
+                }
+            });
+            this.setClasses(['todo-filter-tabs-item-default','selected']);
+        });
+        this.filterTabs.Views.push(this.filterTabs.AssignedTodos);
+
+        // Completed
+        this.filterTabs.CompleteTodos = new Surface({
+            content: 'Complete',
+            size: [undefined, undefined],
+            classes: ['todo-filter-tabs-item-default']
+        });
+        this.filterTabs.CompleteTodos.group = 'Todos';
+        this.filterTabs.CompleteTodos.on('click', function(){
+            that.tabs.todos = 'complete';
+            that.tab_change();
+            that.filterTabs.Views.forEach(function(tmpView){
+                if(tmpView.group == 'Todos'){
+                    tmpView.setClasses(['todo-filter-tabs-item-default']);
+                }
+            });
+            this.setClasses(['todo-filter-tabs-item-default','selected']);
+        });
+        this.filterTabs.Views.push(this.filterTabs.CompleteTodos);
+
+        this.filterTabs.Layout.sequenceFrom(this.filterTabs.Views);
+        
+        var node = this.filterTabs.add(this.filterTabs.SizeMod);
+        node.add(Utils.usePlane('contentTabs',-1)).add(this.filterTabs.BgSurface);
+        node.add(Utils.usePlane('contentTabs')).add(this.filterTabs.Layout);
+
+        this.contentScrollView.Views.push(this.filterTabs);
+
+        // Select Defaults
+        this.filterTabs.MyTodos._eventOutput.trigger('click');
+        // this.filterTabs.TodosAssignedAll._eventOutput.trigger('click');
+
+
+        return;
 
 
         // All the tab options that could be clicked
