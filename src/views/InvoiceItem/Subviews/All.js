@@ -346,7 +346,7 @@ define(function(require, exports, module) {
         invoiceView.Surface.pipe(that.contentLayout);
         invoiceView.Surface.on('click', function(){
             // Utils.Notification.Toast('View Invoice');
-            App.history.navigate('invoice/' + Model.get('_id'));
+            App.history.navigate('todo/' + Model.get('_id'));
         });
 
         invoiceView.Layout.Views.push(invoiceView.Surface);
