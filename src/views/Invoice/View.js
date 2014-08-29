@@ -69,6 +69,7 @@ define(function(require, exports, module) {
         this.options = options;
 
         this.invoice_id = that.options.args[0];
+        this._subviews = [];
         this.loadModels();
 
         // create the layout
@@ -164,18 +165,20 @@ define(function(require, exports, module) {
         this.headerContent.MarkPaid.on('click', function(){
             // App.history.navigate('settings');
 
-            var data = {};
-            if(that.model.get('tags').indexOf('paid') === -1){
-                data = {
-                    add_tags: ['paid']
-                }
-            } else {
-                data = {
-                    remove_tags: ['paid']
-                };
-            }
+            // var data = {};
+            // if(that.model.get('tags').indexOf('paid') === -1){
+            //     data = {
+            //         add_tags: ['paid']
+            //     }
+            // } else {
+            //     data = {
+            //         remove_tags: ['paid']
+            //     };
+            // }
 
-            that.model.save(data,{
+            that.model.save({
+                remove_tags: ['paid']
+            },{
                 patch: true,
                 // success: function(){
                 //     that.model.fetch();    
@@ -219,8 +222,8 @@ define(function(require, exports, module) {
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             moreSurfaces: [
-                this.headerContent.PaymentView,
-                this.headerContent
+                this.headerContent,
+                // this.headerContent
             ]
             // moreClasses: ["normal-header"],
             // moreContent: false // '<span class="icon ion-refresh"></span>'
@@ -334,9 +337,9 @@ define(function(require, exports, module) {
             }
 
             App.history.modifyLast({
-                tag: 'StartAssign'
+                tag: 'StartTo'
             });
-            App.history.navigate('invoice/assign/' + that.model.get('_id'));
+            App.history.navigate('invoice/to/' + that.model.get('_id'));
         });
         this.invoiceDetails.Views.push(this.invoiceDetails.ToSurface);
 
@@ -396,6 +399,7 @@ define(function(require, exports, module) {
         this.invoiceContent = new InvoiceContentView({
             invoice_id: this.invoice_id
         });
+        this._subviews.push(this.invoiceContent);
         this.invoiceContent.View = new View();
         this.invoiceContent.View.add(Utils.usePlane('content')).add(this.invoiceContent);
 
@@ -475,10 +479,59 @@ define(function(require, exports, module) {
     PageView.prototype.make_payment = function() {
         var that = this;
 
+        // Pay with/like what? 
+
+        Utils.Popover.Buttons({
+            title: 'Pay Invoice',
+            body: 'How is this invoice being paid?',
+            buttons: [{
+                text: 'Saved Credit Card',
+                success: function(){
+                    that.make_payment_cc();
+                }
+            },{
+                text: 'Just Mark as Paid',
+                success: function(){
+                    
+                    // var data = {};
+                    // if(that.model.get('tags').indexOf('paid') === -1){
+                    //     data = {
+                    //         add_tags: ['paid']
+                    //     }
+                    // } else {
+                    //     data = {
+                    //         remove_tags: ['paid']
+                    //     };
+                    // }
+
+                    that.model.save({
+                        add_tags: ['paid']
+                    },{
+                        patch: true,
+                        // success: function(){
+                        //     that.model.fetch();    
+                        // }
+                    }).then(function(){
+                        // that.model.set({
+                        //     assigned_id: App.Data.User.toJSON()
+                        // });
+                        that.model.fetch();
+                        that.invoiceContent.collection.fetch();
+                        // App.history.backTo('StartAssign');
+                    });
+
+                }
+            }]
+        });
+
+    };
+
+    PageView.prototype.make_payment_cc = function(){
+        var that = this;
+
         // Gather PaymentSources
 
         var PaymentSources = new PaymentSourceModel.PaymentSourceCollection([],{
-            
         });
         PaymentSources.fetch();
 
@@ -555,7 +608,7 @@ define(function(require, exports, module) {
             // pass
 
             // Make payment using PaymentSource
-            this.headerContent.PaymentLightbox.show(this.headerContent.MakePayment);
+            // this.headerContent.PaymentLightbox.show(this.headerContent.MakePayment);
             // if(that.model.get('tags') && that.model.get('tags').indexOf('paid') !== -1){
             //     // complete
             //     this.headerContent.MarkPaid.setContent('<i class="icon ion-social-usd"></i>');
@@ -567,15 +620,17 @@ define(function(require, exports, module) {
             // }
 
             // "paid" tag
-            this.headerContent.PaidLightbox.show(this.headerContent.MarkPaid);
             if(that.model.get('tags') && that.model.get('tags').indexOf('paid') !== -1){
                 // complete
+                this.headerContent.PaidLightbox.show(this.headerContent.MarkPaid);
                 this.headerContent.MarkPaid.setContent('<i class="icon ion-social-usd"></i>');
                 this.headerContent.MarkPaid.setClasses(['header-tab-icon-text-big','marked-paid']);
             } else {
-                // Not complete
-                this.headerContent.MarkPaid.setContent('<i class="icon ion-social-usd-outline"></i>');
-                this.headerContent.MarkPaid.setClasses(['header-tab-icon-text-big']);
+                // this.headerContent.PaidLightbox.hide();
+                this.headerContent.PaidLightbox.show(this.headerContent.MakePayment);
+                // // Not complete
+                // this.headerContent.MarkPaid.setContent('<i class="icon ion-social-usd-outline"></i>');
+                // this.headerContent.MarkPaid.setClasses(['header-tab-icon-text-big']);
             }
 
             // details/description
@@ -718,7 +773,14 @@ define(function(require, exports, module) {
     PageView.prototype.inOutTransition = function(direction, otherViewName, transitionOptions, delayShowing, otherView, goingBack){
         var that = this;
 
+        var args = arguments;
+        
         this._eventOutput.emit('inOutTransition', arguments);
+
+        // emit on subviews
+        _.each(this._subviews, function(obj, index){
+            obj._eventInput.emit('inOutTransition', args);
+        });
 
         switch(direction){
             case 'hiding':

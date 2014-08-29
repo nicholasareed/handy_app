@@ -107,7 +107,7 @@ define(function(require, exports, module) {
         this._eventInput.on('inOutTransition', function(args){
             // 0 = direction
             if(args[0] == 'showing'){
-                // that.collection.fetch();
+                that.collection.fetch();
             }
         });
 

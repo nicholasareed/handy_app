@@ -209,6 +209,9 @@ define(function(require, exports, module) {
                 'invoice/list' : function(){
                     defaultRoute('InvoiceList', 'Invoice/List', arguments);
                 },
+                'invoice/to/:id' : function(){
+                    defaultRoute('InvoiceToList', 'Invoice/ToList', arguments, {cache: false});
+                },
                 'invoice/:id' : function(){
                     defaultRoute('InvoiceView', 'Invoice/View', arguments);
                 },

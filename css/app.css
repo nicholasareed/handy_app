@@ -464,6 +464,14 @@ body {
   padding-bottom: 16px;
 }
 
+.invoice-list-item-default .other-party {
+  color: #222;
+}
+
+.invoice-list-item-default .other-party.draft {
+  color: #888;
+}
+
 
 .invoice-toggle {
   margin-top: 16px;
@@ -946,6 +954,19 @@ body {
 }
 
 .todo-filter-tabs-item-default.selected {
+  background: #037fde;
+  color: white;
+}
+
+
+/* Todo Filter Tabs Items */
+
+.invoice-filter-tabs-item-default {
+  line-height: 60px;
+  text-align: center;
+}
+
+.invoice-filter-tabs-item-default.selected {
   background: #037fde;
   color: white;
 }

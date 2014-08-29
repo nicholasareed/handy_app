@@ -41,6 +41,7 @@ define(function(require, exports, module) {
 
     // Notifications SubView
     var AllView      = require('./Subviews/All');
+    var FilterView      = require('./Subviews/All');
     // var PotentialView      = require('./Subviews/Potential');
     // var IncomingView      = require('./Subviews/Incoming');
     // var OutgoingView      = require('./Subviews/Outgoing');
@@ -92,28 +93,42 @@ define(function(require, exports, module) {
             Utils.IconHelp('Invoice/List/Create');
         });
         this.headerContent.Create.on('click', function(){
-            // App.Cache.FriendListOptions = {
-            //     default: 'outgoing'
-            // };
-            // App.history.navigate('friend/add');
 
-            Utils.Notification.Toast('Create from the People page');
+            var a = prompt('Amount');
+            if(!a){
+                return;
+            }
+            var p = prompt('Details');
+            if(p && p.trim() != ''){
 
-            return;
+                Utils.Notification.Toast('Create a new Invoice!');
+
+                var newModel = new InvoiceModel.Invoice({
+                    // friend_id: that.model.get('_id'),
+                    amount: a,
+                    details: p
+                });
+
+                newModel.save()
+                .then(function(result){
+                    App.history.navigate('invoice/' + result._id);
+                });
+
+            }
 
 
         });
 
-        // Todos
-        this.headerContent.Todos = new Surface({
+        // Invoices
+        this.headerContent.Invoices = new Surface({
             content: '<i class="icon ion-android-lightbulb"></i>',
             size: [App.Defaults.Header.Icon.w, undefined],
             classes: ['header-tab-icon-text-big']
         });
-        this.headerContent.Todos.on('longtap', function(){
-            Utils.IconHelp('Invoice/List/Todos');
+        this.headerContent.Invoices.on('longtap', function(){
+            Utils.IconHelp('Invoice/List/Invoices');
         });
-        this.headerContent.Todos.on('click', function(){
+        this.headerContent.Invoices.on('click', function(){
             App.history.navigate('todo/list');
         });
 
@@ -179,9 +194,9 @@ define(function(require, exports, module) {
             // backContent: false,
             // moreClasses: ["normal-header"],
             moreSurfaces: [
-                this.headerContent.Todos,
+                // this.headerContent.Invoices,
                 this.headerContent.Create,
-                this.headerContent.FilterSwitcher,
+                // this.headerContent.FilterSwitcher,
             ]
             // moreContent: "New", //'<span class="icon ion-navicon-round"></span>'
         });
@@ -205,9 +220,270 @@ define(function(require, exports, module) {
         this.layout.header.add(this.header);
 
     };
+
+    PageView.prototype.tab_change = function(name){
+        var that = this;
+
+        // Determine the filter we'll use for this ListView
+        var filter = {};
+
+        // 
+        switch(this.tabs.invoices_paid){
+            case 'notcomplete':
+                filter.tags = {
+                    '$ne' : 'paid'
+                };
+                break;
+            case 'complete':
+                filter.tags = 'paid';
+                break;
+            case 'all':
+                break;
+        }
+
+        switch(this.tabs.invoices_recipient){
+            case 'all':
+                // filter.assigned_id = App.Data.User.get('_id');
+                break;
+            case 'to':
+                filter.to_user_id = App.Data.User.get('_id');
+                break;
+            case 'from':
+                filter.from_user_id = App.Data.User.get('_id');
+                break;
+        }
+
+        var key = this.tabs.invoices_paid + '_' +  this.tabs.invoices_recipient;
+
+        // is filter already created (JSON.stringify and check as a key)
+        var cachedView = this._cachedViews[key];
+
+        // Create the ListView if it doesn't exist
+        if(!cachedView){
+            cachedView = new FilterView({
+                empty_string: 'Empty List',
+                filter: filter
+            });
+
+            this._cachedViews[key] = cachedView;
+            this._subviews.push(cachedView);
+
+        } else {
+            cachedView.collection.fetch();
+        }
+
+        // Show the ListView
+        this.ListContent.show(cachedView);
+
+
+    };
+
+    PageView.prototype.createTabs = function(){
+        var that = this;
+
+        this.tabs = {
+            invoices_paid: 'notcomplete',
+            invoices_recipient: 'all'
+        }
+        this._cachedViews = {};
+
+        this.filterTabs = new View();
+        this.filterTabs.getSize = function(){
+            return [undefined, 60];
+        };
+        this.filterTabs.BgSurface = new Surface({
+            size: [undefined, undefined],
+            properties: {
+                backgroundColor: 'rgba(255,255,255,0.5)'
+            }
+        });
+        this.filterTabs.Layout = new FlexibleLayout({
+            direction: 0, //FlexibleLayout.DIRECTION_X,
+            ratios: [true,true,true, 1, true,true,true]
+        });
+        this.filterTabs.Views = [];
+        this.filterTabs.SizeMod = new StateModifier({
+            size: [undefined, 60]
+        });
+
+
+        // All the tab options that could be clicked
+        // - and a spacer
+
+        this.filterTabs.InvoicesNotPaid = new Surface({
+            content: '<i class="icon ion-ios7-circle-outline"></i>',
+            size: [50, undefined],
+            classes: ['invoice-filter-tabs-item-default']
+        });
+        this.filterTabs.InvoicesNotPaid.group = 'InvoicesPaid';
+        this.filterTabs.InvoicesNotPaid.on('click', function(){
+            that.tabs.invoices_paid = 'notcomplete';
+            that.tab_change();
+            that.filterTabs.Views.forEach(function(tmpView){
+                if(tmpView.group == 'InvoicesPaid'){
+                    tmpView.setClasses(['invoice-filter-tabs-item-default']);
+                }
+            });
+            this.setClasses(['invoice-filter-tabs-item-default','selected']);
+        });
+        this.filterTabs.Views.push(this.filterTabs.InvoicesNotPaid);
+
+        this.filterTabs.InvoicesPaid = new Surface({
+            content: '<i class="icon ion-social-usd"></i>',
+            size: [50, undefined],
+            classes: ['invoice-filter-tabs-item-default']
+        });
+        this.filterTabs.InvoicesPaid.group = 'InvoicesPaid';
+        this.filterTabs.InvoicesPaid.on('click', function(){
+            that.tabs.invoices_paid = 'complete';
+            that.tab_change();
+            that.filterTabs.Views.forEach(function(tmpView){
+                if(tmpView.group == 'InvoicesPaid'){
+                    tmpView.setClasses(['invoice-filter-tabs-item-default']);
+                }
+            });
+            this.setClasses(['invoice-filter-tabs-item-default','selected']);
+        });
+        this.filterTabs.Views.push(this.filterTabs.InvoicesPaid);
+
+        this.filterTabs.InvoicesAll = new Surface({
+            content: 'All',
+            size: [50, undefined],
+            classes: ['invoice-filter-tabs-item-default']
+        });
+        this.filterTabs.InvoicesAll.group = 'InvoicesPaid';
+        this.filterTabs.InvoicesAll.on('click', function(){
+            that.tabs.invoices_paid = 'all';
+            that.tab_change();
+            that.filterTabs.Views.forEach(function(tmpView){
+                if(tmpView.group == 'InvoicesPaid'){
+                    tmpView.setClasses(['invoice-filter-tabs-item-default']);
+                }
+            });
+            this.setClasses(['invoice-filter-tabs-item-default','selected']);
+        });
+        this.filterTabs.Views.push(this.filterTabs.InvoicesAll);
+
+        // spacer
+        this.filterTabs.Spacer = new Surface({
+            size: [undefined, undefined]
+        });
+        this.filterTabs.Views.push(this.filterTabs.Spacer);
+
+        this.filterTabs.InvoicesFromMe = new Surface({
+            content: 'From',
+            size: [50, undefined],
+            classes: ['invoice-filter-tabs-item-default']
+        });
+        this.filterTabs.InvoicesFromMe.group = 'InvoicesRecipient';
+        this.filterTabs.InvoicesFromMe.on('click', function(){
+            that.tabs.invoices_recipient = 'from';
+            that.tab_change();
+            that.filterTabs.Views.forEach(function(tmpView){
+                if(tmpView.group == 'InvoicesRecipient'){
+                    tmpView.setClasses(['invoice-filter-tabs-item-default']);
+                }
+            });
+            this.setClasses(['invoice-filter-tabs-item-default','selected']);
+        });
+        this.filterTabs.Views.push(this.filterTabs.InvoicesFromMe);
+
+        this.filterTabs.InvoicesToMe = new Surface({
+            content: 'To',
+            size: [50, undefined],
+            classes: ['invoice-filter-tabs-item-default']
+        });
+        this.filterTabs.InvoicesToMe.group = 'InvoicesRecipient';
+        this.filterTabs.InvoicesToMe.on('click', function(){
+            that.tabs.invoices_recipient = 'to';
+            that.tab_change();
+            that.filterTabs.Views.forEach(function(tmpView){
+                if(tmpView.group == 'InvoicesRecipient'){
+                    tmpView.setClasses(['invoice-filter-tabs-item-default']);
+                }
+            });
+            this.setClasses(['invoice-filter-tabs-item-default','selected']);
+        });
+        this.filterTabs.Views.push(this.filterTabs.InvoicesToMe);
+
+        this.filterTabs.InvoicesAllWithMe = new Surface({
+            content: 'All',
+            size: [50, undefined],
+            classes: ['invoice-filter-tabs-item-default']
+        });
+        this.filterTabs.InvoicesAllWithMe.group = 'InvoicesRecipient';
+        this.filterTabs.InvoicesAllWithMe.on('click', function(){
+            that.tabs.invoices_recipient = 'all';
+            that.tab_change();
+            that.filterTabs.Views.forEach(function(tmpView){
+                if(tmpView.group == 'InvoicesRecipient'){
+                    tmpView.setClasses(['invoice-filter-tabs-item-default']);
+                }
+            });
+            this.setClasses(['invoice-filter-tabs-item-default','selected']);
+        });
+        this.filterTabs.Views.push(this.filterTabs.InvoicesAllWithMe);
+
+        this.filterTabs.Layout.sequenceFrom(this.filterTabs.Views);
+
+        // hack/fix for setRatio with true surfaces
+        // - should instead have the FlexibleLayout check for a "still dirty" surface or getSize and wait for it to not be "null"
+        // Timer.setTimeout(function(){
+        //     console.log(1);
+        //     that.filterTabs.Layout.setRatios(theRatio);
+        // },2000);
+        
+        var node = this.filterTabs.add(this.filterTabs.SizeMod);
+        node.add(Utils.usePlane('contentTabs',-1)).add(this.filterTabs.BgSurface);
+        node.add(Utils.usePlane('contentTabs')).add(this.filterTabs.Layout);
+
+        this.contentScrollView.Views.push(this.filterTabs);
+
+        // Select Defaults
+        this.filterTabs.InvoicesNotPaid._eventOutput.trigger('click');
+        this.filterTabs.InvoicesAllWithMe._eventOutput.trigger('click');
+
+    };
     
     PageView.prototype.createContent = function(){
         var that = this;
+
+        // this.contentScrollView = new SequentialLayout();
+        this.contentScrollView = new FlexibleLayout({
+            direction: 1, //FlexibleLayout.DIRECTION_Y,
+            ratios: [true, 1]
+        });
+        this.contentScrollView.Views = [];
+
+        // Content
+        this.ContentStateModifier = new StateModifier();
+
+        // Lists
+        this.ListContent = new RenderController();
+
+
+
+        // // Filter 
+        // this.ListContent.FilterTodos = new FilterView({
+        //     empty_string: "You have not created any Todos, ever!",
+        //     filter: {}
+        // });
+        // this._subviews.push(this.ListContent.AllTodos);
+
+        this.createTabs();
+
+        // // Show "Todos" by default
+        // this.ListContent.show(this.ListContent.Todos);
+        // this.contentScrollView.Views.push(this.ListContent);
+        this.contentScrollView.Views.push(this.ListContent);
+
+        this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
+
+        this.layout.content.add(this.ContentStateModifier).add(this.contentScrollView);
+
+
+        return;
+
 
         // this.contentScrollView = new ScrollView(App.Defaults.ScrollView);
         this.contentScrollView = new FlexibleLayout({

@@ -70,6 +70,7 @@ define(function(require, exports, module) {
         this.options = options;
 
         this.todo_id = that.options.args[0];
+        this._subviews = [];
         this.loadModels();
 
         // create the layout
@@ -407,6 +408,7 @@ define(function(require, exports, module) {
         this.todoContent = new TodoContentView({
             todo_id: this.todo_id
         });
+        this._subviews.push(this.todoContent);
         this.todoContent.View = new View();
         this.todoContent.View.add(Utils.usePlane('content')).add(this.todoContent);
         this.todoLayout.Layout.Views.push(this.todoContent.View);
@@ -678,7 +680,14 @@ define(function(require, exports, module) {
     PageView.prototype.inOutTransition = function(direction, otherViewName, transitionOptions, delayShowing, otherView, goingBack){
         var that = this;
 
+        var args = arguments;
+        
         this._eventOutput.emit('inOutTransition', arguments);
+
+        // emit on subviews
+        _.each(this._subviews, function(obj, index){
+            obj._eventInput.emit('inOutTransition', args);
+        });
 
         switch(direction){
             case 'hiding':

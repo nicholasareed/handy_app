@@ -274,21 +274,23 @@ define(function(require, exports, module) {
                 break;
         }
 
-        console.log(JSON.stringify(filter));
+        var key = this.tabs.todos_complete + '_' +  this.tabs.todos_assigned;
 
         // is filter already created (JSON.stringify and check as a key)
-        var cachedView = this._cachedViews[JSON.stringify(filter)];
+        var cachedView = this._cachedViews[key];
 
         // Create the ListView if it doesn't exist
         if(!cachedView){
             cachedView = new FilterView({
-                empty_string: 'No todos to show',
+                empty_string: 'Empty List',
                 filter: filter
             });
 
-            this._cachedViews[JSON.stringify(filter)] = cachedView;
+            this._cachedViews[key] = cachedView;
             this._subviews.push(cachedView);
 
+        } else {
+            cachedView.collection.fetch();
         }
 
         // Show the ListView
@@ -481,6 +483,31 @@ define(function(require, exports, module) {
         // Lists
         this.ListContent = new RenderController();
 
+
+
+        // // Filter 
+        // this.ListContent.FilterTodos = new FilterView({
+        //     empty_string: "You have not created any Todos, ever!",
+        //     filter: {}
+        // });
+        // this._subviews.push(this.ListContent.AllTodos);
+
+        this.createTabs();
+
+        // // Show "Todos" by default
+        // this.ListContent.show(this.ListContent.Todos);
+        // this.contentScrollView.Views.push(this.ListContent);
+        this.contentScrollView.Views.push(this.ListContent);
+
+        this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
+
+        this.layout.content.add(this.ContentStateModifier).add(this.contentScrollView);
+
+
+        return;
+
+
+
         // Todo 
         this.ListContent.Todos = new AllView({
             empty_string: 'Add Todos by tapping the <i class="icon ion-ios7-plus-outline"></i>',
@@ -520,25 +547,6 @@ define(function(require, exports, module) {
         // this.layout.content.add(this.ContentStateModifier).add(this.ListContent);
 
 
-
-
-        // // Filter 
-        // this.ListContent.FilterTodos = new FilterView({
-        //     empty_string: "You have not created any Todos, ever!",
-        //     filter: {}
-        // });
-        // this._subviews.push(this.ListContent.AllTodos);
-
-        this.createTabs();
-
-        // // Show "Todos" by default
-        // this.ListContent.show(this.ListContent.Todos);
-        // this.contentScrollView.Views.push(this.ListContent);
-        this.contentScrollView.Views.push(this.ListContent);
-
-        this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
-
-        this.layout.content.add(this.ContentStateModifier).add(this.contentScrollView);
 
 
         return;

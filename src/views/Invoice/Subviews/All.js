@@ -305,7 +305,8 @@ define(function(require, exports, module) {
         // Surface
         invoiceView.Surface = new Surface({
             content: template({
-                Invoice: Model.toJSON()
+                Invoice: Model.toJSON(),
+                User: App.Data.User.toJSON()
             }),
             size: [undefined, true],
             classes: ['invoice-list-item-default']

@@ -6,5 +6,29 @@
 
 <!-- Amount -->
 <div>
-	{{Numeral Invoice.amount "$0,0.00"}}
+
+	<span class="ellipsis-all">
+
+		{{Numeral Invoice.amount "$0,0.00"}} - 
+
+		<!-- Other party (if any) -->
+		{{#if Invoice.to_user_id}}
+			{{#compare Invoice.to_user_id._id "==" User._id}}
+		        <span class="other_party">
+		        	from <span data-replace-id="{{Invoice.from_user_id._id}}" data-replace-model="Profile" data-replace-field="profile.name">&nbsp;</span>
+		        </span>
+		    {{else}}
+		        <span class="other_party">
+		        	to <span data-replace-id="{{Invoice.to_user_id._id}}" data-replace-model="Profile" data-replace-field="profile.name">&nbsp;</span>
+		        </span>
+		    {{/compare}}
+
+	    {{else}}
+	        <span class="other_party draft">
+	        	Draft
+	        </span>
+		{{/if}}
+
+	</span>
+
 </div>

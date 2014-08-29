@@ -5,7 +5,6 @@ define(function(require, exports, module) {
     var View = require('famous/core/View');
     var ScrollView = require('famous/views/Scrollview');
     var SequentialLayout = require('famous/views/SequentialLayout');
-    var FlexibleLayout = require('famous/views/FlexibleLayout');
     var Surface = require('famous/core/Surface');
     var Modifier = require('famous/core/Modifier');
     var StateModifier = require('famous/modifiers/StateModifier');
@@ -22,34 +21,20 @@ define(function(require, exports, module) {
     var HeaderFooterLayout = require('famous/views/HeaderFooterLayout');
     var NavigationBar = require('famous/widgets/NavigationBar');
     var GridLayout = require("famous/views/GridLayout");
-    var ToggleButton = require('famous/widgets/ToggleButton');
 
     var Backbone = require('backbone-adapter');
 
     // Models
-    var TodoContentModel = require("models/todo_content");
+    var FriendModel = require("models/friend");
 
     // Extras
     var Utils = require('utils');
     var numeral = require('lib2/numeral.min');
-    var _ = require('underscore');
 
     // Templates
     var Handlebars          = require('lib2/handlebars-adapter');
-    var tpls                = {
-        text: require('text!./tpl/ContentText.html'),
-        mark_complete: require('text!./tpl/ContentMarkComplete.html'),
-        mark_incomplete: require('text!./tpl/ContentMarkIncomplete.html')
-    };
-    var templates           = {};
-    _.each(tpls, function(val, key){
-        templates[key] = Handlebars.compile(tpls[key]);
-    });
-
-    // {
-    //     text: Handlebars.compile(tpls.text),
-    //     text: Handlebars.compile(tpls.text)
-    // }
+    var tpl                 = require('text!./tpl/Friend.html');
+    var template            = Handlebars.compile(tpl);
 
     function SubView(options) {
         var that = this;
@@ -57,7 +42,6 @@ define(function(require, exports, module) {
         this.options = options;
 
         // Load models
-        this.todo_id = this.options.todo_id;
         this.loadModels();
 
         // Should switch to a RenderController or Lightbox for displaying this content?
@@ -68,11 +52,18 @@ define(function(require, exports, module) {
         this.contentLayout.Views = [];
         this.contentLayout.sequenceFrom(this.contentLayout.Views);
 
-        // this.createTemplates();
-
         this.createDefaultSurfaces();
         this.createDefaultLightboxes();
 
+        this.contentLayout.Views.push(this.lightboxButtons);
+
+        // Gather data after structure built
+        App.Data.User.populated().then(function(){
+
+            // that.update_friend_collection();
+            // App.Data.User.on('sync', that.update_friend_collection.bind(that));
+
+        });
 
         // Need to wait for at least 1 item before showing the result?
         // - otherwise, there is a Render error
@@ -89,14 +80,15 @@ define(function(require, exports, module) {
 
         // App.Data.User contains friends
 
+        this.model = this.options.model;
+
         // Create collection of Games for player_id
         var options = {};
         // if(this.options && this.options.filter){
         //     options['$filter'] = this.options.filter;
         // }
-        this.collection = new TodoContentModel.TodoContentCollection([],{
-            // type: 'friend'
-            todo_id: this.todo_id
+        this.collection = new FriendModel.FriendCollection([],{
+            type: 'friend'
         });
         this.collection.on("sync", that.updateCollectionStatus.bind(this), this);
         this.collection.on("add", this.addOne, this);
@@ -133,12 +125,9 @@ define(function(require, exports, module) {
         });
         this.loadingSurface.pipe(this._eventOutput);
         this.emptyListSurface = new Surface({
-            content: "No updates to Todo yet",
+            content: "None to Show",
             size: [undefined, 100],
-            classes: ['empty-list-surface-default'],
-            properties: {
-                // backgroundColor: 'red'
-            }
+            classes: ['empty-list-surface-default']
         });
         this.emptyListSurface.pipe(this._eventOutput);
 
@@ -216,61 +205,44 @@ define(function(require, exports, module) {
     SubView.prototype.addOne = function(Model){
         var that = this;
 
-        var contentView = new View();
+        var userView = new View(),
+            name = Model.get('profile.name') || '&nbsp;none';
 
-        contentView.Model = Model;
-
-        var surfaceVars = {
-            content: '',
-            classes: ['todo-content-item-default']
-        };
-
-        switch(Model.get('type')){
-            case 'text':
-                // Display some text
-                surfaceVars.content = templates.text(Model.toJSON());
-                surfaceVars.classes.push('todo-content-text-default');
-                break;
-
-            case 'mark_complete':
-                // Display some text
-                surfaceVars.content = templates.mark_complete(Model.toJSON());
-                surfaceVars.classes.push('todo-content-mark-complete-default');
-                break;
-
-            case 'mark_incomplete':
-                // Display some text
-                surfaceVars.content = templates.mark_incomplete(Model.toJSON());
-                surfaceVars.classes.push('todo-content-mark-complete-default');
-                surfaceVars.classes.push('incomplete');
-                break;
-
-            default:
-                console.error('no type');
-                Utils.Notification.Toast('invalid contentView type');
-                return;
-        }
-
-        // console.log(surfaceVars);
-
-        // Surface
-        contentView.Surface = new Surface({
-            content: surfaceVars.content,
-            size: [undefined, true],
-            classes: surfaceVars.classes
+        userView.Model = Model;
+        userView.Surface = new Surface({
+             content: template({
+                User: Model.toJSON()
+             }), //'<div><span class="ellipsis-all">' +name+'</span></div>',
+             size: [undefined, true],
+             classes: ['select-friends-list-item-default']
         });
-        contentView.getSize = function(){
-            return [undefined, contentView.Surface._size ? contentView.Surface._size[1] : undefined];
+        userView.getSize = function(){
+            return [undefined, userView.Surface._size ? userView.Surface._size[1] : undefined]
         };
-        contentView.Surface.pipe(that.contentLayout);
-        contentView.Surface.on('click', function(){
-            // Utils.Notification.Toast('View Todo');
-            // App.history.navigate('todo/' + Model.get('_id'));
+        userView.Surface.pipe(that.contentLayout);
+        userView.Surface.on('click', function(){
+
+            // To/delegate to this person
+
+            // Not assigned to anyone, lets go assign/delegate to someone!
+            // App.history.navigate('todo/assign/' + Model.get('_id'));
+            that.model.save({
+                to_user_id: Model.get('_id')
+            },{
+                patch: true
+            }).then(function(){
+                that.model.set({
+                    to_user_id: Model.toJSON()
+                });
+                that.model.fetch();
+                App.history.backTo('StartTo');
+            });
+
+            // App.history.navigate('user/' + Model.get('_id'));
         });
+        userView.add(userView.Surface);
 
-        contentView.add(contentView.Surface);
-
-        this.contentLayout.Views.splice(this.contentLayout.Views.length-1, 0, contentView);
+        this.contentLayout.Views.splice(this.contentLayout.Views.length-1, 0, userView);
         this.collection.infiniteResults += 1;
 
     };
@@ -278,7 +250,7 @@ define(function(require, exports, module) {
     SubView.prototype.updateCollectionStatus = function() { 
         console.info('updateCollectionStatus');
 
-        this.collection.totalResults = this.collection.length;
+        this.collection.totalResults = this.collection.length; // App.Data.User.get('friends').length;
 
         // Update amounts left
         var amount_left = this.collection.totalResults - this.collection.infiniteResults;
@@ -290,6 +262,7 @@ define(function(require, exports, module) {
             nextRenderable = this.emptyListSurface;
         } else {
             nextRenderable = this.contentLayout;
+            // debugger;
         }
 
         if(nextRenderable != this.lightboxContent.lastRenderable){
@@ -297,19 +270,18 @@ define(function(require, exports, module) {
             this.lightboxContent.show(nextRenderable);
         }
 
-        // // Splice out the lightboxButtons before sorting
-        // var popped = this.contentLayout.Views.pop();
+        // Splice out the lightboxButtons before sorting
+        this.contentLayout.Views = _.without(this.contentLayout.Views, this.lightboxButtons);
 
         // Resort the contentLayout.Views
         this.contentLayout.Views = _.sortBy(this.contentLayout.Views, function(v){
-            // console.log(v.Model.get('created'));
-            return v.Model.get('created');
+            console.log(v.Model.get('profile.name').toLowerCase());
+            return v.Model.get('profile.name').toLowerCase();
         });
-        this.contentLayout.Views.reverse();
 
-        // this.contentLayout.Views.push(popped);
+        // this.contentLayout.Views.push(this.lightboxButtons);
 
-        // console.log(this.contentLayout.Views);
+        console.log(this.contentLayout.Views);
 
         // Re-sequence?
         this.contentLayout.sequenceFrom(this.contentLayout.Views);
