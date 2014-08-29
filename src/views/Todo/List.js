@@ -117,11 +117,13 @@ define(function(require, exports, module) {
                 });
 
                 newModel.save()
-                .then(function(){
+                .then(function(result){
                     // that.ListContent.Todos.collection.fetch();
                     that._subviews.forEach(function(sv){
                         sv.collection.fetch();
                     });
+
+                    App.history.navigate('todo/' + result._id);
 
                     // // show new todos
                     // that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowTodo);

@@ -111,6 +111,11 @@ define(function(require, exports, module) {
 
                 newModel.save()
                 .then(function(result){
+
+                    that._subviews.forEach(function(sv){
+                        sv.collection.fetch();
+                    });
+                    
                     App.history.navigate('invoice/' + result._id);
                 });
 
