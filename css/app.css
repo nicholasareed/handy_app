@@ -539,6 +539,8 @@ body {
 /* Invoice item View */
 
 .invoice-view-title-default {
+  border-top: 1px solid #ddd;
+
   line-height: 30px;
   font-size: 24px;
   padding: 8px 10px;
@@ -560,13 +562,13 @@ body {
   display: inline-block;
   width: 100%;
 
-  background: #ddd;
+  background: #111;
   text-align: center;
 
   line-height: 40px;
   font-size: 14px;
 
-  color: #444;
+  color: white;
 
 }
 
@@ -756,6 +758,10 @@ body {
 /* Todo item View */
 
 .todo-view-title-default {
+  border-top: 1px solid #ddd;
+
+  font-family: Helvetica, sans-serif;
+
   line-height: 30px;
   font-size: 24px;
   padding: 8px 10px;
@@ -782,7 +788,7 @@ body {
 
 .todo-view-todocontent-add-button-default {
   padding: 8px;
-  background: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.8);
   border-top: 1px solid #eee;
 }
 
@@ -790,13 +796,13 @@ body {
   display: inline-block;
   width: 100%;
 
-  background: #ddd;
+  background: #111;
   text-align: center;
 
   line-height: 40px;
   font-size: 14px;
 
-  color: #444;
+  color: white;
 
 }
 

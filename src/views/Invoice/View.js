@@ -412,7 +412,7 @@ define(function(require, exports, module) {
         // OptionButtons (add text, etc.)
         this.invoiceButtons = new View();
         this.invoiceButtons.ButtonSurface = new Surface({
-            content: '<div>Write Message</div>',
+            content: '<div>Add to Stream</div>',
             size: [undefined, true],
             classes: ['invoice-view-invoicecontent-add-button-default']
         });
@@ -420,23 +420,33 @@ define(function(require, exports, module) {
             return [undefined, 60];
         };
         this.invoiceButtons.ButtonSurface.on('click', function(){
-            Timer.setTimeout(function(){
-                var p = prompt('Update text');
-                if(p && p.trim() !== ''){
+            
+            Utils.Popover.Buttons({
+                title: 'Choose type of content',
+                buttons: [{
+                    text: 'Text',
+                    success: function(){
 
-                    var InvoiceContent = new InvoiceContentModel.InvoiceContent({
-                        invoice_id: that.invoice_id,
-                        type: 'text',
-                        text: p
-                    });
-                    InvoiceContent.save()
-                    .then(function(){
-                        that.invoiceContent.collection.fetch();
-                    });
+                        var p = prompt('Update text');
+                        if(p && p.trim() !== ''){
 
-                }
+                            var InvoiceContent = new InvoiceContentModel.InvoiceContent({
+                                invoice_id: that.invoice_id,
+                                type: 'text',
+                                text: p
+                            });
+                            InvoiceContent.save()
+                            .then(function(){
+                                that.invoiceContent.collection.fetch();
+                            });
 
-            },200);
+                        }
+
+                    }
+                }]
+
+            });
+
 
         });
         this.invoiceButtons.add(Utils.usePlane('content',2)).add(this.invoiceButtons.ButtonSurface);

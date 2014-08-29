@@ -429,7 +429,7 @@ define(function(require, exports, module) {
         // OptionButtons (add text, etc.)
         this.todoButtons = new View();
         this.todoButtons.ButtonSurface = new Surface({
-            content: '<div>Write Message</div>',
+            content: '<div>Add to Stream</div>',
             size: [undefined, true],
             classes: ['todo-view-todocontent-add-button-default']
         });
@@ -437,23 +437,33 @@ define(function(require, exports, module) {
             return [undefined, 60];
         };
         this.todoButtons.ButtonSurface.on('click', function(){
-            Timer.setTimeout(function(){
-                var p = prompt('Update text');
-                if(p && p.trim() !== ''){
+            
+            Utils.Popover.Buttons({
+                title: 'Choose type of content',
+                buttons: [{
+                    text: 'Text',
+                    success: function(){
 
-                    var TodoContent = new TodoContentModel.TodoContent({
-                        todo_id: that.todo_id,
-                        type: 'text',
-                        text: p
-                    });
-                    TodoContent.save()
-                    .then(function(){
-                        that.todoContent.collection.fetch();
-                    });
+                        var p = prompt('Update text');
+                        if(p && p.trim() !== ''){
 
-                }
+                            var TodoContent = new TodoContentModel.TodoContent({
+                                todo_id: that.todo_id,
+                                type: 'text',
+                                text: p
+                            });
+                            TodoContent.save()
+                            .then(function(){
+                                that.todoContent.collection.fetch();
+                            });
 
-            },200);
+                        }
+
+                    }
+                }]
+
+            });
+
 
         });
         this.todoButtons.add(Utils.usePlane('content',1)).add(this.todoButtons.ButtonSurface);
@@ -681,7 +691,7 @@ define(function(require, exports, module) {
         var that = this;
 
         var args = arguments;
-        
+
         this._eventOutput.emit('inOutTransition', arguments);
 
         // emit on subviews
