@@ -154,6 +154,7 @@ define(function(require, exports, module) {
         MainContext: null,
         MainController: null,
         Events: new EventHandler(),
+        Credentials: JSON.parse(require('text!credentials.json')),
         Config: null, // parsed in a few lines, symlinked to src/config.xml
         ConfigImportant: {},
         BackboneModels: _.extend({}, Backbone.Events),
@@ -192,10 +193,11 @@ define(function(require, exports, module) {
             },
         },
         Planes: {
+            fps: 10, // frames-per-second counter
             content: 100,
             contentTabs: 400,
             header: 500,
-            footer: 500,
+            mainfooter: 500,
             popover: 1000
         }
     };
@@ -441,9 +443,6 @@ define(function(require, exports, module) {
 
 
                 // Attach header to the layout 
-                App.Views.MainFooter.frontMod = new StateModifier({
-                    transform: Transform.inFront
-                });
                 App.Views.MainFooter.originMod = new StateModifier({
                     origin: [0, 1]
                 });
@@ -454,7 +453,7 @@ define(function(require, exports, module) {
                     size: [undefined, 60]
                 });
 
-                App.Views.MainFooter.add(App.Views.MainFooter.frontMod).add(App.Views.MainFooter.originMod).add(App.Views.MainFooter.positionMod).add(App.Views.MainFooter.sizeMod).add(App.Views.MainFooter.Tabs);
+                App.Views.MainFooter.add(App.Views.MainFooter.originMod).add(App.Views.MainFooter.positionMod).add(App.Views.MainFooter.sizeMod).add(App.Views.MainFooter.Tabs);
 
                 App.Views.MainFooter.show = function(transition){
                     transition = transition || {
@@ -473,7 +472,7 @@ define(function(require, exports, module) {
                 };
 
                 // Add to maincontext
-                App.MainContext.add(App.Views.MainFooter);
+                App.MainContext.add(Utils.usePlane('mainfooter')).add(App.Views.MainFooter);
 
             };
             createMainFooter();
@@ -505,37 +504,28 @@ define(function(require, exports, module) {
             // Add FPS Surface to mainContext
             var fps = new View();
             fps.Surface = new Surface({
-                content: 'test',
+                content: 'fps',
                 size: [12,12],
-                properties: {
-                    fontSize: '10px',
-                    lineHeight: '12px',
-                    backgroundColor: 'white',
-                    textAlign: 'center',
-                    color: 'red',
-                    zIndex: '1000'
-                }
+                classes: ['fps-counter-default']
             });
             fps.Mod = new StateModifier({
+                opacity: 0,
                 origin: [1,1]
             });
-            var inFront = new StateModifier({
-                transform: Transform.inFront
-            });
-            window.setInterval(function(){
+            Timer.setInterval(function(){
                 var fpsNum = parseInt(Engine.getFPS(), 10);
-                var thresh = 30;
+                var thresh = App.Credentials.fps_threshold;
                 if(fpsNum >= thresh){
                     fps.Mod.setOpacity(0);
                 }
-                if(fpsNum < thresh){
+                if(fpsNum < thresh && App.Credentials.show_fps){
                     fps.Mod.setOpacity(1);
                 }
 
                 fps.Surface.setContent(fpsNum);
             },1000);
-            fps.add(inFront).add(fps.Mod).add(fps.Surface);
-            App.MainContext.add(fps);
+            fps.add(fps.Mod).add(fps.Surface);
+            App.MainContext.add(Utils.usePlane('fps')).add(fps);
 
             App.StartRouter = new App.Router.DefaultRouter();
 

@@ -1191,6 +1191,20 @@ body {
 }
 
 
+/* FPS counter (frames per second) */
+
+.fps-counter-default {
+  font-size: 10px;
+  line-height: 12px;
+  background: black;
+  text-align: center;
+  color: blue;
+
+  -webkit-border-top-left-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+  border-top-left-radius: 3px;
+}
+
 /* Misc */
 
 .text-center {
