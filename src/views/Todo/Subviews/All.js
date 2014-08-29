@@ -218,7 +218,8 @@ define(function(require, exports, module) {
 
         todoView.Layout = new FlexibleLayout({
             direction: 0, // x, horizontal
-            ratios: [true, 1] // Done, Title, 
+            // ratios: [true, 1] // Done, Title, 
+            ratios: [1]
         });
         todoView.Layout.Views = [];
 
@@ -304,7 +305,7 @@ define(function(require, exports, module) {
         });
 
         todoView.Action.add(todoView.Action.Toggle);
-        todoView.Layout.Views.push(todoView.Action);
+        // todoView.Layout.Views.push(todoView.Action); // uncomment to re-enable the checkbox
 
         // Surface
         todoView.Surface = new Surface({

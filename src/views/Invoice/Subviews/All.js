@@ -214,7 +214,8 @@ define(function(require, exports, module) {
 
         invoiceView.Layout = new FlexibleLayout({
             direction: 0, // x, horizontal
-            ratios: [true, 1] // Done, Title, 
+            // ratios: [true, 1] // Done, Title, 
+            ratios: [1]
         });
         invoiceView.Layout.Views = [];
 
@@ -300,7 +301,7 @@ define(function(require, exports, module) {
 
         });
         invoiceView.Action.add(invoiceView.Action.Toggle);
-        invoiceView.Layout.Views.push(invoiceView.Action);
+        // invoiceView.Layout.Views.push(invoiceView.Action); // uncomment to enable Toggle!
 
         // Surface
         invoiceView.Surface = new Surface({
