@@ -43,7 +43,7 @@ define(function(require, exports, module) {
     var crypto = require('lib2/crypto');
 
     // Models
-    var PlayerModel = require('models/player');
+    var InvoiceModel = require('models/invoice');
     var TodoModel = require('models/todo');
     var TodoContentModel = require('models/todo_content');
 
@@ -149,11 +149,14 @@ define(function(require, exports, module) {
 
         // -- settings/message (lightbox)
         this.headerContent = new View();
-        this.headerContent.Lightbox = new RenderController();
-        this.headerContent.SizeMod = new StateModifier({
+
+        // Complete
+        this.headerContent.Complete = new View();
+        this.headerContent.Complete.Lightbox = new RenderController();
+        this.headerContent.Complete.SizeMod = new StateModifier({
             size: [80, 60]
         });
-        this.headerContent.add(this.headerContent.SizeMod).add(this.headerContent.Lightbox);
+        this.headerContent.Complete.add(this.headerContent.Complete.SizeMod).add(this.headerContent.Complete.Lightbox);
         // settings
         this.headerContent.MarkComplete = new Surface({
             content: '<i class="icon ion-ios7-checkmark-outline"></i><div>Not Done</div>',
@@ -193,16 +196,139 @@ define(function(require, exports, module) {
 
         });
 
+        // Invoiced
+        this.headerContent.Invoice = new View();
+        this.headerContent.Invoice.Lightbox = new RenderController();
+        this.headerContent.Invoice.SizeMod = new StateModifier({
+            size: [80, 60]
+        });
+        this.headerContent.Invoice.add(this.headerContent.Invoice.SizeMod).add(this.headerContent.Invoice.Lightbox);
+        // settings
+        this.headerContent.ViewInvoice = new Surface({
+            content: '<i class="icon ion-social-usd"></i>',
+            size: [80, undefined],
+            classes: ['header-tab-icon-text']
+        });
+        this.headerContent.ViewInvoice.on('longtap', function(){
+            Utils.IconHelp('Todo/View/ViewInvoice');
+        });
+        this.headerContent.ViewInvoice.on('click', function(){
+            
+            // Invoiced?
+            if(that.model.get('invoice_id')){
+                // Go to invoice
+                App.history.navigate('invoice/' + that.model.get('invoice_id._id'));
+                return;
+            }
+
+            // Not invoiced, bring up the options
+
+            Utils.Popover.Buttons({
+                title: 'Attach to Invoice',
+                buttons: [
+                // {
+                //     text: 'Browse Unpaid Invoices',
+                //     success: function(){
+
+                //         var p = prompt('Update text');
+                //         if(p && p.trim() !== ''){
+
+                            
+
+                //         }
+
+                //     }
+                // },
+                {
+                    text: 'New Invoice',
+                    success: function(){
+
+                        // Create a new Invoice
+                        // Add this Todo to the Invoice
+
+                        Utils.Notification.Toast('Creating Invoice');
+
+                        var a = prompt('Cost of this Todo');
+                        a = parseFloat(a);
+                        if(!a){
+                            // canceled
+                            console.error(a);
+                            return;
+                        }
+
+                        var newModel = new InvoiceModel.Invoice({
+                            // friend_id: that.model.get('_id'),
+                            // amount: a,
+                            title: that.model.get('title')
+                            // todo_id: that.model.get('_id')
+                        });
+
+                        newModel.save()
+                        .then(function(newInvoice){
+
+                            that._subviews.forEach(function(sv){
+                                sv.collection.fetch();
+                            });
+
+                            that.model.save({
+                                cost: a,
+                                invoice_id: newInvoice._id
+                            },{
+                                patch: true
+                            })
+                            .then(function(newModel){
+
+                                App.history.navigate('invoice/' + newInvoice._id);
+
+                            });
+                            
+                        });
+
+                    }
+                }]
+
+            });
+
+            return;
+
+            var data = {};
+            if(that.model.get('tags').indexOf('complete') === -1){
+                data = {
+                    add_tags: ['complete']
+                }
+            } else {
+                data = {
+                    remove_tags: ['complete']
+                };
+            }
+
+            that.model.save(data,{
+                patch: true,
+                // success: function(){
+                //     that.model.fetch();    
+                // }
+            }).then(function(){
+                // that.model.set({
+                //     assigned_id: App.Data.User.toJSON()
+                // });
+                that.model.fetch();
+                that.todoContent.collection.fetch();
+                // App.history.backTo('StartAssign');
+            });
+
+        });
+
 
 
         // create the header
         this.header = new StandardHeader({
-            content: " ",
+            content: "Todo",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             moreClasses: ["normal-header"],
             moreSurfaces: [
-                this.headerContent
+                this.headerContent.Invoice,
+                this.headerContent.Complete
             ]
             // moreContent: false // '<span class="icon ion-refresh"></span>'
         }); 
@@ -526,7 +652,7 @@ define(function(require, exports, module) {
             console.log(that.model.get('tags'));
 
             // "complete" tag
-            this.headerContent.Lightbox.show(this.headerContent.MarkComplete);
+            this.headerContent.Complete.Lightbox.show(this.headerContent.MarkComplete);
             if(that.model.get('tags') && that.model.get('tags').indexOf('complete') !== -1){
                 // complete
                 this.headerContent.MarkComplete.setContent('<i class="icon ion-ios7-checkmark"></i>');
@@ -535,6 +661,18 @@ define(function(require, exports, module) {
                 // Not complete
                 this.headerContent.MarkComplete.setContent('<i class="icon ion-ios7-checkmark-outline"></i>');
                 this.headerContent.MarkComplete.setClasses(['header-tab-icon-text-big']);
+            }
+
+            // Invoicing
+            this.headerContent.Invoice.Lightbox.show(this.headerContent.ViewInvoice);
+            if(that.model.get('invoice_id')){
+                // complete
+                this.headerContent.ViewInvoice.setContent('<i class="icon ion-social-usd"></i>');
+                this.headerContent.ViewInvoice.setClasses(['header-tab-icon-text-big','marked-complete']);
+            } else {
+                // Not complete
+                this.headerContent.ViewInvoice.setContent('<i class="icon ion-social-usd"></i>');
+                this.headerContent.ViewInvoice.setClasses(['header-tab-icon-text-big']);
             }
 
             // // tags

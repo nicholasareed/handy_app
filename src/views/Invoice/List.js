@@ -58,7 +58,7 @@ define(function(require, exports, module) {
         // create the layout
         this.layout = new HeaderFooterLayout({
             headerSize: App.Defaults.Header.size,
-            footerSize: 60
+            footerSize: 0
         });
 
         this.createHeader();
@@ -94,19 +94,20 @@ define(function(require, exports, module) {
         });
         this.headerContent.Create.on('click', function(){
 
-            var a = prompt('Amount');
-            if(!a){
-                return;
-            }
-            var p = prompt('Details');
+            // var a = prompt('Amount');
+            // if(!a){
+            //     return;
+            // }
+            var p = prompt('Title of Invoice');
             if(p && p.trim() != ''){
 
                 Utils.Notification.Toast('Create a new Invoice!');
 
                 var newModel = new InvoiceModel.Invoice({
                     // friend_id: that.model.get('_id'),
-                    amount: a,
-                    details: p
+                    // amount: a,
+                    // details: p
+                    title: p
                 });
 
                 newModel.save()
@@ -115,7 +116,7 @@ define(function(require, exports, module) {
                     that._subviews.forEach(function(sv){
                         sv.collection.fetch();
                     });
-                    
+
                     App.history.navigate('invoice/' + result._id);
                 });
 

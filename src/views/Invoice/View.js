@@ -218,7 +218,7 @@ define(function(require, exports, module) {
 
         // create the header
         this.header = new StandardHeader({
-            content: " ",
+            content: "Invoice",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             moreSurfaces: [
@@ -317,6 +317,11 @@ define(function(require, exports, module) {
             content: '',
             size: [window.innerWidth, true],
             classes: ['invoice-view-cost-default']
+        });
+        this.invoiceDetails.Cost.on('click', function(){
+            // Line-items for an Invoice
+            // - including Todos that are linked
+            App.history.navigate('invoice_item/list/' + that.model.get('_id'));
         });
         this.invoiceDetails.Views.push(this.invoiceDetails.Cost);
 
@@ -643,8 +648,8 @@ define(function(require, exports, module) {
                 // this.headerContent.MarkPaid.setClasses(['header-tab-icon-text-big']);
             }
 
-            // details/description
-            this.invoiceDetails.DetailMarkdown.setContent(S(that.model.get('details')));
+            // title/details/description
+            this.invoiceDetails.DetailMarkdown.setContent(S(that.model.get('title')));
 
             // amount
             this.invoiceDetails.Cost.setContent(S(numeral(that.model.get('amount')).format('$0,0.00')));
@@ -656,7 +661,7 @@ define(function(require, exports, module) {
                 this.invoiceDetails.ToSurface.setClasses(['invoice-view-to-default','assigned']);
             } else {
                 // Not assigned
-                this.invoiceDetails.ToSurface.setContent('not to anyone');
+                this.invoiceDetails.ToSurface.setContent('not sent to anyone');
                 this.invoiceDetails.ToSurface.setClasses(['invoice-view-to-default','notassigned']);
             }
 
@@ -666,7 +671,7 @@ define(function(require, exports, module) {
                 this.invoiceDetails.FromSurface.setContent('from: ' + that.model.get('from_user_id.profile.name') || '');
                 this.invoiceDetails.FromSurface.setClasses(['invoice-view-from-default','has_owner']);
             } else {
-                // No owner at the moment
+                // No owner at the moment (what the fuck)
                 this.invoiceDetails.FromSurface.setContent('');
                 this.invoiceDetails.FromSurface.setClasses(['invoice-view-from-default','no_owner']);
                 this.invoiceDetails.FromSurface.setSize([undefined,1]);

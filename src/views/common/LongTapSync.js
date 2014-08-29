@@ -72,6 +72,10 @@ define(function(require, exports, module) {
                 event : event,
                 // surface   : this
             });
+            this._eventOutput.emit('hold', {
+                event : event,
+                // surface   : this
+            });
         }
     };
 

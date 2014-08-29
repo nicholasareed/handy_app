@@ -817,6 +817,13 @@ body {
   color: #888;
 }
 
+.todo-view-assigned-default.invoiced {
+  display: inline-block;
+  padding: 0 8px 0 0;
+}
+.todo-view-assigned-default.invoiced.paid {
+  color: blue;
+}
 .todo-view-assigned-default.assigned {
   font-weight: bold;
 }

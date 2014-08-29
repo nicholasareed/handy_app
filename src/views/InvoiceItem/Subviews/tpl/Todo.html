@@ -6,13 +6,6 @@
 
 <div>
 
-	<!-- Invoiced? -->
-	{{#if Todo.invoice_id}}
-		<span class="invoiced">
-	    	$
-	    </span>
-	{{/if}}
-
 	<!-- Assigned? -->
 	{{#if Todo.assigned_id}}
 		{{#compare Todo.assigned_id._id "==" User._id}}

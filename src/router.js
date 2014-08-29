@@ -206,6 +206,10 @@ define(function(require, exports, module) {
                     defaultRoute('UserView', 'User/View', arguments);
                 },
 
+                'invoice_item/list/:invoice_id' : function(){
+                    defaultRoute('InvoiceItemList', 'InvoiceItem/List', arguments);
+                },
+
                 'invoice/list' : function(){
                     defaultRoute('InvoiceList', 'Invoice/List', arguments);
                 },
