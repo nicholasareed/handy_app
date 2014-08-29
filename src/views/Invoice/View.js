@@ -652,7 +652,7 @@ define(function(require, exports, module) {
             this.invoiceDetails.DetailMarkdown.setContent(S(that.model.get('title')));
 
             // amount
-            this.invoiceDetails.Cost.setContent(S(numeral(that.model.get('amount')).format('$0,0.00')));
+            this.invoiceDetails.Cost.setContent('<div>' + S(numeral(that.model.get('amount')).format('$0,0.00')) + '</div>');
 
             // to
             if(that.model.get('to_user_id')){

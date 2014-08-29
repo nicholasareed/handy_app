@@ -552,6 +552,15 @@ body {
   padding: 8px;
 }
 
+.invoice-view-cost-default > div {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid #444;
+
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+}
+
 .invoice-view-invoicecontent-add-button-default {
   padding: 8px;
   background: rgba(255,255,255,0.5);
@@ -713,6 +722,11 @@ body {
   color: #2C3E50;
 }
 
+.todo-list-item-default > div:nth-child(2) span.invoiced {
+  /*padding-right: 8px;*/
+  color: green;
+}
+
 .todo-list-item-default > div:nth-child(2) span.owner {
   color: #7F8C8D;
 }
@@ -817,13 +831,6 @@ body {
   color: #888;
 }
 
-.todo-view-assigned-default.invoiced {
-  display: inline-block;
-  padding: 0 8px 0 0;
-}
-.todo-view-assigned-default.invoiced.paid {
-  color: blue;
-}
 .todo-view-assigned-default.assigned {
   font-weight: bold;
 }

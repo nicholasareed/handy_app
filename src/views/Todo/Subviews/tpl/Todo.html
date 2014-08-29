@@ -6,13 +6,6 @@
 
 <div>
 
-	<!-- Invoiced? -->
-	{{#if Todo.invoice_id}}
-		<span class="invoiced">
-	    	$
-	    </span>
-	{{/if}}
-
 	<!-- Assigned? -->
 	{{#if Todo.assigned_id}}
 		{{#compare Todo.assigned_id._id "==" User._id}}
@@ -37,6 +30,13 @@
 	        	for <span data-replace-id="{{Todo.owner_id._id}}" data-replace-model="Profile" data-replace-field="profile.name">&nbsp;</span>
 	        </span>
 	    {{/compare}}
+	{{/if}}
+	
+	<!-- Invoiced? -->
+	{{#if Todo.invoice_id}}
+		<span class="invoiced">
+	    	$
+	    </span>
 	{{/if}}
 
 </div>
