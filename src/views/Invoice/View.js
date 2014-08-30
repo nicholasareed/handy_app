@@ -138,6 +138,14 @@ define(function(require, exports, module) {
         this.model = new InvoiceModel.Invoice({
             _id: this.invoice_id
         });
+
+        this.model.on('error',function(model, err){
+            if(err.status == 404){
+                // Do not have access
+                that.contentLightbox.show(that.errorLoading);
+            }
+        });
+
         this.model.fetch({prefill: true});
     };
 
@@ -484,6 +492,25 @@ define(function(require, exports, module) {
             }
         });
         this.loadingUser.add(this.loadingUser.StateModifier).add(this.loadingUser.Surface);
+
+        // Error
+        this.errorLoading = new View();
+        this.errorLoading.StateModifier = new StateModifier({
+            origin: [0.5, 0.5]
+        });
+        this.errorLoading.Surface = new Surface({
+            content: 'This Invoice is not yet available',
+            size: [true, true],
+            properties: {
+                padding: "0 10px",
+                fontSize: "24px",
+                textAlign: "center",
+                color: "#777",
+                lineHeight: "32px"
+            }
+        });
+        this.errorLoading.add(this.errorLoading.StateModifier).add(this.errorLoading.Surface);
+
         this.contentLightbox.show(this.loadingUser);
 
         // this.layout.content.add(this.ContentStateModifier).add(this.mainNode);
