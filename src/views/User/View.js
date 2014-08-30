@@ -203,11 +203,20 @@ define(function(require, exports, module) {
 
         // -- settings/message (lightbox)
         this.headerContent = new View();
-        this.headerContent.Lightbox = new RenderController();
-        this.headerContent.SizeMod = new StateModifier({
+        this.headerContent.Middle = new View();
+        this.headerContent.Middle.Lightbox = new RenderController();
+        this.headerContent.Middle.SizeMod = new StateModifier({
             size: [60, 60]
         });
-        this.headerContent.add(this.headerContent.SizeMod).add(this.headerContent.Lightbox);
+        this.headerContent.Middle.add(this.headerContent.Middle.SizeMod).add(this.headerContent.Middle.Lightbox);
+
+        this.headerContent.Right = new View();
+        this.headerContent.Right.Lightbox = new RenderController();
+        this.headerContent.Right.SizeMod = new StateModifier({
+            size: [60, 60]
+        });
+        this.headerContent.Right.add(this.headerContent.Right.SizeMod).add(this.headerContent.Right.Lightbox);
+
         // settings
         this.headerContent.Settings = new Surface({
             content: '<i class="icon ion-gear-a"></i>',
@@ -301,9 +310,10 @@ define(function(require, exports, module) {
             // backContent: "+Game"
             // moreContent: false,
             moreSurfaces: [
-                this.headerContent,
+                this.headerContent.Middle,
+                this.headerContent.Right,
                 // this.headerContent.Invite,
-                this.headerContent.Friends,
+                // this.headerContent.Friends,
                 // this.headerContent.spacer1,
                 // this.headerContent.Search
             ],
@@ -955,11 +965,14 @@ define(function(require, exports, module) {
             if(that.is_me === true){
                 // no back button
                 // - show settings
-                that.headerContent.Lightbox.show(that.headerContent.Settings);
+                that.headerContent.Right.Lightbox.show(that.headerContent.Friends);
+                that.headerContent.Middle.Lightbox.show(that.headerContent.Settings);
 
             } else {
 
-                that.headerContent.Lightbox.show(that.headerContent.Message);
+                
+                that.headerContent.Right.Lightbox.show(that.headerContent.Message);
+                that.headerContent.Middle.Lightbox.hide();
 
                 // that.header.navBar.back.setSize([20,undefined]);
                 // that.header.navBar.back.setContent('<i class="icon ion-android-arrow-back"></i>');
