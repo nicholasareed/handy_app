@@ -331,7 +331,8 @@ define(function(require, exports, module) {
                 console.log(App.Views.currentPageView);
                 if(typeof App.Views.currentPageView.remoteRefresh == "function"){
                     console.log('launching refreshData');
-                    App.Views.currentPageView.remoteRefresh.apply(App.Views.currentPageView, snapshot);
+                    App.Views.currentPageView.remoteRefresh.apply(App.Views.currentPageView, [snapshot]);
+                    // App.Views.currentPageView.remoteRefresh(snapshot);
                     return;
                 } else {
                     console.log('no remoteRefresh handler in PageView');
