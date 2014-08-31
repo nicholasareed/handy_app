@@ -576,7 +576,7 @@ define(function(require, exports, module) {
 
 
             // Ajax setup for users
-            var localUser = localStorage.getItem('user_v3_');
+            var localUser = localStorage.getItem(App.Credentials.local_user_key);
             App.Data.User = new UserModel.User();
             try {
 
@@ -588,7 +588,7 @@ define(function(require, exports, module) {
                 console.log(App.Data.User);
 
                 // Set up ajax credentials for later calls using this user
-                App.Data.UserToken = localStorage.getItem('usertoken_v1_');
+                App.Data.UserToken = localStorage.getItem(App.Credentials.local_token_key);
                 $.ajaxSetup({
                     headers: {
                         'x-token' : App.Data.UserToken

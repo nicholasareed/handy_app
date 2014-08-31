@@ -300,6 +300,11 @@ define(function(require, exports, module) {
                 classes = ['action-news-item-default'];
                 link = 'todo/' + Action.get('todo_id');
                 break;
+            case 'todo_new_email':
+                content = '<span class="type">todo</span> <span data-replace-id="'+ Action.get('todo_id') +'" data-replace-model="Todo" data-replace-field="title">&nbsp;</span> has new text via email',
+                classes = ['action-news-item-default'];
+                link = 'todo/' + Action.get('todo_id');
+                break;
             case 'todo_tags_added':
                 content = '<span class="type">todo</span> <span data-replace-id="'+ Action.get('todo_id') +'" data-replace-model="Todo" data-replace-field="title">&nbsp;</span> had tags added',
                 classes = ['action-news-item-default'];

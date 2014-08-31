@@ -257,7 +257,7 @@ define(function(require, exports, module) {
                         }
 
                         // Store access_token in localStorage
-                        localStorage.setItem('usertoken_v1_',response.token);
+                        localStorage.setItem(App.Credentials.local_token_key, response.token);
                         App.Data.UserToken = response.token;
 
                         // Get's the User's Model
@@ -276,7 +276,7 @@ define(function(require, exports, module) {
                                 console.log(userModel);
                                 console.log(userModel.toJSON());
 
-                                localStorage.setItem('user_v3_',JSON.stringify(userModel.toJSON()));
+                                localStorage.setItem(App.Credentials.local_user_key, JSON.stringify(userModel.toJSON()));
 
                                 // Preload Models
                                 require(['models/preload'], function(PreloadModels){

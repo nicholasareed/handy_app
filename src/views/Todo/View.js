@@ -161,14 +161,13 @@ define(function(require, exports, module) {
         this.headerContent.MarkComplete = new Surface({
             content: '<i class="icon ion-ios7-checkmark-outline"></i><div>Not Done</div>',
             size: [80, undefined],
-            classes: ['header-tab-icon-text']
+            classes: ['header-tab-icon-text-big']
         });
         this.headerContent.MarkComplete.on('longtap', function(){
             Utils.IconHelp('Todo/View/MarkComplete');
         });
         this.headerContent.MarkComplete.on('click', function(){
-            // App.history.navigate('settings');
-
+            
             var data = {};
             if(that.model.get('tags').indexOf('complete') === -1){
                 data = {
@@ -207,7 +206,7 @@ define(function(require, exports, module) {
         this.headerContent.ViewInvoice = new Surface({
             content: '<i class="icon ion-social-usd"></i>',
             size: [80, undefined],
-            classes: ['header-tab-icon-text']
+            classes: ['header-tab-icon-text-big']
         });
         this.headerContent.ViewInvoice.on('longtap', function(){
             Utils.IconHelp('Todo/View/ViewInvoice');
@@ -317,6 +316,55 @@ define(function(require, exports, module) {
             });
 
         });
+    
+        // Email
+        this.headerContent.Email = new Surface({
+            content: '<i class="icon ion-android-mail"></i>',
+            size: [60, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.Email.on('click',function(){
+
+            var listData = [];
+
+            that.model.get('included').forEach(function(theEmail){
+                listData.push({
+                    text: theEmail,
+                    success: function(){
+                        Utils.Notification.Toast('Cannot remove yet!');
+                    }
+                });
+            });
+
+            listData.push({
+                text: '<i class="icon ion-plus-round"></i> Add new Email',
+                success: function(){
+                    var e = prompt('Email address');
+                    if(!e){
+                        return;
+                    }
+
+                    $.ajax({
+                        url: App.Credentials.server_root + 'todo/emailinvite/' + that.model.get('_id'),
+                        method: 'post',
+                        data: {
+                            email: e
+                        },
+                        success: function(result, status){
+                            console.log(result);
+                            console.log(status);
+                        }
+                    });
+
+
+                }
+            });
+
+            Utils.Popover.List({
+                list: listData
+            });
+
+        });
 
 
 
@@ -327,6 +375,7 @@ define(function(require, exports, module) {
             backClasses: ["normal-header"],
             moreClasses: ["normal-header"],
             moreSurfaces: [
+                this.headerContent.Email,
                 this.headerContent.Invoice,
                 this.headerContent.Complete
             ]

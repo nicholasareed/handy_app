@@ -38,6 +38,7 @@ define(function(require, exports, module) {
     var Handlebars          = require('lib2/handlebars-adapter');
     var tpls                = {
         text: require('text!./tpl/ContentText.html'),
+        email: require('text!./tpl/ContentEmail.html'),
         mark_complete: require('text!./tpl/ContentMarkComplete.html'),
         mark_incomplete: require('text!./tpl/ContentMarkIncomplete.html')
     };
@@ -229,6 +230,12 @@ define(function(require, exports, module) {
             case 'text':
                 // Display some text
                 surfaceVars.content = templates.text(Model.toJSON());
+                surfaceVars.classes.push('todo-content-text-default');
+                break;
+
+            case 'email':
+                // Display some text
+                surfaceVars.content = templates.email(Model.toJSON());
                 surfaceVars.classes.push('todo-content-text-default');
                 break;
 
