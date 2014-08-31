@@ -84,7 +84,7 @@ define(function(require, exports, module) {
         },
 
         onReady: function(){
-
+            
             if(this.isReady === true){
                 return;
             }

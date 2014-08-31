@@ -741,7 +741,7 @@ define(function (require) {
         },
 
         logout: function(){
-
+            
             // Reset caches
             App.Cache = {}; //_.defaults({},App.DefaultCache);
             // console.log(App.Cache);

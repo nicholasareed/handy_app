@@ -82,6 +82,7 @@
                 // browser?
                 if (!navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
                     // browser
+                    GLOBAL_onReady = true;
                     addScripts(require_scripts);
                 } else {
                     try {
@@ -91,6 +92,7 @@
                     }catch(err){
                         // browser
                         console.log('catch browser');
+                        GLOBAL_onReady = true;
                         addScripts(require_scripts);
                         return;
                     }
