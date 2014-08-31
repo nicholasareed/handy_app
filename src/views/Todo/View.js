@@ -353,6 +353,7 @@ define(function(require, exports, module) {
                         success: function(result, status){
                             console.log(result);
                             console.log(status);
+                            that.model.fetch();
                         }
                     });
 
