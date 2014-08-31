@@ -441,15 +441,15 @@ define(function(require, exports, module) {
                     // Already cached, use the cached version
                 }
 
-                // Cache pageview
-                App.Views.currentPageView = PageView;
-
                 // Popover?
                 if(options.popover === true){
                     PageView.inOutTransitionPopover('showing');
                     App.Views.Popover.show(PageView);
                     return;
                 }
+                
+                // Cache pageview
+                App.Views.currentPageView = PageView;
 
                 // Switch to it
                 // - if going backwards, do something interesting?
