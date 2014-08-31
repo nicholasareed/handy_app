@@ -124,7 +124,7 @@ define(function(require, exports, module) {
         this.inputEmailSurface = new InputSurface({
             name: 'email',
             placeholder: 'Email Address',
-            type: 'text',
+            type: 'email',
             size: [undefined, 50],
             value: ''
         });
