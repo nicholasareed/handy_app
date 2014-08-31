@@ -13,8 +13,8 @@
         <link rel="stylesheet" type="text/css" href="css/bootflat.css" />
         <link rel="stylesheet" type="text/css" href="css/app.css" />
 
-        <script src='https://cdn.firebase.com/js/client/1.0.15/firebase.js'></script>
-        
+        <script type="text/javascript" src="src/lib2/firebase.js"></script>
+
         <script type="text/javascript">
             var cordova;
         </script>
@@ -95,16 +95,16 @@
                         return;
                     }
 
-                    // wait for deviceready from cordova
-                    console.log('wait for deviceready from cordova');
-                    document.addEventListener("deviceready", function(){
-                        // alert('deviceready listener fired!');
-                        GLOBAL_onReady = true;
-                        addScripts(require_scripts);
-                        // loadGoogleMapsScript();
-                    }, false);
-
                 }
+
+                // wait for deviceready from cordova
+                console.log('wait for deviceready from cordova');
+                document.addEventListener("deviceready", function(){
+                    // alert('deviceready listener fired!');
+                    GLOBAL_onReady = true;
+                    addScripts(require_scripts);
+                    // loadGoogleMapsScript();
+                }, false);
 
 
             }
