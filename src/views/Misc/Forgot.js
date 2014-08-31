@@ -15,23 +15,29 @@ define(function(require, exports, module) {
     var RenderNode         = require('famous/core/RenderNode')
 
     var Utility = require('famous/utilities/Utility');
+    var Timer = require('famous/utilities/Timer');
+
+    // Curves
+    var Easing = require('famous/transitions/Easing');
 
     var HeaderFooterLayout = require('famous/views/HeaderFooterLayout');
     var NavigationBar = require('famous/widgets/NavigationBar');
     var GridLayout = require("famous/views/GridLayout");
 
-    // Extras
     var Credentials         = JSON.parse(require('text!credentials.json'));
     var $ = require('jquery');
     var Utils = require('utils');
 
     // Views
     var StandardHeader = require('views/common/StandardHeader');
-
+    
     var EventHandler = require('famous/core/EventHandler');
 
     // Models
     var UserModel = require('models/user');
+
+    // Custom Surface
+    var TextAreaSurface = require('views/common/TextAreaSurface');
 
 
     function PageView(options) {
@@ -39,88 +45,82 @@ define(function(require, exports, module) {
         View.apply(this, arguments);
         this.options = options;
 
+        // User
+        this.model = new UserModel.User();
+
         // create the layout
         this.layout = new HeaderFooterLayout({
             headerSize: App.Defaults.Header.size,
             footerSize: App.Defaults.Footer.size
         });
 
-        Utils.Notification.Toast('Signup IS broken');
-
-        // create the header
-
-        this.header = new StandardHeader({
-            content: "Back to Login",
-            classes: ["normal-header"],
-            backClasses: ["normal-header"],
-            moreContent: false
-        }); 
-        this.header._eventOutput.on('back',function(){
-            App.history.back();//.history.go(-1);
-        });
-        this.header.navBar.title.on('click',function(){
-            App.history.back();//.history.go(-1);
-        });
-        this._eventOutput.on('inOutTransition', function(args){
-            this.header.inOutTransition.apply(this.header, args);
-        })
-
-        // create the scrollView of content
-        this.contentScrollView = new SequentialLayout(); //(App.Defaults.ScrollView);
-        this.scrollSurfaces = [];
-        this.contentScrollView.sequenceFrom(this.scrollSurfaces);
-
-        // link endpoints of layout to widgets
-
-        // Header/navigation
-        this.layout.header.add(this.header);
-
-        // Content
-        this.layout.content.StateModifier = new StateModifier();
-        this.contentView = new View();
-        this.contentView.SizeMod = new Modifier({
-            size: //[window.innerWidth - 50, true]
-                function(){
-                    var tmpSize = that.contentScrollView.getSize(true);
-                    if(!tmpSize){
-                        return [window.innerWidth, undefined];
-                    }
-                    return [window.innerWidth - 16, tmpSize[1]];
-                }
-        });
-        this.contentView.OriginMod = new StateModifier({
-            origin: [0.5, 0.5]
-        });
-        this.contentView.add(this.contentView.OriginMod).add(this.contentView.SizeMod).add(this.contentScrollView);
-        this.layout.content.add(this.layout.content.StateModifier).add(this.contentView);
-
-        // Add surfaces
-        this.addSurfaces();
-
-        // // Footer
-        // // - bring it up
-        // this.layout.footer.add(quick_stats_grid);
+        this.createHeader();
+        this.createContent();
         
-        // add to RenderTree
+        // Attach the main transform and the comboNode to the renderTree
         this.add(this.layout);
-
-        // Models
-
-        // User
-        this.model = new UserModel.User();
 
     }
 
     PageView.prototype = Object.create(View.prototype);
     PageView.prototype.constructor = PageView;
 
+
+    PageView.prototype.createHeader = function(){
+        var that = this;
+        
+        // create the header
+        this.header = new StandardHeader({
+            content: "Forgot Password",
+            classes: ["normal-header"],
+            backClasses: ["normal-header"],
+            moreContent: false
+        }); 
+        this.header._eventOutput.on('back',function(){
+            App.history.back();
+        });
+        this.header.navBar.title.on('click', function(){
+            App.history.back();
+        });
+        this.header.pipe(this._eventInput);
+        this._eventOutput.on('inOutTransition', function(args){
+            this.header.inOutTransition.apply(this.header, args);
+        })
+
+        // Attach header to the layout        
+        this.layout.header.add(this.header);
+
+    };
+
+    PageView.prototype.createContent = function(){
+        var that = this;
+        
+        // create the scrollView of content
+        this.contentScrollView = new ScrollView(App.Defaults.ScrollView);
+        this.contentScrollView.Views = [];
+
+        // link endpoints of layout to widgets
+
+        // Add surfaces to content (buttons)
+        this.addSurfaces();
+
+        // Sequence
+        this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
+
+        // Content Modifiers
+        this.layout.content.StateModifier = new StateModifier();
+
+        // Now add content
+        this.layout.content.add(this.layout.content.StateModifier).add(this.contentScrollView);
+
+
+    };
+
     PageView.prototype.addSurfaces = function() {
         var that = this;
 
         // Build Surfaces
         // - add to scrollView
-
-        // Email
         this.inputEmailSurface = new InputSurface({
             name: 'email',
             placeholder: 'Email Address',
@@ -128,37 +128,49 @@ define(function(require, exports, module) {
             size: [undefined, 50],
             value: ''
         });
-        this.scrollSurfaces.push(this.inputEmailSurface);
 
-        this.scrollSurfaces.push(new Surface({
-            size: [undefined, 4]
-        }));
+        this.inputEmailSurface.View = new View();
+        this.inputEmailSurface.View.StateModifier = new StateModifier();
+        this.inputEmailSurface.View.add(this.inputEmailSurface.View.StateModifier).add(this.inputEmailSurface);
+        this.contentScrollView.Views.push(this.inputEmailSurface.View);
 
-        // Submit button
         this.submitButtonSurface = new Surface({
-            size: [undefined,60],
-            classes: ['form-button-submit-default'],
-            content: 'Request Reset'
+            content: 'Send Reset Email',
+            size: [undefined, 60],
+            classes: ['form-button-submit-default']
         });
-        this.scrollSurfaces.push(this.submitButtonSurface);
+        this.submitButtonSurface.View = new View();
+        this.submitButtonSurface.View.StateModifier = new StateModifier();
+        this.submitButtonSurface.View.add(this.submitButtonSurface.View.StateModifier).add(this.submitButtonSurface);
+        this.contentScrollView.Views.push(this.submitButtonSurface.View);
 
         // Events for surfaces
         this.submitButtonSurface.on('click', this.submit_forgot.bind(this));
+
 
     };
 
     PageView.prototype.submit_forgot = function(ev){
         var that = this;
 
-        // Get email
-        var email = $.trim(this.inputEmailSurface.getValue().toString());
-        if(email.length === 0){
+        if(this.checking === true){
             return;
         }
-        // todo: validate email
+        this.checking = true;
+
+        console.log(this.inputEmailSurface);
+        console.log(this.inputPasswordSurface);
+
+        // Get email and password
+        var email = $.trim(this.inputEmailSurface.getValue().toString());
+        if(email.length === 0){
+            this.checking = false;
+            Utils.Notification.Toast('Email Missing');
+            return;
+        }
 
         // Disable submit button
-        this.submitButtonSurface.setSize([0,0]);
+        this.submitButtonSurface.setContent('Please wait...');
 
         // data to POST
         // - just the email
@@ -176,10 +188,11 @@ define(function(require, exports, module) {
                 // failed somehow
                 // - if it was a "valid" (structured correctly) email, we'll ALWAYS return "if an account exists for this email, we've sent a reset password"
 
-                that.lightbox.show(that.contentInputScrollView);
+                console.log(err);
 
                 Utils.Notification.Toast('Failed sending email');
-                that.submitButtonSurface.setSize([undefined,40]);
+                that.submitButtonSurface.setContent('Send Reset Email');
+                that.checking = false;
 
             },
             success: function(response){
@@ -189,7 +202,19 @@ define(function(require, exports, module) {
                 if(response.complete == true){
                     // Awesome, sent a reset email
 
-                    that.lightbox.show(that.successSurface);
+                    // Surfaces for success (after submitting)
+                    var successSurface = new Surface({
+                        content: "Sent Reset Email",
+                        size: [undefined, 80],
+                        properties: {
+                            color: "black",
+                            lineHeight: "80px",
+                            textAlign: "center"
+                        }
+                    });
+
+                    that.contentScrollView.Views = [successSurface];
+                    that.contentScrollView.sequenceFrom(that.contentScrollView.Views);
 
                     Utils.Notification.Toast('Sent Reset Email');
 
@@ -213,7 +238,8 @@ define(function(require, exports, module) {
                 }
 
                 // Re-enable submit button
-                that.submitButtonSurface.setSize([undefined,40]);
+                that.submitButtonSurface.setContent('Send Reset Email');
+                that.checking = false;
 
                 return false;
 
@@ -236,11 +262,11 @@ define(function(require, exports, module) {
                         // Overwriting and using default identity
                         transitionOptions.outTransform = Transform.identity;
 
-                        // Content
+                        // Hide/move elements
                         window.setTimeout(function(){
 
-                            // // Bring content back
-                            // that.layout.content.StateModifier.setTransform(Transform.translate(window.innerWidth,0,0), transitionOptions.inTransition);
+                            // Slide content left
+                            that.layout.content.StateModifier.setTransform(Transform.translate(0,window.innerHeight,0), transitionOptions.outTransition);
 
                         }, delayShowing);
 
@@ -250,7 +276,7 @@ define(function(require, exports, module) {
                 break;
             case 'showing':
                 if(this._refreshData){
-                    // window.setTimeout(this.refreshData.bind(this), 1000);
+                    // window.setTimeout(that.refreshData.bind(that), 1000);
                 }
                 this._refreshData = true;
                 switch(otherViewName){
@@ -266,20 +292,29 @@ define(function(require, exports, module) {
                         // } else {
                         //     that.layout.content.StateModifier.setTransform(Transform.translate(window.innerWidth + 100,0,0));
                         // }
-                        that.layout.content.StateModifier.setOpacity(0);
-                        // that.layout.content.StateModifier.setTransform(Transform.translate(window.innerWidth, 0, 0));
+                        that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0));
+                        that.contentScrollView.Views.forEach(function(surf, index){
+                            surf.StateModifier.setTransform(Transform.translate(0,window.innerHeight,0));
+                        });
 
                         // Content
-                        // - extra delay for content to be gone
+                        // - extra delay for other content to be gone
                         window.setTimeout(function(){
 
-                            // Bring content back
-                            that.layout.content.StateModifier.setOpacity(1, transitionOptions.inTransition);
+                            // // Bring content back
                             // that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
 
+                            // Bring in button surfaces individually
+                            that.contentScrollView.Views.forEach(function(surf, index){
+                                window.setTimeout(function(){
+                                    surf.StateModifier.setTransform(Transform.translate(0,0,0), {
+                                        duration: 250,
+                                        curve: Easing.easeOut
+                                    });
+                                }, index * 50);
+                            });
 
-                        }, delayShowing +transitionOptions.outTransition.duration);
-
+                        }, delayShowing); // + transitionOptions.outTransition.duration);
 
                         break;
                 }
@@ -288,7 +323,6 @@ define(function(require, exports, module) {
         
         return transitionOptions;
     };
-
 
 
 
@@ -315,3 +349,5 @@ define(function(require, exports, module) {
     module.exports = PageView;
 
 });
+
+
