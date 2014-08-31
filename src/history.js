@@ -322,6 +322,26 @@ define(function(require, exports, module) {
             // RouterContext.currentPageView._eventInput.emit('backbutton');
         });
 
+        // Firebase update (update content on page)
+        App.Events.on('firebase.child_added', function(snapshot){
+
+            // var newPost = snapshot.val();
+
+            try {
+                console.log(App.Views.currentPageView);
+                if(typeof App.Views.currentPageView.remoteRefresh == "function"){
+                    console.log('launching refreshData');
+                    App.Views.currentPageView.remoteRefresh.apply(App.Views.currentPageView, snapshot);
+                    return;
+                } else {
+                    console.log('no remoteRefresh handler in PageView');
+                }
+            } catch(err){
+                console.error(err);
+            }
+            
+        });
+
         return historyObj;
 
     };

@@ -40,7 +40,8 @@ define(function(require, exports, module) {
         text: require('text!./tpl/ContentText.html'),
         email: require('text!./tpl/ContentEmail.html'),
         mark_complete: require('text!./tpl/ContentMarkComplete.html'),
-        mark_incomplete: require('text!./tpl/ContentMarkIncomplete.html')
+        mark_incomplete: require('text!./tpl/ContentMarkIncomplete.html'),
+        added_email: require('text!./tpl/ContentAddedEmail.html')
     };
     var templates           = {};
     _.each(tpls, function(val, key){
@@ -227,6 +228,7 @@ define(function(require, exports, module) {
         };
 
         switch(Model.get('type')){
+
             case 'text':
                 // Display some text
                 surfaceVars.content = templates.text(Model.toJSON());
@@ -253,8 +255,16 @@ define(function(require, exports, module) {
                 break;
 
             default:
-                console.error('no type');
-                Utils.Notification.Toast('invalid contentView type');
+                console.error('testing default type');
+
+                // template exist?
+                if(templates[Model.get('type')]){
+                    surfaceVars.content = templates[Model.get('type')](Model.toJSON());
+                    surfaceVars.classes.push('todo-content-item-default');
+                    break;
+                }
+
+                console.error('Invalid content view type');
                 return;
         }
 
@@ -415,6 +425,22 @@ define(function(require, exports, module) {
                 that.render_infinity_buttons();
             }
         });
+    };
+
+    SubView.prototype.remoteRefresh = function(snapshot){
+        var that = this;
+
+        console.info('RemoteRefresh - SubView');
+
+        this.collection.fetch();
+
+        // // emit on subviews
+        // _.each(this._subviews, function(tmpSubview){
+        //     if(typeof tmpSubview.remoteRefresh == "function"){
+        //         tmpSubview.remoteRefresh(snapshot);
+        //     }
+        // });
+
     };
 
 

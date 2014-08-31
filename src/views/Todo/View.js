@@ -140,6 +140,10 @@ define(function(require, exports, module) {
             _id: this.todo_id
         });
         this.model.fetch({prefill: true});
+
+        // this._onRemoteRefresh = [];
+        // this._onRemoteRefresh.push(this.model);
+
     };
 
     PageView.prototype.createHeader = function(){
@@ -684,6 +688,22 @@ define(function(require, exports, module) {
             this.model.fetch();
             this.tabBar.Layout.Stories.GameStoryListView.collection.fetch();
         }catch(err){};
+    };
+
+    PageView.prototype.remoteRefresh = function(snapshot){
+        var that = this;
+
+        console.info('RemoteRefresh - PageView');
+
+        this.model.fetch();
+
+        // emit on subviews
+        _.each(this._subviews, function(tmpSubview){
+            if(typeof tmpSubview.remoteRefresh == "function"){
+                tmpSubview.remoteRefresh(snapshot);
+            }
+        });
+
     };
 
     PageView.prototype.update_content = function(){

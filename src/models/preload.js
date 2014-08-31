@@ -73,6 +73,14 @@ define(function(require, exports, module) {
             App.Data.MessageCollection.fetch();
 
 
+            // Firebase
+            // - needs auth
+            var firebase = new Firebase(App.Credentials.firebase_url + 'users/' + App.Data.User.get('_id'));
+            firebase.on('child_changed', function (snapshot) {
+                console.log('firebase triggered!');
+                App.Events.trigger('firebase.child_added', snapshot);
+            });
+
             // console.log('Logged in, preloading');
             // console.log(App);
             // debugger;

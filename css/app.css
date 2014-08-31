@@ -856,8 +856,14 @@ body {
 
 
 .todo-content-item-default {
-
+  padding: 8px;
 }
+
+.todo-content-item-default > div.system-notify {
+  padding: 8px;
+  border: 1px solid #eee;
+}
+
 
 .todo-content-text-default {
   padding: 8px;
