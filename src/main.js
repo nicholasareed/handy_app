@@ -646,13 +646,14 @@ define(function(require, exports, module) {
                         console.error('failed login');
                         console.error(err);
                         Utils.Notification.Toast('Failed login');
+                        App.history.navigate('logout/force');
                     },
                     success: function(){
                         // Resolve deferred (in case anyone is listening)
                         // Store credentials
 
                         // Update localStorage
-                        localStorage.setItem('user_v3_',JSON.stringify(App.Data.User.toJSON()));
+                        localStorage.setItem(App.Credentials.local_user_key, JSON.stringify(App.Data.User.toJSON()));
 
                     }
                 });
