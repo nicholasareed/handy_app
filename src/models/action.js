@@ -55,7 +55,7 @@ define(function (require) {
               currentPage: 0,
 
               // how many items per page should be shown
-              perPage: 5,
+              perPage: 20,
               totalPages: 10 // the default, gets overwritten
             },
 
