@@ -88,7 +88,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.Create.on('longtap', function(){
-            Utils.IconHelp('PaymentSource/List/Create');
+            Utils.Help('PaymentSource/List/Create');
         });
         this.headerContent.Create.on('click', function(){
             // App.Cache.FriendListOptions = {
@@ -104,10 +104,10 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.BankDetails.on('longtap', function(){
-            Utils.IconHelp('PaymentSource/List/BankDetails');
+            Utils.Help('PaymentSource/List/BankDetails');
         });
         this.headerContent.BankDetails.on('click', function(){
-            Utils.IconHelp('PaymentSource/List/BankDetails');
+            Utils.Help('PaymentSource/List/BankDetails');
             // App.history.navigate('payment_source/add/creditcard');
         });
 

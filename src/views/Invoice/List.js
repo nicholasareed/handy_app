@@ -90,7 +90,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.Create.on('longtap', function(){
-            Utils.IconHelp('Invoice/List/Create');
+            Utils.Help('Invoice/List/Create');
         });
         this.headerContent.Create.on('click', function(){
 
@@ -132,7 +132,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.Invoices.on('longtap', function(){
-            Utils.IconHelp('Invoice/List/Invoices');
+            Utils.Help('Invoice/List/Invoices');
         });
         this.headerContent.Invoices.on('click', function(){
             App.history.navigate('todo/list');
@@ -152,7 +152,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.ShowInvoice.on('longtap', function(){
-            Utils.IconHelp('Invoice/List/Series');
+            Utils.Help('Invoice/List/Series');
         });
         this.headerContent.ShowInvoice.on('click', function(){
             that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowPaid);
@@ -165,7 +165,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.ShowPaid.on('longtap', function(){
-            Utils.IconHelp('Invoice/List/Series');
+            Utils.Help('Invoice/List/Series');
         });
         this.headerContent.ShowPaid.on('click', function(){
             that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowAll);
@@ -178,7 +178,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.ShowAll.on('longtap', function(){
-            Utils.IconHelp('Invoice/List/Series');
+            Utils.Help('Invoice/List/Series');
         });
         this.headerContent.ShowAll.on('click', function(){
             that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowInvoice);
@@ -749,6 +749,12 @@ define(function(require, exports, module) {
             // this.alert_collection.fetch();
             // this.CarTripListView.collection.fetch();
         }catch(err){};
+    };
+
+    PageView.prototype.remoteRefresh = function(snapshot){
+        var that = this;
+        console.log('RemoteRefresh - PageView');
+        Utils.RemoteRefresh(this);
     };
 
     PageView.prototype.inOutTransition = function(direction, otherViewName, transitionOptions, delayShowing, otherView, goingBack){

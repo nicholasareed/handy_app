@@ -91,7 +91,7 @@ define(function(require, exports, module) {
                 // ratios: _.map(_.range(this.options.moreSurfaces.length), function(){return true;}) // [true, true, ...]
             });
             this.more.getSize = function(){
-                console.log(that.more.Grid.getSize());
+                // console.log(that.more.Grid.getSize());
                 return that.more.Grid.getSize() ? that.more.Grid.getSize() : [undefined, undefined];
             };
             this.more.add(this.more.Grid);
@@ -136,7 +136,7 @@ define(function(require, exports, module) {
         this.more.OpacityModifier = new StateModifier();
         this.more.View.add(this.more.PositionModifier).add(this.more.OpacityModifier).add(this.more);
         this.more.View.getSize = function(){
-            console.log(that.more.getSize());
+            // console.log(that.more.getSize());
             return that.more.getSize() ? that.more.getSize() : [undefined,undefined];
         };
 

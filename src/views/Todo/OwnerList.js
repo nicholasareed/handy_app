@@ -98,7 +98,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.Invite.on('longtap', function(){
-            Utils.IconHelp('Todo/AssignList/Invite');
+            Utils.Help('Todo/AssignList/Invite');
         });
         this.headerContent.Invite.on('click', function(){
             // App.Cache.FriendListOptions = {
@@ -114,7 +114,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.UseMe.on('longtap', function(){
-            Utils.IconHelp('Todo/AssignList/UseMe');
+            Utils.Help('Todo/AssignList/UseMe');
         });
         this.headerContent.UseMe.on('click', function(){
             // App.history.navigate('friend/potential');

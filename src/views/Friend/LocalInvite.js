@@ -77,7 +77,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.CopyCode.on('longtap', function(){
-            Utils.IconHelp('Friend/LocalInvite/CopyCode');
+            Utils.Help('Friend/LocalInvite/CopyCode');
         });
         this.headerContent.CopyCode.on('click', function(){
 
@@ -110,7 +110,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.CopyCode.on('longtap', function(){
-            Utils.IconHelp('Friend/LocalInvite/EnterCode');
+            Utils.Help('Friend/LocalInvite/EnterCode');
         });
         this.headerContent.EnterCode.on('click', function(){
             Timer.setTimeout(function(){

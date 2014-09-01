@@ -168,7 +168,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.MarkComplete.on('longtap', function(){
-            Utils.IconHelp('Todo/View/MarkComplete');
+            Utils.Help('Todo/View/MarkComplete');
         });
         this.headerContent.MarkComplete.on('click', function(){
             
@@ -213,7 +213,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.ViewInvoice.on('longtap', function(){
-            Utils.IconHelp('Todo/View/ViewInvoice');
+            Utils.Help('Todo/View/ViewInvoice');
         });
         this.headerContent.ViewInvoice.on('click', function(){
             

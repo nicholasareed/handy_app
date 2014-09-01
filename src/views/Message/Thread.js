@@ -152,7 +152,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.NewMessage.on('longtap', function(){
-            Utils.IconHelp('Message/Thread/NewMessage');
+            Utils.Help('Message/Thread/NewMessage');
         });
         this.headerContent.NewMessage.on('click', function(){
             // App.Cache.FriendListOptions = {

@@ -88,7 +88,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.Invite.on('longtap', function(){
-            Utils.IconHelp('Friend/List/Invite');
+            Utils.Help('Friend/List/Invite');
         });
         this.headerContent.Invite.on('click', function(){
             // App.Cache.FriendListOptions = {
@@ -104,7 +104,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.GetRecommendation.on('longtap', function(){
-            Utils.IconHelp('Friend/List/GetRecommendation');
+            Utils.Help('Friend/List/GetRecommendation');
         });
         this.headerContent.GetRecommendation.on('click', function(){
             // App.history.navigate('friend/potential');
@@ -318,6 +318,12 @@ define(function(require, exports, module) {
             // this.alert_collection.fetch();
             // this.CarTripListView.collection.fetch();
         }catch(err){};
+    };
+
+    PageView.prototype.remoteRefresh = function(snapshot){
+        var that = this;
+        console.log('RemoteRefresh - PageView');
+        Utils.RemoteRefresh(this);
     };
 
     PageView.prototype.inOutTransition = function(direction, otherViewName, transitionOptions, delayShowing, otherView, goingBack){

@@ -224,7 +224,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.Settings.on('longtap', function(){
-            Utils.IconHelp('User/View/Settings');
+            Utils.Help('User/View/Settings');
         });
         this.headerContent.Settings.on('click', function(){
             App.history.navigate('settings');
@@ -236,7 +236,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.Message.on('longtap', function(){
-            Utils.IconHelp('User/View/Message');
+            Utils.Help('User/View/Message');
         });
         this.headerContent.Message.on('click', function(){
             App.history.navigate('inbox/' + that.profile_id);
@@ -275,7 +275,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.Friends.on('longtap', function(){
-            Utils.IconHelp('User/View/Friends');
+            Utils.Help('User/View/Friends');
         });
         this.headerContent.Friends.on('click', function(){
             // App.Cache.FriendListOptions = {

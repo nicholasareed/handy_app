@@ -5,16 +5,19 @@ define(function (require) {
     var $ = require('jquery-adapter'),
         _ = require('underscore');
 
-    var leaflet = require('lib2/leaflet/leaflet');
-    // require('lib2/leaflet/leaflet.label');
-    require('lib2/leaflet/leaflet.iconlabel');
-    require('lib2/leaflet/tile.stamen');
+    // var leaflet = require('lib2/leaflet/leaflet');
+    // // require('lib2/leaflet/leaflet.label');
+    // require('lib2/leaflet/leaflet.iconlabel');
+    // require('lib2/leaflet/tile.stamen');
 
     var Transform = require('famous/core/Transform');
     var StateModifier = require('famous/modifiers/StateModifier');
 
     var Credentials = JSON.parse(require('text!credentials.json'));
     var Crypto = require('lib2/crypto');
+
+    var Help = require('help');
+    // var thisHelp = new Help();
 
     var Utils = {
 
@@ -228,41 +231,8 @@ define(function (require) {
             },
         },
 
-        IconHelp: function(key){
-
-            var opts = {
-
-                todo_invoices : {
-                    title: 'Switch to Invoices',
-                    body: 'Tapping this will switch to a view of Invoices'
-                },
-
-                todo_circle_checkmark : {
-                    title: 'Cycle between Todos',
-                    body: 'Tapping this will switch between 3 todo types:<br />' + 
-                          '<p><i class="icon ion-ios7-circle-outline"></i> Todo</p>' + 
-                          '<p><i class="icon ion-ios7-checkmark-outline"></i> Complete</p>' + 
-                          '<p><i class="icon ion-ios7-checkmark"></i> All</p>'
-                },
-
-                'PaymentSource/List/BankDetails' : {
-                    title: 'Accepting Payments',
-                    body: "To accept payments, we'll need a few more details from you. " + 
-                          "Please email us at founders@thehandyapp.com (or use the feedback form from the Settings menu) and we'll get you set up!<br /><br />" +
-                          "We apologize for the inconvenience!"
-                }
-                
-            };
-
-            if(opts[key] === undefined){
-                Utils.Popover.Help({
-                    title: 'Help Option Unavailable',
-                    body: "I'm sorry, this help page isn't ready yet! <br />" + key
-                });
-                return;
-            }
-
-            Utils.Popover.Help(opts[key]);
+        Help: function(key){
+            Help.launch(key);
         },
 
         Contacts: {
@@ -285,8 +255,8 @@ define(function (require) {
                 // key doesn't exist, use 'content'
                 plane_name = 'content';
             }
-            console.log(App.Planes[plane_name] + add);
-            console.log(0.001 + (App.Planes[plane_name] + add)/1000000);
+            // console.log(App.Planes[plane_name] + add);
+            // console.log(0.001 + (App.Planes[plane_name] + add)/1000000);
             return new StateModifier({
                 transform: Transform.translate(0,0, 0.001 + (App.Planes[plane_name] + add)/1000000)
             });
@@ -457,6 +427,7 @@ define(function (require) {
                     if(App.Data.usePg){
                         console.error('Utils.Analytics.trackPage');
                         console.error(err);
+                        debugger;
                     }
                 }
             }

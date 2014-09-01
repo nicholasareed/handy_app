@@ -224,43 +224,43 @@ define(function(require, exports, module) {
 
         var surfaceVars = {
             content: '',
-            classes: ['todo-content-item-default']
+            classes: ['list-content-item-default']
         };
 
         switch(Model.get('type')){
 
-            case 'text':
-                // Display some text
-                surfaceVars.content = templates.text(Model.toJSON());
-                surfaceVars.classes.push('todo-content-text-default');
-                break;
+            // case 'text':
+            //     // Display some text
+            //     surfaceVars.content = templates.text(Model.toJSON());
+            //     surfaceVars.classes.push('list-content-text-default');
+            //     break;
 
-            case 'email':
-                // Display some text
-                surfaceVars.content = templates.email(Model.toJSON());
-                surfaceVars.classes.push('todo-content-text-default');
-                break;
+            // case 'email':
+            //     // Display some text
+            //     surfaceVars.content = templates.email(Model.toJSON());
+            //     surfaceVars.classes.push('list-content-text-default');
+            //     break;
 
-            case 'mark_complete':
-                // Display some text
-                surfaceVars.content = templates.mark_complete(Model.toJSON());
-                surfaceVars.classes.push('todo-content-mark-complete-default');
-                break;
+            // case 'mark_complete':
+            //     // Display some text
+            //     surfaceVars.content = templates.mark_complete(Model.toJSON());
+            //     surfaceVars.classes.push('list-content-mark-complete-default');
+            //     break;
 
-            case 'mark_incomplete':
-                // Display some text
-                surfaceVars.content = templates.mark_incomplete(Model.toJSON());
-                surfaceVars.classes.push('todo-content-mark-complete-default');
-                surfaceVars.classes.push('incomplete');
-                break;
+            // case 'mark_incomplete':
+            //     // Display some text
+            //     surfaceVars.content = templates.mark_incomplete(Model.toJSON());
+            //     surfaceVars.classes.push('list-content-mark-complete-default');
+            //     surfaceVars.classes.push('incomplete');
+            //     break;
 
             default:
-                console.error('testing default type');
+                // console.error('testing default type');
 
                 // template exist?
                 if(templates[Model.get('type')]){
                     surfaceVars.content = templates[Model.get('type')](Model.toJSON());
-                    surfaceVars.classes.push('todo-content-item-default');
+                    surfaceVars.classes.push('list-content-item-default');
                     break;
                 }
 

@@ -168,7 +168,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.MarkPaid.on('longtap', function(){
-            Utils.IconHelp('Invoice/View/MarkPaid');
+            Utils.Help('Invoice/View/MarkPaid');
         });
         this.headerContent.MarkPaid.on('click', function(){
             // App.history.navigate('settings');
@@ -184,20 +184,30 @@ define(function(require, exports, module) {
             //     };
             // }
 
-            that.model.save({
-                remove_tags: ['paid']
-            },{
-                patch: true,
-                // success: function(){
-                //     that.model.fetch();    
-                // }
-            }).then(function(){
-                // that.model.set({
-                //     assigned_id: App.Data.User.toJSON()
-                // });
-                that.model.fetch();
-                that.invoiceContent.collection.fetch();
-                // App.history.backTo('StartAssign');
+            Utils.Popover.Buttons({
+                title: 'Mark as Unpaid',
+                text: 'Are you sure?',
+                buttons: [{
+                    text: 'Yes, mark as Unpaid',
+                    success: function(){
+                        Utils.Notification.Toast('Marking as Unpaid');
+                        that.model.save({
+                            remove_tags: ['paid']
+                        },{
+                            patch: true,
+                            // success: function(){
+                            //     that.model.fetch();    
+                            // }
+                        }).then(function(){
+                            // that.model.set({
+                            //     assigned_id: App.Data.User.toJSON()
+                            // });
+                            that.model.fetch();
+                            that.invoiceContent.collection.fetch();
+                            // App.history.backTo('StartAssign');
+                        });
+                    }
+                }]
             });
 
         });
@@ -215,7 +225,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.MakePayment.on('longtap', function(){
-            Utils.IconHelp('Invoice/View/MakePayment');
+            Utils.Help('Invoice/View/MakePayment');
         });
         this.headerContent.MakePayment.on('click', function(){
             // App.history.navigate('settings');
@@ -224,12 +234,65 @@ define(function(require, exports, module) {
 
         });
 
+    
+        // Email
+        this.headerContent.Email = new Surface({
+            content: '<i class="icon ion-android-mail"></i>',
+            size: [60, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.Email.on('click',function(){
+
+            var listData = [];
+
+            that.model.get('included').forEach(function(theEmail){
+                listData.push({
+                    text: theEmail,
+                    success: function(){
+                        Utils.Notification.Toast('Cannot remove yet!');
+                    }
+                });
+            });
+
+            listData.push({
+                text: '<i class="icon ion-plus-round"></i> Add new Email',
+                success: function(){
+                    var e = prompt('Email address');
+                    if(!e){
+                        return;
+                    }
+
+                    $.ajax({
+                        url: App.Credentials.server_root + 'invoice/emailinvite/' + that.model.get('_id'),
+                        method: 'post',
+                        data: {
+                            email: e
+                        },
+                        success: function(result, status){
+                            console.log(result);
+                            console.log(status);
+                            that.model.fetch();
+                        }
+                    });
+
+
+                }
+            });
+
+            Utils.Popover.List({
+                list: listData
+            });
+
+        });
+
+
         // create the header
         this.header = new StandardHeader({
             content: "Invoice",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             moreSurfaces: [
+                this.headerContent.Email,
                 this.headerContent,
                 // this.headerContent
             ]
@@ -638,6 +701,12 @@ define(function(require, exports, module) {
             this.model.fetch();
             this.tabBar.Layout.Stories.GameStoryListView.collection.fetch();
         }catch(err){};
+    };
+
+    PageView.prototype.remoteRefresh = function(snapshot){
+        var that = this;
+        console.log('RemoteRefresh - PageView');
+        Utils.RemoteRefresh(this);
     };
 
     PageView.prototype.update_content = function(){

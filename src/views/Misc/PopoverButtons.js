@@ -156,62 +156,6 @@ define(function(require, exports, module) {
     PageView.prototype = Object.create(View.prototype);
     PageView.prototype.constructor = PageView;
 
-    PageView.prototype.backbuttonHandler = function(){
-        var that = this;
-        // Back button pressed
-        // alert('back button pressed for popover');
-        this.closePopover();
-        // if(that.params.passed.on_cancel){
-        that.params.passed.on_cancel();
-        // }
-    };
-
-    PageView.prototype.closePopover = function(){
-        // Back button pressed
-        var that = this;
-        var def = $.Deferred();
-
-        // Close popover!
-
-        // run our animation first
-        var delay = this.inOutTransitionPopover('hiding');
-        Timer.setTimeout(function(){
-
-            def.resolve(); // 
-            App.Views.Popover.hide(); // actually hide the popover
-
-        }, delay);
-
-        return def.promise();
-    };
-
-    PageView.prototype.createHeader = function(){
-        var that = this;
-        
-        // create the header
-        this.header = new StandardHeader({
-            content: this.params.passed.title,
-            classes: ["normal-header"],
-            backClasses: ["normal-header"],
-            moreContent: false
-        }); 
-        this.header._eventOutput.on('back',function(){
-            // App.history.back();//.history.go(-1);
-            
-            if(that.params.passed.on_cancel){
-                that.params.passed.on_cancel();
-            }
-        });
-        this.header.pipe(this._eventInput);
-        this._eventOutput.on('inOutTransition', function(args){
-            this.header.inOutTransition.apply(this.header, args);
-        })
-
-        // Attach header to the layout        
-        this.layout.header.add(this.header);
-
-    };
-
     PageView.prototype.addSurfaces = function(Model) { 
         var that = this;
         ModelIndex = this.contentScrollView.Views.length;
@@ -257,7 +201,7 @@ define(function(require, exports, module) {
             });
             this.textView.add(this.textView.Surface);
             this.textView.getSize = function(){
-                return [undefined, that.textView._size ? that.textView._size[1] : 60];
+                return [undefined, that.textView.Surface._trueSize ? that.textView.Surface._trueSize[1] : undefined];
             };
             this.textView.Surface.pipe(that.contentScrollView.SeqLayout);
             this.textView.Surface.on('click', function(){
@@ -288,6 +232,9 @@ define(function(require, exports, module) {
                         backgroundColor: 'white'
                     }
                 });
+                buttonView.getSize = function(){
+                    return [undefined, 60];
+                };
                 buttonView.add(buttonView.Surface);
                 buttonView.Surface.pipe(that.contentScrollView.SeqLayout);
                 buttonView.Surface.on('click', function(){
@@ -298,11 +245,40 @@ define(function(require, exports, module) {
                     }
 
                 });
-                that.contentScrollView.Views.push(buttonView);
+                that.contentScrollView.Views.push(buttonView.Surface);
             });
 
         }
 
+    };
+
+    PageView.prototype.backbuttonHandler = function(){
+        var that = this;
+        // Back button pressed
+        // alert('back button pressed for popover');
+        this.closePopover();
+        // if(that.params.passed.on_cancel){
+        that.params.passed.on_cancel();
+        // }
+    };
+
+    PageView.prototype.closePopover = function(){
+        // Back button pressed
+        var that = this;
+        var def = $.Deferred();
+
+        // Close popover!
+
+        // run our animation first
+        var delay = this.inOutTransitionPopover('hiding');
+        Timer.setTimeout(function(){
+
+            def.resolve(); // 
+            App.Views.Popover.hide(); // actually hide the popover
+
+        }, delay);
+
+        return def.promise();
     };
 
     PageView.prototype.inOutTransitionPopover = function(direction){

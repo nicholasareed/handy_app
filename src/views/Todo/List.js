@@ -101,7 +101,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.Create.on('longtap', function(){
-            Utils.IconHelp('todo_plus');
+            Utils.Help('todo_plus');
         });
         this.headerContent.Create.on('click', function(){
 
@@ -146,7 +146,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.Invoices.on('longtap', function(){
-            Utils.IconHelp('todo_invoices');
+            Utils.Help('todo_invoices');
             this.longTap = true;
         });
         this.headerContent.Invoices.on('click', function(){
@@ -172,7 +172,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.ShowTodo.on('longtap', function(){
-            Utils.IconHelp('todo_circle_checkmark');
+            Utils.Help('todo_circle_checkmark');
         });
         this.headerContent.ShowTodo.on('click', function(){
             that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowComplete);
@@ -185,7 +185,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.ShowComplete.on('longtap', function(){
-            Utils.IconHelp('todo_circle_checkmark');
+            Utils.Help('todo_circle_checkmark');
         });
         this.headerContent.ShowComplete.on('click', function(){
             that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowAll);
@@ -198,7 +198,7 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.ShowAll.on('longtap', function(){
-            Utils.IconHelp('todo_circle_checkmark');
+            Utils.Help('todo_circle_checkmark');
         });
         this.headerContent.ShowAll.on('click', function(){
             that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowTodo);

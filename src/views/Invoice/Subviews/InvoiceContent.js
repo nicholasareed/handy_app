@@ -37,6 +37,8 @@ define(function(require, exports, module) {
     var Handlebars          = require('lib2/handlebars-adapter');
     var tpls                = {
         text: require('text!./tpl/ContentText.html'),
+        email: require('text!./tpl/ContentEmail.html'),
+        added_email: require('text!./tpl/ContentAddedEmail.html'),
         mark_paid: require('text!./tpl/ContentMarkPaid.html'),
         mark_unpaid: require('text!./tpl/ContentMarkUnpaid.html'),
         card_paid: require('text!./tpl/ContentCardPaid.html')
@@ -217,37 +219,47 @@ define(function(require, exports, module) {
 
         var surfaceVars = {
             content: '',
-            classes: ['invoice-content-item-default']
+            classes: ['list-content-item-default']
         };
 
         switch(Model.get('type')){
-            case 'text':
-                // Display some text
-                surfaceVars.content = templates.text(Model.toJSON());
-                surfaceVars.classes.push('invoice-content-text-default');
-                break;
+            // case 'text':
+            //     // Display some text
+            //     surfaceVars.content = templates.text(Model.toJSON());
+            //     surfaceVars.classes.push('list-content-text-default');
+            //     break;
 
-            case 'mark_paid':
-                surfaceVars.content = templates.mark_paid(Model.toJSON());
-                surfaceVars.classes.push('invoice-content-paid-status-default');
-                break;
+            // case 'mark_paid':
+            //     surfaceVars.content = templates.mark_paid(Model.toJSON());
+            //     surfaceVars.classes.push('list-content-paid-status-default');
+            //     break;
 
-            case 'mark_unpaid':
-                surfaceVars.content = templates.mark_unpaid(Model.toJSON());
-                surfaceVars.classes.push('invoice-content-paid-status-default');
-                surfaceVars.classes.push('unpaid');
-                break;
+            // case 'mark_unpaid':
+            //     surfaceVars.content = templates.mark_unpaid(Model.toJSON());
+            //     surfaceVars.classes.push('list-content-paid-status-default');
+            //     surfaceVars.classes.push('unpaid');
+            //     break;
 
-            case 'card_paid':
-                surfaceVars.content = templates.card_paid(Model.toJSON());
-                surfaceVars.classes.push('invoice-content-paid-status-default');
-                surfaceVars.classes.push('card-paid');
-                break;
+            // case 'card_paid':
+            //     surfaceVars.content = templates.card_paid(Model.toJSON());
+            //     surfaceVars.classes.push('list-content-paid-status-default');
+            //     surfaceVars.classes.push('card-paid');
+            //     break;
+
 
             default:
-                console.error('no type');
-                Utils.Notification.Toast('invalid contentView type');
+                // console.error('testing default type');
+
+                // template exist?
+                if(templates[Model.get('type')]){
+                    surfaceVars.content = templates[Model.get('type')](Model.toJSON());
+                    surfaceVars.classes.push('list-content-item-default');
+                    break;
+                }
+
+                console.error('Invalid content view type');
                 return;
+
         }
 
         console.log(surfaceVars);
@@ -374,6 +386,12 @@ define(function(require, exports, module) {
                 that.render_infinity_buttons();
             }
         });
+    };
+
+    SubView.prototype.remoteRefresh = function(snapshot){
+        var that = this;
+        console.log('RemoteRefresh - SubView');
+        Utils.RemoteRefresh(this);
     };
 
     SubView.prototype.next_page = function(){

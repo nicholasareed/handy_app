@@ -610,81 +610,6 @@ body {
 
 
 
-.invoice-content-item-default {
-
-}
-
-.invoice-content-text-default {
-  padding: 8px;
-}
-
-.invoice-content-text-default > div {
-  padding: 8px;
-  border: 1px solid #eee;
-}
-
-.invoice-content-text-default > div > div:nth-child(1) {
-  font-size: 16px;
-  line-height: 20px;
-}
-
-.invoice-content-text-default > div > div:nth-child(2) {
-  color: #888;
-
-  font-size: 11px;
-  line-height: 13px;
-}
-
-
-.invoice-content-item-default {
-
-}
-
-.invoice-content-paid-status-default {
-  padding: 8px;
-}
-
-.invoice-content-paid-status-default > div {
-  background: rgba(46,204,113,0.2);
-}
-.invoice-content-paid-status-default.unpaid > div {
-  background: rgba(231,76,60,0.2);
-}
-.invoice-content-paid-status-default.card-paid > div {
-  background: rgba(46,204,113,0.2);
-}
-
-.invoice-content-paid-status-default > div {
-  padding: 8px;
-  border: 1px solid #eee;
-}
-
-.invoice-content-paid-status-default > div > div:nth-child(1) {
-  font-size: 16px;
-  line-height: 20px;
-}
-
-.invoice-content-paid-status-default > div > div:nth-child(2) {
-  color: #888;
-
-  font-size: 11px;
-  line-height: 13px;
-}
-
-.invoice-content-paid-status-default.card-paid > div > div:nth-child(2) {
-  color: #444;
-  font-size: 13px;
-  line-height: 15px;
-}
-.invoice-content-paid-status-default.card-paid > div > div:nth-child(3) {
-  color: #888;
-
-  font-size: 11px;
-  line-height: 13px;
-}
-
-
-
 
 
 
@@ -854,78 +779,55 @@ body {
 }
 
 
+/* List (todo/invoice) Content - TodoContent InvoiceContent */
 
-.todo-content-item-default {
+.list-content-item-default {
   padding: 8px;
 }
 
-.todo-content-item-default > div.system-notify {
+.list-content-item-default > div {
   padding: 8px;
-  border: 1px solid #eee;
+  border: 1px solid #444;
+}
+
+.list-content-item-default > div.system-notify {
   background: #fefefe;
 }
 
-.todo-content-item-default > div > div:nth-child(1) {
-  font-size: 16px;
-  line-height: 20px;
-}
-
-.todo-content-item-default > div > div:nth-child(2) {
-  color: #888;
-
-  font-size: 11px;
-  line-height: 13px;
-}
-
-
-.todo-content-text-default {
-  padding: 8px;
-}
-
-.todo-content-text-default > div {
-  padding: 8px;
-  border: 1px solid #eee;
-}
-
-.todo-content-text-default > div > div:nth-child(1) {
-  font-size: 16px;
-  line-height: 20px;
-}
-
-.todo-content-text-default > div > div:nth-child(2) {
-  color: #888;
-
-  font-size: 11px;
-  line-height: 13px;
-}
-
-.todo-content-mark-complete-default {
-  padding: 8px;
-}
-
-.todo-content-mark-complete-default > div {
+.list-content-item-default > div.mark-complete {
   background: rgba(46,204,113,0.2);
 }
-.todo-content-mark-complete-default.incomplete > div {
+
+.list-content-item-default > div.mark-incomplete {
   background: rgba(231,76,60,0.2);
 }
 
-.todo-content-mark-complete-default > div {
-  padding: 8px;
-  border: 1px solid #eee;
+.list-content-item-default > div.mark-paid {
+  background: rgba(46,204,113,0.2);
+}
+.list-content-item-default > div.mark-paid-by-card {
+  background: rgba(46,204,113,0.2);
 }
 
-.todo-content-mark-complete-default > div > div:nth-child(1) {
+.list-content-item-default > div.mark-unpaid {
+  background: rgba(231,76,60,0.2);
+}
+
+
+.list-content-item-default > div > div:nth-child(1) {
   font-size: 16px;
   line-height: 20px;
 }
 
-.todo-content-mark-complete-default > div > div:nth-child(2) {
+.list-content-item-default > div > div:nth-child(2) {
   color: #888;
 
   font-size: 11px;
   line-height: 13px;
 }
+
+
+
 
 
 
@@ -1097,6 +999,8 @@ body {
 
 .modal-option-buttons-title-default {
 
+  font-family: Helvetica, sans-serif;
+  
   background: white;
   line-height: 30px;
   font-size: 18px;
@@ -1111,7 +1015,7 @@ body {
   background: white;
   line-height: 30px;
   font-size: 16px;
-  padding: 15px 0 0 10px;
+  padding: 10px 8px;
   border-bottom: 1px solid #eee;
 }
 

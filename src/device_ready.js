@@ -21,7 +21,7 @@ define(function(require, exports, module) {
 
             // phonegap/cordova usage
             App.Data.usePg = false;
-            if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
+            if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/) && cordova) {
                 console.log('Using PhoneGap/Cordova!');
                 App.Data.usePg = true;
             }
