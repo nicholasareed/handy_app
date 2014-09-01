@@ -128,7 +128,8 @@ define(function(require, exports, module) {
         optionSurface.add(optionSurface.Surface);
         optionSurface.Surface.pipe(that.contentScrollView);
         optionSurface.Surface.on('click', function(){
-            App.history.navigate('welcome/fullname',{history: false});
+            // App.history.navigate('welcome/fullname',{history: false});
+            App.history.navigate('profile/edit',{history: false});
         });
         that.contentScrollView.Views.push(optionSurface);
 
