@@ -645,7 +645,7 @@ define(function(require, exports, module) {
                     error: function(err){
                         console.error('failed login');
                         console.error(err);
-                        Utils.Notification.Toast('Failed login');
+                        // Utils.Notification.Toast('Failed login');
                         App.history.navigate('logout/force');
                     },
                     success: function(){

@@ -48,7 +48,7 @@ define(function(require, exports, module) {
                 if(lastArgs === undefined || !lastArgs || lastArgs.length < 1 || lastArgs[0] == ''){
                     // No last arguments exist
                     // alert('Exiting app');
-                    Utils.Notification.Toast('Exiting App');
+                    // Utils.Notification.Toast('Exiting App');
                     console.error('exiting app');
                     historyObj.data = [];
                     historyObj.navigate('dash');
@@ -74,7 +74,7 @@ define(function(require, exports, module) {
 
                 if(lastArgs === undefined || !lastArgs || lastArgs.length < 1 || lastArgs[0] == ''){
                     // No last arguments exist
-                    Utils.Notification.Toast('Exiting App');
+                    // Utils.Notification.Toast('Exiting App');
                     console.error('Exiting app, reloadCurrent failed');
                     historyObj.navigate('dash');
                     return;
