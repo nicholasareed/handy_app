@@ -1174,11 +1174,15 @@ body {
 /* Messages */
 
 .message-text-default {
+  padding: 1px 0;
+}
+
+.message-text-default > div {
   padding: 4px 8px;
   border-left: 8px solid #3498DB;
 }
 
-.message-text-default.from_me {
+.message-text-default.from_me > div {
   text-align: right;
   border-left: 0px;
   border-right: 8px solid #E67E22;
@@ -1193,13 +1197,13 @@ body {
   font-size: 11px;
 }
 
-.message-text-default div:nth-child(1) {
+.message-text-default > div div:nth-child(1) {
   padding-top:2px;
 
   font-size: 14px;
   line-height: 16px;
 }
-.message-text-default > div:last-child {
+.message-text-default > div > div:last-child {
   padding-bottom: 8px;
   /*border-bottom: 1px dashed #ddd;*/
 }

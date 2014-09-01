@@ -581,6 +581,12 @@ define(function(require, exports, module) {
         });
     };
 
+    SubView.prototype.remoteRefresh = function(snapshot){
+        var that = this;
+        console.log('RemoteRefresh - SubView');
+        Utils.RemoteRefresh(this, snapshot);
+    };
+
     SubView.prototype.next_page = function(){
         // Load more games
         var that = this;

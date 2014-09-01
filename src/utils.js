@@ -521,6 +521,27 @@ define(function (require) {
 
         },
 
+        RemoteRefresh: function(context, snapshot){
+            // Default PageView.prototype.remoteRefresh
+
+            if(context.model){
+                context.model.fetch();
+            }
+            if(context.collection){
+                context.collection.fetch(); // updates, doesn't take "pager" into account?
+            }
+
+            // emit on subviews
+            if(context._subviews){
+                _.each(context._subviews, function(tmpSubview){
+                    if(typeof tmpSubview.remoteRefresh == "function"){
+                        tmpSubview.remoteRefresh(snapshot);
+                    }
+                });
+            }
+
+        },
+
         GetRatio: function(normal_ratio, our_variable, max){
             // Utils.GetRatio([160,320],[window.innerWidth,'x'])
             var val;

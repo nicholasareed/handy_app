@@ -77,7 +77,7 @@ define(function(require, exports, module) {
             // - needs auth
             var firebase = new Firebase(App.Credentials.firebase_url + 'users/' + App.Data.User.get('_id'));
             firebase.on('child_changed', function (snapshot) {
-                console.log('firebase triggered!');
+                console.info('firebase child_added');
                 App.Events.trigger('firebase.child_added', snapshot);
             });
 

@@ -692,18 +692,7 @@ define(function(require, exports, module) {
 
     PageView.prototype.remoteRefresh = function(snapshot){
         var that = this;
-
-        console.info('RemoteRefresh - PageView');
-
-        this.model.fetch();
-
-        // emit on subviews
-        _.each(this._subviews, function(tmpSubview){
-            if(typeof tmpSubview.remoteRefresh == "function"){
-                tmpSubview.remoteRefresh(snapshot);
-            }
-        });
-
+        Utils.RemoteRefresh(this);
     };
 
     PageView.prototype.update_content = function(){
