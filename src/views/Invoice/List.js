@@ -754,7 +754,7 @@ define(function(require, exports, module) {
     PageView.prototype.remoteRefresh = function(snapshot){
         var that = this;
         console.log('RemoteRefresh - PageView');
-        Utils.RemoteRefresh(this);
+        Utils.RemoteRefresh(this,snapshot);
     };
 
     PageView.prototype.inOutTransition = function(direction, otherViewName, transitionOptions, delayShowing, otherView, goingBack){

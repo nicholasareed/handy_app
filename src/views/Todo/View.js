@@ -692,7 +692,7 @@ define(function(require, exports, module) {
 
     PageView.prototype.remoteRefresh = function(snapshot){
         var that = this;
-        Utils.RemoteRefresh(this);
+        Utils.RemoteRefresh(this,snapshot);
     };
 
     PageView.prototype.update_content = function(){
