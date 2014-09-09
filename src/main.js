@@ -311,6 +311,7 @@ define(function(require, exports, module) {
             });
 
             App.MainContext.on('resize', function(e) {
+                Utils.Notification.Toast('Resized');
                 App.MainController.SizeMod.setSize(App.mainSize);
             }.bind(this));
 
