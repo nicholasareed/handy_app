@@ -176,9 +176,9 @@ define(function(require, exports, module) {
         // run our animation first
         var delay = this.inOutTransitionPopover('hiding');
         Timer.setTimeout(function(){
-
+            
             def.resolve(); // 
-            App.Views.Popover.hide(); // actually hide the popover
+            App.Views.Popover.hideIf(this); // actually hide the popover
 
         }, delay);
 

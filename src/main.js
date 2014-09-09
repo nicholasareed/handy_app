@@ -497,6 +497,11 @@ define(function(require, exports, module) {
                     inTransition: false,
                     outTransition: false,
                 });
+                App.Views.Popover.hideIf = function(thisView){
+                    if(App.Views.Popover.CurrentPopover === thisView){
+                        App.Views.Popover.hide();
+                    }
+                };
                 // var po = App.Views.Popover;
                 App.Views.Popover.frontMod = new StateModifier({
                     transform: Transform.inFront
@@ -586,6 +591,19 @@ define(function(require, exports, module) {
                 }
             });
 
+    
+            // Hide SplashScreen
+            Timer.setTimeout(function(){
+                try {
+                    if(App.Data.usePg){
+                        navigator.splashscreen.hide();
+                    }
+                }catch(err){
+                    alert('failed hiding splash screen');
+                    alert(err);
+                }
+            },500);
+
 
             // Ajax setup for users
             var localUser = localStorage.getItem(App.Credentials.local_user_key);
@@ -658,7 +676,8 @@ define(function(require, exports, module) {
                         console.error('failed login');
                         console.error(err);
                         // Utils.Notification.Toast('Failed login');
-                        App.history.navigate('logout/force');
+                        // App.history.navigate('logout/force');
+                        App.history.navigate('dash');
                     },
                     success: function(){
                         // Resolve deferred (in case anyone is listening)

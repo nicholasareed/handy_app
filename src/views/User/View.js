@@ -347,7 +347,7 @@ define(function(require, exports, module) {
         // this.HeaderNode.add(this.header.StateModifier).add(this.header);
 
         // Attach header to the layout        
-        this.layout.header.add(this.header);
+        this.layout.header.add(Utils.usePlane('header')).add(this.header);
 
     };
 
@@ -499,16 +499,6 @@ define(function(require, exports, module) {
                 fontWeight: "bold",
                 textAlign: "center"
             }
-        });
-        this.profileTop.ProfileName.Surface.on('click', function(){
-            Utils.Popover.Prompt('What is your name','nick','Set Name')
-            .then(function(result){
-                alert(result);
-                // Utils.Popover.Alert('number dos')
-                // .then(function(){
-
-                // });
-            });
         });
         this.profileTop.ProfileName.Surface.pipe(this.contentScrollView);
         this.profileTop.ProfileName.getSize = function(){

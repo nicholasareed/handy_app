@@ -41,6 +41,9 @@
     <preference name="StatusBarBackgroundColor" value="#34495E" />
     <preference name="StatusBarStyle" value="lightcontent" />
 
+    <preference name="AutoHideSplashScreen" value="false" />
+    <preference name="splashscreen" value="splash.png" /> <!-- Android -->
+    
     <preference name="URL_SCHEME" value="http" />
     <preference name="URL_HOST" value="thehandyapp.com" />
 
@@ -65,6 +68,7 @@
     <gap:plugin name="info.asankan.phonegap.smsplugin" />
     <gap:plugin name="nl.x-services.plugins.toast" />
     <gap:plugin name="de.appplant.cordova.plugin.local-notification" />
+    <gap:plugin name="org.apache.cordova.splashscreen" />
 
     <gap:plugin name="com.ionic.keyboard" version="1.0.2" />
 
@@ -81,6 +85,11 @@
         <param name="URL_SCHEME" value="handy" />
     </gap:plugin>
 
+    <feature name="SplashScreen">
+        <param name="android-package" value="org.apache.cordova.splashscreen.SplashScreen"/>
+        <param name="ios-package" value="CDVSplashScreen"/>
+        <param name="onload" value="true"/>
+    </feature>
 
     <feature name="StatusBar">
     	<param name="ios-package" value="CDVStatusBar" onload="true" />

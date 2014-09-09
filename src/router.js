@@ -31,13 +31,15 @@ define(function(require, exports, module) {
                 '' : function(){
                     console.info('homeAlso');
                     if(App.history.data.length == 0){
-                        window.location = window.location.href.split('#')[0];
+                        // window.location = window.location.href.split('#')[0];
+                        App.history.navigate('dash');
                     }
                 },
                 'random(:anynumber)' : function(){
                     console.info('homeAlso');
                     if(App.history.data.length == 0){
-                        window.location = window.location.href.split('#')[0];
+                        // window.location = window.location.href.split('#')[0];
+                        App.history.navigate('dash');
                     }
                 },
 
@@ -465,6 +467,7 @@ define(function(require, exports, module) {
                 // Popover?
                 if(options.popover === true){
                     PageView.inOutTransitionPopover('showing');
+                    App.Views.CurrentPopover = PageView;
                     App.Views.Popover.show(PageView);
                     return;
                 }

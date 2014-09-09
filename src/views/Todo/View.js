@@ -624,20 +624,25 @@ define(function(require, exports, module) {
                     text: 'Text',
                     success: function(){
 
-                        var p = prompt('Update text');
-                        if(p && p.trim() !== ''){
 
-                            var TodoContent = new TodoContentModel.TodoContent({
-                                todo_id: that.todo_id,
-                                type: 'text',
-                                text: p
-                            });
-                            TodoContent.save()
-                            .then(function(){
-                                that.todoContent.collection.fetch();
-                            });
+                        Utils.Popover.Prompt('Post Text', '', 'Post')
+                        .then(function(p){
+                            if(p && p.trim() !== ''){
 
-                        }
+                                var TodoContent = new TodoContentModel.TodoContent({
+                                    todo_id: that.todo_id,
+                                    type: 'text',
+                                    text: p
+                                });
+                                TodoContent.save()
+                                .then(function(){
+                                    that.todoContent.collection.fetch();
+                                });
+
+                            }
+
+                        });
+
 
                     }
                 }]

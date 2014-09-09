@@ -503,20 +503,22 @@ define(function(require, exports, module) {
                     text: 'Text',
                     success: function(){
 
-                        var p = prompt('Update text');
-                        if(p && p.trim() !== ''){
+                        Utils.Popover.Prompt('Post Text', '', 'Post')
+                        .then(function(p){
+                            if(p && p.trim() !== ''){
 
-                            var InvoiceContent = new InvoiceContentModel.InvoiceContent({
-                                invoice_id: that.invoice_id,
-                                type: 'text',
-                                text: p
-                            });
-                            InvoiceContent.save()
-                            .then(function(){
-                                that.invoiceContent.collection.fetch();
-                            });
+                                var InvoiceContent = new InvoiceContentModel.InvoiceContent({
+                                    invoice_id: that.invoice_id,
+                                    type: 'text',
+                                    text: p
+                                });
+                                InvoiceContent.save()
+                                .then(function(){
+                                    that.invoiceContent.collection.fetch();
+                                });
 
-                        }
+                            }
+                        });
 
                     }
                 }]

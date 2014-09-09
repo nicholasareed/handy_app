@@ -112,7 +112,7 @@ define(function(require, exports, module) {
         switch(this.modalOptions.type){
             case 'scroll':
                 this.contentScrollView.SeqLayout = new ScrollView(); //App.Defaults.ScrollView);
-                this.contentScrollView.SizeMod.setSize([window.innerWidth - 80, window.innerHeight - 40]);
+                this.contentScrollView.SizeMod.setSize([window.innerWidth - 40, window.innerHeight - 40]);
                 break
             case 'static':
             default:
@@ -182,7 +182,7 @@ define(function(require, exports, module) {
         // Input
         this.inputView = new View();
         this.inputView.Bg = new Surface({
-            size: [undefined, 80],
+            size: [undefined, 40],
             properties: {
                 backgroundColor: 'white'
             }
@@ -194,17 +194,17 @@ define(function(require, exports, module) {
             type: this.params.passed.type || 'text'
         });
         this.inputView.Surface.OriginMod = new StateModifier({
-            origin: [0.5,0.5]
+            // origin: [0.5,0.5]
         });
         this.inputView.Surface.SizeMod = new Modifier({
             size: function(){
-                return [undefined, 80];
+                return [undefined, 40];
             }
         });
         this.inputView.add(Utils.usePlane('popover',1)).add(this.inputView.Bg);
         this.inputView.add(Utils.usePlane('popover',2)).add(this.inputView.Surface.SizeMod).add(this.inputView.Surface.OriginMod).add(this.inputView.Surface);
         this.inputView.getSize = function(){
-            return [undefined, 80];
+            return [undefined, 40];
         };
         this.inputView.Surface.pipe(that.contentScrollView.SeqLayout);
         this.inputView.Surface.on('click', function(){
@@ -244,6 +244,7 @@ define(function(require, exports, module) {
         OKButtonView.Surface.pipe(that.contentScrollView.SeqLayout);
         OKButtonView.Surface.on('click', function(){
             var value = that.inputView.Surface.getValue();
+
             that.closePopover();
             if(that.params.passed.on_done){
                 that.params.passed.on_done(value);
@@ -265,10 +266,10 @@ define(function(require, exports, module) {
         CancelButtonView.add(CancelButtonView.Surface);
         CancelButtonView.Surface.pipe(that.contentScrollView.SeqLayout);
         CancelButtonView.Surface.on('click', function(){
-            var value = that.inputView.Surface.getValue();
+            
             that.closePopover();
-            if(that.params.passed.on_done){
-                that.params.passed.on_done(value);
+            if(that.params.passed.on_cancel){
+                that.params.passed.on_cancel();
             }
 
         });
@@ -304,7 +305,7 @@ define(function(require, exports, module) {
         Timer.setTimeout(function(){
 
             def.resolve(); // 
-            App.Views.Popover.hide(); // actually hide the popover
+            App.Views.Popover.hideIf(this); // actually hide the popover
 
         }, delay);
 

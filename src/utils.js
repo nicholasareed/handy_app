@@ -228,9 +228,11 @@ define(function (require) {
                 };
 
                 opts.on_done = function(){
-                    def.resolve();
+                    def.resolve(true);
                 };
-                opts.on_cancel = opts.on_done;
+                opts.on_cancel = function(){
+                    def.resolve(false);
+                };
 
                 // Options and details
                 App.Cache.OptionModal = opts;
@@ -240,7 +242,7 @@ define(function (require) {
 
                 return def.promise();
             },
-            Prompt: function(text, defaultValue, button, buttonCancel){
+            Prompt: function(text, defaultValue, button, buttonCancel){ // use callback pattern instead?
 
                 var def = $.Deferred();
 
@@ -256,11 +258,11 @@ define(function (require) {
                     buttonCancel: buttonCancel,
                 };
 
-                opts.on_done = function(){
-                    def.resolve();
+                opts.on_done = function(value){
+                    def.resolve(value);
                 };
                 opts.on_cancel = function(){
-                    def.reject();
+                    def.resolve(false);
                 };
 
                 // Options and details
