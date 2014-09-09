@@ -155,6 +155,7 @@ define(function(require, exports, module) {
         Flags: {},
         MainContext: null,
         MainController: null,
+        MainView: null, // SizeMod included
         Events: new EventHandler(),
         Credentials: JSON.parse(require('text!credentials.json')),
         Config: null, // parsed in a few lines, symlinked to src/config.xml
@@ -287,18 +288,21 @@ define(function(require, exports, module) {
             App.MainContext = Engine.createContext();
             App.MainContext.setPerspective(1000);
 
+            App.MainView = new View();
+            App.MainView.SizeMod = new StateModifier({
+                size: [undefined, undefined]
+            });
+            App.MainContext.add(App.MainView.SizeMod).add(App.MainView);
+
             // Add main background image (pattern)
             App.MainBackground = new Surface({
                 size: [undefined, undefined],
                 classes: ['overall-background']
             });
-            App.MainContext.add(Utils.usePlane('background')).add(App.MainBackground); 
+            App.MainView.add(Utils.usePlane('background')).add(App.MainBackground); 
 
             // Create main Lightbox
             App.MainController = new Lightbox();
-            App.MainController.SizeMod = new StateModifier({
-                size: [undefined, undefined]
-            });
             App.MainController.resetOptions = function(){
                 this.setOptions(Lightbox.DEFAULT_OPTIONS);
             };
@@ -312,7 +316,7 @@ define(function(require, exports, module) {
 
             App.MainContext.on('resize', function(e) {
                 Utils.Notification.Toast('Resized');
-                App.MainController.SizeMod.setSize(App.mainSize);
+                App.MainView.SizeMod.setSize(App.mainSize);
             }.bind(this));
 
             // // Add Background
@@ -333,7 +337,7 @@ define(function(require, exports, module) {
             // - todo...
 
             // Add Lightbox/RenderController to mainContext
-            App.MainContext.add(Utils.usePlane('content')).add(App.MainController.SizeMod).add(App.MainController);
+            App.MainView.add(Utils.usePlane('content')).add(App.MainController.SizeMod).add(App.MainController);
 
             var colors = new Array(
               [62,35,255],
@@ -485,7 +489,7 @@ define(function(require, exports, module) {
                 };
 
                 // Add to maincontext
-                App.MainContext.add(Utils.usePlane('mainfooter')).add(App.Views.MainFooter);
+                App.MainView.add(Utils.usePlane('mainfooter')).add(App.Views.MainFooter);
 
             };
             createMainFooter();
@@ -503,11 +507,7 @@ define(function(require, exports, module) {
                         App.Views.Popover.hide();
                     }
                 };
-                // var po = App.Views.Popover;
-                App.Views.Popover.frontMod = new StateModifier({
-                    transform: Transform.inFront
-                });
-                App.MainContext.add(Utils.usePlane('popover')).add(App.Views.Popover);
+                App.MainView.add(App.Views.Popover.SizeMod).add(Utils.usePlane('popover')).add(App.Views.Popover);
 
             };
             createPopover();
@@ -517,7 +517,7 @@ define(function(require, exports, module) {
             // - it should be a ViewSequence or something that allows multiple 'toasts' to be displayed at once, with animations)
             // - todo
             var toastNode = new RenderNode();
-            App.MainContext.add(toastNode);
+            App.MainView.add(toastNode);
 
             // Add FPS Surface to mainContext
             var fps = new View();
@@ -543,7 +543,7 @@ define(function(require, exports, module) {
                 fps.Surface.setContent(fpsNum);
             },1000);
             fps.add(fps.Mod).add(fps.Surface);
-            App.MainContext.add(Utils.usePlane('fps')).add(fps);
+            App.MainView.add(Utils.usePlane('fps')).add(fps);
 
             App.StartRouter = new App.Router.DefaultRouter();
 
