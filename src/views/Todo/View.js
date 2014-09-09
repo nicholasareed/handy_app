@@ -609,7 +609,7 @@ define(function(require, exports, module) {
         // OptionButtons (add text, etc.)
         this.todoButtons = new View();
         this.todoButtons.ButtonSurface = new Surface({
-            content: '<div>Add to Stream</div>',
+            content: '<div>Post an Update</div>',
             size: [undefined, true],
             classes: ['todo-view-todocontent-add-button-default']
         });

@@ -103,6 +103,22 @@ define(function(require, exports, module) {
                     defaultRoute('HelpPopover', 'Misc/HelpPopover', arguments, {cache: false, popover: true});
                 },
 
+                'popover/alert' : function(){
+                    // eh, I should be able to cache this route before login, then destroy after login
+                    // defaultRoute('OptionModal', 'Misc/OptionModal', arguments, {cache: false});
+                    App.Flags.InPopover = true;
+                    App.history.navigate('random' + Utils.randomInt(0,10000), {history: false});
+                    defaultRoute('PopoverAlert', 'Misc/PopoverAlert', arguments, {cache: false, popover: true});
+                },
+
+                'popover/prompt' : function(){
+                    // eh, I should be able to cache this route before login, then destroy after login
+                    // defaultRoute('OptionModal', 'Misc/OptionModal', arguments, {cache: false});
+                    App.Flags.InPopover = true;
+                    App.history.navigate('random' + Utils.randomInt(0,10000), {history: false});
+                    defaultRoute('PopoverPrompt', 'Misc/PopoverPrompt', arguments, {cache: false, popover: true});
+                },
+
                 'modal/list' : function(){
                     // eh, I should be able to cache this route before login, then destroy after login
                     // defaultRoute('OptionModal', 'Misc/OptionModal', arguments, {cache: false});
@@ -119,7 +135,7 @@ define(function(require, exports, module) {
                     // eh, I should be able to cache this route before login, then destroy after login
                     defaultRoute('Landing', 'Misc/Landing', arguments, {cache: false});
                 },
-                
+
                 'login' : function(){
                     // eh, I should be able to cache this route before login, then destroy after login
                     defaultRoute('Login', 'Misc/Login', arguments, {cache: false});

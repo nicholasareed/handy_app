@@ -643,6 +643,10 @@ define(function(require, exports, module) {
                             }
 
                             console.log(window.location.hash);
+                            if(window.location.hash.indexOf('random') != -1){
+                                App.history.navigate('dash');
+                                return;
+                            }
 
                             if(window.location.hash != '#login' && window.location.hash != '#logout'){
                                 App.history.navigate('logout/force');

@@ -488,7 +488,7 @@ define(function(require, exports, module) {
         // OptionButtons (add text, etc.)
         this.invoiceButtons = new View();
         this.invoiceButtons.ButtonSurface = new Surface({
-            content: '<div>Add to Stream</div>',
+            content: '<div>Post an Update</div>',
             size: [undefined, true],
             classes: ['invoice-view-invoicecontent-add-button-default']
         });

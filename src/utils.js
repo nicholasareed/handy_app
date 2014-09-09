@@ -214,6 +214,63 @@ define(function (require) {
                 // Change history (must)
                 App.history.navigate('modal/popoverbuttons', {history: false});
             },
+            Alert: function(text, button){
+                // default options
+
+                var def = $.Deferred();
+
+                button = button || 'OK';
+
+                // default options
+                var opts = {
+                    text: text,
+                    button: button
+                };
+
+                opts.on_done = function(){
+                    def.resolve();
+                };
+                opts.on_cancel = opts.on_done;
+
+                // Options and details
+                App.Cache.OptionModal = opts;
+
+                // Change history (must)
+                App.history.navigate('popover/alert', {history: false});
+
+                return def.promise();
+            },
+            Prompt: function(text, defaultValue, button, buttonCancel){
+
+                var def = $.Deferred();
+
+                defaultValue = defaultValue || '';
+                button = button || 'OK';
+                buttonCancel = buttonCancel || 'X';
+
+                // default options
+                var opts = {
+                    text: text,
+                    defaultValue: defaultValue,
+                    button: button,
+                    buttonCancel: buttonCancel,
+                };
+
+                opts.on_done = function(){
+                    def.resolve();
+                };
+                opts.on_cancel = function(){
+                    def.reject();
+                };
+
+                // Options and details
+                App.Cache.OptionModal = opts;
+
+                // Change history (must)
+                App.history.navigate('popover/prompt', {history: false});
+
+                return def.promise();
+            },
             List: function(opts){
 
                 // defaults
