@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget 
     id="com.handy.app.pub" 
-    version="0.0.1.20" 
+    version="0.0.1.21" 
     xmlns="http://www.w3.org/ns/widgets" 
     xmlns:gap="http://phonegap.com/ns/1.0" 
     xmlns:android="http://schemas.android.com/apk/res/android" 
@@ -28,8 +28,11 @@
     <!-- iOS Version -->
     <preference name="deployment-target" value="7.0" />
 
+
     <preference name="orientation" value="portrait" />
     <preference name="fullscreen" value="false" />
+
+    <preference name="android-windowSoftInputMode" value="stateVisible|adjustResize" />
 
     <preference name="target-device" value="handset" />
     <preference name="disallowOverscroll" value="true" />
@@ -43,7 +46,7 @@
 
     <preference name="AutoHideSplashScreen" value="false" />
     <preference name="splashscreen" value="splash.png" /> <!-- Android -->
-    
+
     <preference name="URL_SCHEME" value="http" />
     <preference name="URL_HOST" value="thehandyapp.com" />
 
