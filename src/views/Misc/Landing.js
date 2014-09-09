@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     var ScrollView = require('famous/views/Scrollview');
     var SequentialLayout = require('famous/views/SequentialLayout');
     var Surface = require('famous/core/Surface');
+    var ImageSurface = require('famous/surfaces/ImageSurface');
     var InputSurface = require('famous/surfaces/InputSurface');
     var Modifier = require('famous/core/Modifier');
     var StateModifier = require('famous/modifiers/StateModifier');
@@ -24,6 +25,8 @@ define(function(require, exports, module) {
     var NavigationBar = require('famous/widgets/NavigationBar');
     var GridLayout = require("famous/views/GridLayout");
 
+    var InAppBrowserCSS = require('text!inappbrowsercss');
+    var InAppBrowserJS = require('text!inappbrowserjs');
     var Credentials         = JSON.parse(require('text!credentials.json'));
     var $ = require('jquery');
     var Utils = require('utils');
@@ -51,14 +54,22 @@ define(function(require, exports, module) {
         // create the layout
         this.layout = new HeaderFooterLayout({
             headerSize: App.Defaults.Header.size,
-            footerSize: App.Defaults.Footer.size
+            footerSize: 132
+        });
+
+        this.layout.Bg = new Surface({
+            content: '',
+            size: [undefined, undefined],
+            classes: ['landing-page-bg-default']
         });
 
         this.createHeader();
         this.createContent();
+        this.createFooter();
         
         // Attach the main transform and the comboNode to the renderTree
-        this.add(this.layout);
+        this.add(Utils.usePlane('content',-1)).add(this.layout.Bg);
+        this.add(Utils.usePlane('content',1)).add(this.layout);
 
     }
 
@@ -68,19 +79,20 @@ define(function(require, exports, module) {
 
     PageView.prototype.createHeader = function(){
         var that = this;
-        
+
         // create the header
         this.header = new StandardHeader({
-            content: "Login",
-            classes: ["normal-header"],
-            backClasses: ["normal-header"],
+            content: " ",
+            bgClasses: ['header-bg-white'],
+            classes: ["normal-header","white-bg"],
+            backContent: false,
             moreContent: false
         }); 
         this.header._eventOutput.on('back',function(){
-            App.history.back();
+            // App.history.back();
         });
         this.header.navBar.title.on('click', function(){
-            App.history.back();
+            // App.history.back();
         });
         this.header.pipe(this._eventInput);
         this._eventOutput.on('inOutTransition', function(args){
@@ -92,27 +104,72 @@ define(function(require, exports, module) {
 
     };
 
+
+    PageView.prototype.createFooter = function(){
+        var that = this;
+
+        this.footer = new View();
+        this.footer.SizeMod = new StateModifier({
+            size: [undefined, undefined]
+        });
+        this.footer.SeqLayout = new SequentialLayout();
+        this.footer.Views = [];
+
+        // Sign Up button
+        this.signupButton = new Surface({
+            content: '<div>Create Account</div>',
+            size: [window.innerWidth, 60],
+            classes: ['landing-signup-button']
+        });
+        this.signupButton.on('click', function(){
+            App.history.navigate('signup');
+        });
+        this.footer.Views.push(this.signupButton);
+
+        // Login button/text
+        this.loginButton = new Surface({
+            content: 'Already have an account? <span>Log In</span>',
+            size: [undefined, 60],
+            classes: ['landing-login-button']
+        });
+        this.loginButton.on('click', function(){
+            App.history.navigate('login');
+        });
+        this.footer.Views.push(this.loginButton);
+
+        this.footer.SeqLayout.sequenceFrom(this.footer.Views);
+
+        this.footer.add(this.footer.SizeMod).add(this.footer.SeqLayout);
+        // Attach header to the layout        
+        this.layout.footer.add(this.footer);
+
+    };
+
     PageView.prototype.createContent = function(){
         var that = this;
         
-        // create the scrollView of content
-        this.contentScrollView = new ScrollView(App.Defaults.ScrollView);
-        this.contentScrollView.Views = [];
+        // Landing Page Title
+        this.landingTitle = new View();
+        this.landingTitle.Bg = new Surface({
+            content: '',
+            size: [undefined, 300],
+            classes: ['landing-title-bg-gradient']
+        });
+        this.landingTitle.Surface = new Surface({
+            content: '<div>handy</div><div>Work. Done.</div>',
+            size: [undefined, undefined],
+            classes: ['landing-page-logo-tagline']
+        });
 
-        // link endpoints of layout to widgets
+        this.landingTitle.add(Utils.usePlane('content',2)).add(this.landingTitle.Bg);
+        this.landingTitle.add(Utils.usePlane('content',3)).add(this.landingTitle.Surface);
 
-        // Add surfaces to content (buttons)
-        this.addSurfaces();
-
-        // Sequence
-        this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
 
         // Content Modifiers
         this.layout.content.StateModifier = new StateModifier();
 
         // Now add content
-        this.layout.content.add(this.layout.content.StateModifier).add(this.contentScrollView);
-
+        this.layout.content.add(this.layout.content.StateModifier).add(this.landingTitle);
 
     };
 
@@ -120,8 +177,7 @@ define(function(require, exports, module) {
         var that = this;
 
         // Build Surfaces
-
-        // Email
+        // - add to scrollView
         this.inputEmailSurface = new InputSurface({
             name: 'email',
             placeholder: 'Email Address',
@@ -135,7 +191,8 @@ define(function(require, exports, module) {
         this.inputEmailSurface.View.add(this.inputEmailSurface.View.StateModifier).add(this.inputEmailSurface);
         this.contentScrollView.Views.push(this.inputEmailSurface.View);
 
-        // Password
+        // Build Surfaces
+        // - add to scrollView
         this.inputPasswordSurface = new InputSurface({
             name: 'password',
             placeholder: 'Password',
@@ -149,9 +206,8 @@ define(function(require, exports, module) {
         this.inputPasswordSurface.View.add(this.inputPasswordSurface.View.StateModifier).add(this.inputPasswordSurface);
         this.contentScrollView.Views.push(this.inputPasswordSurface.View);
 
-        // Submit button
         this.submitButtonSurface = new Surface({
-            content: 'Login',
+            content: 'Sign Up',
             size: [undefined, 60],
             classes: ['form-button-submit-default']
         });
@@ -160,124 +216,15 @@ define(function(require, exports, module) {
         this.submitButtonSurface.View.add(this.submitButtonSurface.View.StateModifier).add(this.submitButtonSurface);
         this.contentScrollView.Views.push(this.submitButtonSurface.View);
 
-        // Forgot password
-        this.forgotPassword = new View();
-        this.forgotPassword.StateModifier = new StateModifier();
-        this.forgotPassword.Surface = new Surface({
-            content: 'Forgot your password? Reset Now',
-            size: [undefined, 60],
-            classes: ['login-forgot-pass-button']
-        });
-        this.forgotPassword.Surface.on('click', function(){
-            App.history.navigate('forgot');
-        });
-        this.forgotPassword.add(this.forgotPassword.StateModifier).add(this.forgotPassword.Surface);
-        this.contentScrollView.Views.push(this.forgotPassword);
-
         // Events for surfaces
-        this.submitButtonSurface.on('click', this.login.bind(this));
+        this.submitButtonSurface.on('click', this.create_account.bind(this));
 
 
     };
 
-    PageView.prototype.login = function(ev){
-        var that = this;
-
-        if(this.checking === true){
-            return;
-        }
-        this.checking = true;
-
-        console.log(this.inputEmailSurface);
-        console.log(this.inputPasswordSurface);
-
-        // Get email and password
-        var email = $.trim(this.inputEmailSurface.getValue().toString());
-        if(email.length === 0){
-            this.checking = false;
-            Utils.Notification.Toast('Email Missing');
-            return;
-        }
-        // todo: validate email
-
-        var password = this.inputPasswordSurface.getValue().toString();
-
-        // Disable submit button
-        this.submitButtonSurface.setContent('Please wait...');
-
-        var dataBody = {
-            email: email,
-            password: password,
-            platform: App.Config.devicePlatform
-        };
-
-        // Test fetching a user
-        this.model.login(dataBody)
-        .fail(function(err){
-
-            that.checking = false;
-            that.submitButtonSurface.setContent('Login');
-
-            // invalid login
-            console.error('Fail, invalid login');
-
-            // Toast
-            Utils.Notification.Toast('Invalid Login');
-
-        })
-        .then(function(response){
-            // Success logging in
-
-            // Fetch model
-            if(response.code != 200){
-                console.error('Failed signing in (3424)');
-                console.log(response);
-                console.log(response.code);
-                Utils.Notification.Toast('Failed signing in (3424)');
-                that.checking = false;
-                that.submitButtonSurface.setContent('Login');
-                return;
-            }
-
-            // Store access_token in localStorage
-            localStorage.setItem(App.Credentials.local_token_key, response.token);
-            App.Data.UserToken = response.token;
-
-            // Get's the User's Model
-            that.model.fetch({
-                error: function(){
-                    alert("Failed gathering user model");
-                },
-                success: function(userModel){
-                    console.log('UserModel');
-                    console.log(userModel);
-
-                    // Set global logged in user
-                    that.options.App.Data.User = userModel;
-
-                    console.log('user_v3');
-                    console.log(userModel);
-                    console.log(userModel.toJSON());
-
-                    localStorage.setItem(App.Credentials.local_user_key, JSON.stringify(userModel.toJSON()));
-
-                    // Preload Models
-                    require(['models/preload'], function(PreloadModels){
-                        PreloadModels(that.options.App);
-                    });
-
-                    // Register for Push Notifications
-                    App.DeviceReady.initPush();
-
-                    // Goto home
-                    App.history.eraseUntilTag('all-of-em');
-                    App.history.navigate('dash');
-
-                }
-            });
-
-        });
-
+    PageView.prototype.backbuttonHandler = function(){
+        // killing
+        return false;
     };
 
     PageView.prototype.inOutTransition = function(direction, otherViewName, transitionOptions, delayShowing, otherView, goingBack){
@@ -324,9 +271,9 @@ define(function(require, exports, module) {
                         //     that.layout.content.StateModifier.setTransform(Transform.translate(window.innerWidth + 100,0,0));
                         // }
                         that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0));
-                        that.contentScrollView.Views.forEach(function(surf, index){
-                            surf.StateModifier.setTransform(Transform.translate(0,window.innerHeight,0));
-                        });
+                        // that.contentScrollView.Views.forEach(function(surf, index){
+                        //     surf.StateModifier.setTransform(Transform.translate(0,window.innerHeight,0));
+                        // });
 
                         // Content
                         // - extra delay for other content to be gone
@@ -335,15 +282,15 @@ define(function(require, exports, module) {
                             // // Bring content back
                             // that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
 
-                            // Bring in button surfaces individually
-                            that.contentScrollView.Views.forEach(function(surf, index){
-                                window.setTimeout(function(){
-                                    surf.StateModifier.setTransform(Transform.translate(0,0,0), {
-                                        duration: 250,
-                                        curve: Easing.easeOut
-                                    });
-                                }, index * 50);
-                            });
+                            // // Bring in button surfaces individually
+                            // that.contentScrollView.Views.forEach(function(surf, index){
+                            //     window.setTimeout(function(){
+                            //         surf.StateModifier.setTransform(Transform.translate(0,0,0), {
+                            //             duration: 250,
+                            //             curve: Easing.easeOut
+                            //         });
+                            //     }, index * 50);
+                            // });
 
                         }, delayShowing); // + transitionOptions.outTransition.duration);
 

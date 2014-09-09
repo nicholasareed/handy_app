@@ -115,6 +115,11 @@ define(function(require, exports, module) {
                     defaultRoute('MiscHelp', 'Misc/HelpStatic', arguments, {cache: false});
                 },
 
+                'landing' : function(){
+                    // eh, I should be able to cache this route before login, then destroy after login
+                    defaultRoute('Landing', 'Misc/Landing', arguments, {cache: false});
+                },
+                
                 'login' : function(){
                     // eh, I should be able to cache this route before login, then destroy after login
                     defaultRoute('Login', 'Misc/Login', arguments, {cache: false});

@@ -11,7 +11,6 @@ input, input:focus, input:active, input:hover {
 }
 
 body { 
-  background-color: #888; 
   font-family: 'Circular Light', "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -787,7 +786,7 @@ body {
 
 .list-content-item-default > div {
   padding: 8px;
-  border: 1px solid #444;
+  border: 1px solid #999;
 }
 
 .list-content-item-default > div.system-notify {
@@ -1398,6 +1397,10 @@ body {
   z-index: -10;
 }
 
+.header-bg-white {
+  background: white;
+}
+
 .normal-header {
 	/*background: #182030;
 	color: white;*/
@@ -1724,6 +1727,74 @@ body {
 }
 
 
+
+/* Landing Page */
+
+.landing-page-bg-default {
+  background: url('../img/landingbg.png') no-repeat;
+  /*background: url('https://dl.dropboxusercontent.com/u/6673634/landingWelcome4%402x.png') no-repeat;*/
+  background-size: cover;
+}
+
+.landing-page-logo-tagline {
+  text-align: center;
+}
+
+.landing-page-logo-tagline > div:nth-child(1) {
+  font-size: 72px;
+  line-height: 80px;
+}
+
+.landing-page-logo-tagline > div:nth-child(2) {
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.landing-title-bg-gradient {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(36%,rgba(255,255,255,1)), color-stop(44%,rgba(255,255,255,0.92)), color-stop(100%,rgba(255,255,255,0))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 36%,rgba(255,255,255,0.92) 44%,rgba(255,255,255,0) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 36%,rgba(255,255,255,0.92) 44%,rgba(255,255,255,0) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 36%,rgba(255,255,255,0.92) 44%,rgba(255,255,255,0) 100%); /* IE10+ */
+background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 36%,rgba(255,255,255,0.92) 44%,rgba(255,255,255,0) 100%); /* W3C */
+}
+
+.landing-signup-button {
+  color: white;
+  padding: 8px 8px;
+  text-align: center;
+}
+
+.landing-signup-button > div {
+  display: inline-block;
+  background: #182030;
+  padding: 14px 8px;
+  width: 80%;
+
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.landing-login-button {
+  text-align: center;
+  padding: 16px 8px 8px 8px;
+  color: white;
+}
+
+.landing-login-button span {
+  font-weight: bold;
+}
+
+.header-landing-page-text {
+  color: red;
+  text-align: left;
+  line-height: 60px;
+
+  white-space: nowrap;
+  /*overflow: hidden;*/
+
+}
+
+
 /* login */
 
 .login-page-welcome-top-default { /* > div:nth-child(3){*/
@@ -1731,6 +1802,12 @@ body {
   font-size: 58px;
   line-height: 60px;
   /*font-family: 'Kaushan Script', cursive;*/
+  text-align: center;
+}
+
+.login-forgot-pass-button {
+  color: white;
+  line-height: 60px;
   text-align: center;
 }
 

@@ -585,16 +585,17 @@ define(function(require, exports, module) {
         var that = this;
 
         // Pay with/like what? 
-
-        Utils.Popover.Buttons({
-            title: 'Pay Invoice',
-            body: 'How is this invoice being paid?',
-            buttons: [{
-                text: 'Saved Credit Card',
+        var title = 'Pay Invoice',
+            buttons = [{
+                text: 'Credit Card',
                 success: function(){
                     that.make_payment_cc();
                 }
-            },{
+            }];
+
+        if(that.model.get('from_user_id._id') == App.Data.User.get('_id')){
+            title = 'Collect Invoice';
+            buttons.push({
                 text: 'Just Mark as Paid',
                 success: function(){
                     
@@ -626,7 +627,13 @@ define(function(require, exports, module) {
                     });
 
                 }
-            }]
+            });
+        }
+
+        Utils.Popover.Buttons({
+            title: title,
+            body: 'How is this invoice being paid?',
+            buttons: buttons
         });
 
     };
@@ -757,14 +764,14 @@ define(function(require, exports, module) {
                 this.invoiceDetails.ToSurface.setClasses(['invoice-view-to-default','assigned']);
             } else {
                 // Not assigned
-                this.invoiceDetails.ToSurface.setContent('not sent to anyone');
+                this.invoiceDetails.ToSurface.setContent('not shared with anyone');
                 this.invoiceDetails.ToSurface.setClasses(['invoice-view-to-default','notassigned']);
             }
 
             // from
             if(that.model.get('from_user_id')){
                 // assigned to someone
-                this.invoiceDetails.FromSurface.setContent('from: ' + that.model.get('from_user_id.profile.name') || '');
+                this.invoiceDetails.FromSurface.setContent('recipient: ' + that.model.get('from_user_id.profile.name') || '');
                 this.invoiceDetails.FromSurface.setClasses(['invoice-view-from-default','has_owner']);
             } else {
                 // No owner at the moment (what the fuck)

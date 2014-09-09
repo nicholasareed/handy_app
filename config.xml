@@ -66,6 +66,8 @@
     <gap:plugin name="nl.x-services.plugins.toast" />
     <gap:plugin name="de.appplant.cordova.plugin.local-notification" />
 
+    <gap:plugin name="com.ionic.keyboard" version="1.0.2" />
+
     <gap:plugin name="com.adobe.plugins.gaplugin" />
 
 
@@ -84,6 +86,10 @@
     	<param name="ios-package" value="CDVStatusBar" onload="true" />
     </feature>
     
+    <feature name="Keyboard">
+        <param name="ios-package" value="IonicKeyboard" onload="true" />
+    </feature>
+
     <feature name="BarcodeScanner">
         <param name="ios-package" value="CDVBarcodeScanner" />
         <param name="android-package" value="com.phonegap.plugins.barcodescanner.BarcodeScanner" />

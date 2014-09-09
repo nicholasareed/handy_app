@@ -287,7 +287,7 @@ define(function(require, exports, module) {
                                 App.DeviceReady.initPush();
 
                                 // Goto home
-                                App.history.eraseUntilTag('allofem');
+                                App.history.eraseUntilTag('all-of-em');
                                 App.history.navigate('welcome');
 
                             }

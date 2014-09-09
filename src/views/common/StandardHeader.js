@@ -27,7 +27,7 @@ define(function(require, exports, module) {
         // create the header's bg
         this.background = new Surface({
             size: [undefined, undefined],
-            classes: ['header-bg-default']
+            classes: options.bgClasses || ['header-bg-default']
         });
 
         this.navBar = new StandardNavigationBar(options); 

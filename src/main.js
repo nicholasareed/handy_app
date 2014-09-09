@@ -27,8 +27,10 @@ require.config({
         utils: '../src/utils',
         handlebars: '../src/lib2/handlebars',
         'backbone-adapter' : '../src/lib2/backbone-adapter',
-        'jquery-adapter' : '../src/lib2/jquery-adapter'
+        'jquery-adapter' : '../src/lib2/jquery-adapter',
 
+        inappbrowsercss: '../css/inappbrowser.css',
+        inappbrowserjs: '../src/views/Misc/inappbrowser.js'
     },
 
     shim: {
@@ -94,8 +96,8 @@ require.config({
         //             "src/lib/requestAnimationFrame.js",
     },
 
-    // urlArgs: new Date().toString(),
-    urlArgs: 'v1.8'
+    urlArgs: new Date().toString(),
+    // urlArgs: 'v1.8'
 
 });
 
@@ -285,11 +287,32 @@ define(function(require, exports, module) {
             App.MainContext = Engine.createContext();
             App.MainContext.setPerspective(1000);
 
+            // Add main background image (pattern)
+            App.MainBackground = new Surface({
+                size: [undefined, undefined],
+                classes: ['overall-background']
+            });
+            App.MainContext.add(Utils.usePlane('background')).add(App.MainBackground); 
+
             // Create main Lightbox
             App.MainController = new Lightbox();
+            App.MainController.SizeMod = new StateModifier({
+                size: [undefined, undefined]
+            });
             App.MainController.resetOptions = function(){
                 this.setOptions(Lightbox.DEFAULT_OPTIONS);
             };
+
+            App.defaultSize = [window.innerWidth, window.innerHeight];
+            App.mainSize = [window.innerWidth, window.innerHeight];
+            Engine.nextTick(function() {
+                console.log('After tick=' + App.MainContext.getSize());
+                App.mainSize = App.MainContext.getSize();
+            });
+
+            App.MainContext.on('resize', function(e) {
+                App.MainController.SizeMod.setSize(App.mainSize);
+            }.bind(this));
 
             // // Add Background
             // var MainBackgroundSurface = new Surface({
@@ -308,16 +331,8 @@ define(function(require, exports, module) {
             // - we want to effectively communicate to the user when we have lost or are experiencing a degraded internet connection
             // - todo...
 
-            // Add main background image (pattern)
-            var backgroundSurface = new Surface({
-                size: [undefined, undefined],
-                properties: {
-                    // background: "url(img/mochaGrunge.png) repeat",
-                    backgroundColor: "white",
-                    zIndex : -10
-                }
-            });
-            App.MainContext.add(backgroundSurface); 
+            // Add Lightbox/RenderController to mainContext
+            App.MainContext.add(Utils.usePlane('content')).add(App.MainController.SizeMod).add(App.MainController);
 
             var colors = new Array(
               [62,35,255],
@@ -357,7 +372,7 @@ define(function(require, exports, module) {
                     var b2 = Math.round(istep * c1_0[2] + step * c1_1[2]);
                     var color2 = "#"+((r2 << 16) | (g2 << 8) | b2).toString(16);
 
-                    backgroundSurface.setProperties({
+                    App.MainBackground.setProperties({
                         background: "-webkit-gradient(linear, left top, right top, from("+color1+"), to("+color2+"))"
                     });
 
@@ -378,10 +393,7 @@ define(function(require, exports, module) {
 
                 },10);
             }
-            // updateBackgroundSurface();
-
-            // Add Lightbox/RenderController to mainContext
-            App.MainContext.add(App.MainController);
+            // updateBackgroundSurface(); // uncomment to have an animated background
 
             // Main Footer
             var createMainFooter = function(){
@@ -611,10 +623,6 @@ define(function(require, exports, module) {
                 App.Data.User.fetch({
                     statusCode: {
                         403: function(){
-                            // failed login
-                            // alert('Failed login on startup');
-                            console.log(4);
-                            App.Data.User.clear();
 
                             // Unregister from Push Notifications
                             App.DeviceReady.ready.then(function(){
@@ -630,7 +638,7 @@ define(function(require, exports, module) {
                             // - if not already at the login page
                             // - and if data is already clear
                             if(!localUser){
-                                App.history.navigate('login');
+                                App.history.navigate('landing');
                                 return;   
                             }
 

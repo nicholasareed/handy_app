@@ -127,38 +127,12 @@ define(function(require, exports, module) {
                 var script = document.createElement( 'script' );
                 script.type = 'text/javascript';
                 script.src = 'src/lib2/track.js';
-                // $(script).attr('data-customer','2138571d0e004d109396748e01e291a0');
+                // $(script).attr('data-token', Credentials.trackjs_token);
+
+                // trackjs options
+                window._trackJs = Credentials.trackjs_opts;
+                window._trackJs.version = App.ConfigImportant.Version;
                 $("body").append( script );
-
-                // Need to init it first
-                console.error();
-
-                //override the error function (the immediate call function pattern is used for data hiding)
-                console.error = (function () {
-                  //save a reference to the original error function.
-                  var originalConsole = console.error;
-                  //this is the function that will be used instead of the error function
-                  function myError (stackTrace) {
-                    // alert( 'Error is called. ' );
-                    try {
-                        trackJs.track(stackTrace);
-                    }catch(err){
-                        console.log('trackJs.track non-existant for now');
-                    }
-
-                    //the arguments array contains the arguments that was used when console.error() was called
-                    originalConsole.apply( this, arguments );
-                  }
-                  //return the function which will be assigned to console.error
-                  return myError;
-                })();
-
-                // // Testing in production
-                // window.setTimeout(function(){
-                //     // Throw a failure
-                //     throw WeAreInProduction
-                // },3000);
-
             }
 
             // <script type="text/javascript" src="//dl1d2m8ri9v3j.cloudfront.net/releases/1.2.4/tracker.js" data-customer="2138571d0e004d109396748e01e291a0"></script>
@@ -172,6 +146,38 @@ define(function(require, exports, module) {
 
             // Push notifications
             this.initPush();
+
+            // Keyboard
+            // - requires ionic keyboard plugin
+            try {
+                // disable keyboard scrolling
+                cordova.plugins.Keyboard.disableScroll(true);
+            }catch(err){
+                console.error(err, 'no Keyboard');
+            }
+            // add listeners for keyboard show/hide
+            window.addEventListener('native.keyboardshow', function(e){
+                // Utils.Notification.Toast('Keyboard Show');
+
+                App.mainSize = [App.defaultSize[0],App.defaultSize[1] - e.keyboardHeight];
+                App.MainContext.emit('resize');
+
+                // App.mainSize = App.MainContext.getSize();
+                // if (App.MainController)
+                //     App.MainController.setOptions({size: [App.mainSize[0], App.mainSize[1]]});
+
+            });
+            window.addEventListener('native.keyboardhide', function(e){
+                // Utils.Notification.Toast('Keyboard HIDE');
+                
+                App.mainSize = [App.defaultSize[0],App.defaultSize[1]];
+                App.MainContext.emit('resize');
+
+                // App.mainSize = App.MainContext.getSize();
+                // if (App.MainController)
+                //     App.MainController.setOptions({size: [App.mainSize[0], App.mainSize[1]]});
+
+            });
 
             // Pausing (exiting)
             document.addEventListener("pause", function(){

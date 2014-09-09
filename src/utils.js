@@ -421,8 +421,8 @@ define(function (require) {
                         console.log('success');
                     }, function(){
                         // error
-                        console.error('error');
-                    }, 'nemesis.app/' + pageRoute);
+                        // console.error('error');
+                    }, 'handy.app/' + pageRoute);
                 }catch(err){
                     if(App.Data.usePg){
                         console.error('Utils.Analytics.trackPage');
@@ -754,7 +754,7 @@ define(function (require) {
             // Reset credentials
             $.ajaxSetup({
                 headers: {
-                    'x-token' : ''
+                    // 'x-token' : ''
                 }
             });
 
@@ -772,7 +772,9 @@ define(function (require) {
             // Last effort, reload the page
             // - probably lose all native hooks
             // console.log(window.location.href);
-            window.location = window.location.href.split('#')[0] + '#login';
+            App.history.eraseUntilTag('all-of-em');
+            App.history.navigate('landing');
+            // window.location = window.location.href.split('#')[0] + '#landing';
 
             return true;
         },
