@@ -308,6 +308,8 @@ define(function(require, exports, module) {
             };
 
             App.defaultSize = [window.innerWidth, window.innerHeight];
+            document.body.setAttribute('style',"width:"+window.innerWidth+"px;height:"+window.innerHeight+"px");
+            Utils.Notification.Toast(window.innerHeight);
             App.mainSize = [window.innerWidth, window.innerHeight];
             Engine.nextTick(function() {
                 console.log('After tick=' + App.MainContext.getSize());
