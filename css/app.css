@@ -133,64 +133,6 @@ body {
   font-size: 12px;
 }
 
-/* Sentence */
-
-.sentence-loading-default {
-  font-size: 18px;
-  line-height: 20px;
-  text-align: center;
-}
-
-.sentence-normal-default {
-  text-align: center;
-  font-family: 'Circular Light', serif;
-  line-height: 60px;
-  font-size: 48px;
-}
-
-.sentence-normal-default span {
-  color: #F1C40F;
-  display: inline-block;
-  border: 1px solid rgba(241,196,15,0.5);
-  padding: 0px 16px;
-  margin: 4px;
-}
-
-.sentence-normal-button-default {
-  color: white; 
-  /*background: #3498DB;*/
-  background: #34495E;
-  color: white;
-
-  font-size: 18px;
-
-}
-
-.sentence-footer-button {
-  border-bottom: 4px solid #2C3E50;
-  font-weight: bold;
-}
-
-.sentence-footer-button.left-button {
-  border-right: 1px solid #114C2A;
-}
-
-.sentence-footer-button.right-button {
-  border-left: 1px solid #114C2A;
-}
-
-.sentence-normal-button-separator-default {
-  /*color: white;
-  background: #3498DB; */
-  background: none;
-  color: #888;
-
-
-
-  font-size: 12px;
-
-}
-
 
 /* Select Friends for Sentence */
   
@@ -1759,7 +1701,7 @@ background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,1
 }
 
 .landing-signup-button {
-  color: white;
+  color: #444;
   padding: 8px 8px;
   text-align: center;
 }
@@ -1777,7 +1719,7 @@ background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,1
 .landing-login-button {
   text-align: center;
   padding: 16px 8px 8px 8px;
-  color: white;
+  color: #444;
 }
 
 .landing-login-button span {
@@ -1806,7 +1748,7 @@ background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,1
 }
 
 .login-forgot-pass-button {
-  color: white;
+  color: #444;
   line-height: 60px;
   text-align: center;
 }
