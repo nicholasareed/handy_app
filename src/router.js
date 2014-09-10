@@ -120,12 +120,12 @@ define(function(require, exports, module) {
                     defaultRoute('PopoverPrompt', 'Misc/PopoverPrompt', arguments, {cache: false, popover: true});
                 },
 
-                'modal/list' : function(){
+                'popover/list' : function(){
                     // eh, I should be able to cache this route before login, then destroy after login
                     // defaultRoute('OptionModal', 'Misc/OptionModal', arguments, {cache: false});
                     App.Flags.InPopover = true;
                     App.history.navigate('random', {history: false});
-                    defaultRoute('Popover', 'Misc/Popover', arguments, {cache: false, popover: true});
+                    defaultRoute('Popover', 'Misc/PopoverList', arguments, {cache: false, popover: true});
                 },
 
                 'misc/help' : function(){

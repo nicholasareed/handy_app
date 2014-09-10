@@ -286,7 +286,7 @@ define(function (require) {
 
 
                 // Change history (must)
-                App.history.navigate('modal/list', {history: false});
+                App.history.navigate('popover/list', {history: false});
             },
         },
 

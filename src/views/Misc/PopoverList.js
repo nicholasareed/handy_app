@@ -34,8 +34,8 @@ define(function(require, exports, module) {
     var _ = require('underscore');
     var $ = require('jquery');
 
-    // Models
-    var PlayerModel = require('models/player');
+    // // Models
+    // var PlayerModel = require('models/player');
 
     function PageView(params) {
         var that = this;
@@ -86,11 +86,7 @@ define(function(require, exports, module) {
             // inTransition: false
         });
 
-        var frontMod = new StateModifier({
-            transform: Transform.inFront
-        });
-        this.contentView.add(this.contentView.BgOpacityMod).add(this.contentView.BgSurface);
-        // this.contentView.add(frontMod).add(this.lightbox);
+        this.contentView.add(Utils.usePlane('popover')).add(this.contentView.BgOpacityMod).add(this.contentView.BgSurface);
 
         this.contentScrollView = new View();
         this.contentScrollView.OriginMod = new StateModifier({
@@ -101,9 +97,6 @@ define(function(require, exports, module) {
         });
         this.contentScrollView.PositionMod = new StateModifier({
             transform: Transform.translate(0, window.innerHeight, 0)
-        });
-        this.contentScrollView.ScaleMod = new StateModifier({
-            transform: Transform.scale(0.001, 0.001, 0.001)
         });
 
         // ScrollView or SequentialLayout
@@ -127,11 +120,11 @@ define(function(require, exports, module) {
         this.contentScrollView.SeqLayout.sequenceFrom(this.contentScrollView.Views);
 
         // add sizing and everything
-        this.contentScrollView.add(this.contentScrollView.OriginMod).add(this.contentScrollView.PositionMod).add(this.contentScrollView.ScaleMod).add(this.contentScrollView.SizeMod).add(this.contentScrollView.SeqLayout);
+        this.contentScrollView.add(this.contentScrollView.OriginMod).add(this.contentScrollView.PositionMod).add(this.contentScrollView.SizeMod).add(this.contentScrollView.SeqLayout);
 
         // show the content in the lightbox
         // this.lightbox.show(this.contentScrollView);
-        this.contentView.add(frontMod).add(this.contentScrollView);
+        this.contentView.add(Utils.usePlane('popover',1)).add(this.contentScrollView);
         this.add(this.contentView);
 
 
@@ -178,7 +171,7 @@ define(function(require, exports, module) {
         Timer.setTimeout(function(){
 
             def.resolve(); // 
-            App.Views.Popover.hideIf(that); // actually hide the popover
+            App.Views.Popover.hide(); // actually hide the popover
 
         }, delay);
 
@@ -270,10 +263,6 @@ define(function(require, exports, module) {
                     duration: 250,
                     curve: 'easeIn' //Easing.inElastic
                 });
-                // that.contentScrollView.ScaleMod.setTransform(Transform.scale(1,1,1),{
-                //     duration: 750,
-                //     curve: 'easeOut'
-                // });
 
                 break;
 
@@ -289,10 +278,6 @@ define(function(require, exports, module) {
 
 
                 that.contentScrollView.PositionMod.setTransform(Transform.translate(0,0,0),{
-                    duration: 250,
-                    curve: 'easeOut'
-                });
-                that.contentScrollView.ScaleMod.setTransform(Transform.scale(1,1,1),{
                     duration: 250,
                     curve: 'easeOut'
                 });
