@@ -466,7 +466,7 @@ define(function(require, exports, module) {
                 // Popover?
                 if(options.popover === true){
                     PageView.inOutTransitionPopover('showing');
-                    App.Views.CurrentPopover = PageView;
+                    App.Views.Popover.CurrentPopover = PageView;
                     App.Views.Popover.show(PageView);
                     return;
                 }

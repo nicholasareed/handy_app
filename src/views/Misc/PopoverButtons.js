@@ -274,7 +274,7 @@ define(function(require, exports, module) {
         Timer.setTimeout(function(){
 
             def.resolve(); // 
-            App.Views.Popover.hideIf(this); // actually hide the popover
+            App.Views.Popover.hideIf(that); // actually hide the popover
 
         }, delay);
 

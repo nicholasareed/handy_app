@@ -170,6 +170,7 @@ define(function(require, exports, module) {
         });
         this.forgotPassword.Surface.on('click', function(){
             // App.history.navigate('forgot');
+            // console.log(1);
             Utils.Popover.Prompt('title','default','saveit')
             .then(function(result){
                 if(result && $.trim(result) != ''){

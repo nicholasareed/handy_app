@@ -304,8 +304,8 @@ define(function(require, exports, module) {
         var delay = this.inOutTransitionPopover('hiding');
         Timer.setTimeout(function(){
 
-            def.resolve(); // 
-            App.Views.Popover.hideIf(this); // actually hide the popover
+            App.Views.Popover.hideIf(that); // actually hide the popover
+            def.resolve();
 
         }, delay);
 
