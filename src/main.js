@@ -311,10 +311,10 @@ define(function(require, exports, module) {
             document.body.setAttribute('style',"width:"+window.innerWidth+"px;height:"+window.innerHeight+"px");
             Utils.Notification.Toast(window.innerHeight);
             App.mainSize = [window.innerWidth, window.innerHeight];
-            Engine.nextTick(function() {
-                console.log('After tick=' + App.MainContext.getSize());
-                App.mainSize = App.MainContext.getSize();
-            });
+            // Engine.nextTick(function() {
+            //     console.log('After tick=' + App.MainContext.getSize());
+            //     App.mainSize = App.MainContext.getSize();
+            // });
 
             App.MainContext.on('resize', function(e) {
                 Utils.Notification.Toast('Resized');
@@ -338,7 +338,7 @@ define(function(require, exports, module) {
             // Add GenericOnlineStatus
             // - we want to effectively communicate to the user when we have lost or are experiencing a degraded internet connection
             // - todo...
-            
+
             // Add Lightbox/RenderController to mainContext
             App.MainView.add(Utils.usePlane('content')).add(App.MainController.SizeMod).add(App.MainController);
 
@@ -645,16 +645,6 @@ define(function(require, exports, module) {
                     statusCode: {
                         403: function(){
 
-                            // Unregister from Push Notifications
-                            App.DeviceReady.ready.then(function(){
-                                console.info('Unregisering from PushNotification');
-                                try {
-                                    window.plugins.pushNotification.unregister();
-                                }catch(err){
-                                    console.error('Failed unregistering from PushNotification');
-                                }
-                            });
-
                             // Logout
                             // - if not already at the login page
                             // - and if data is already clear
@@ -680,7 +670,7 @@ define(function(require, exports, module) {
                         console.error(err);
                         // Utils.Notification.Toast('Failed login');
                         // App.history.navigate('logout/force');
-                        App.history.navigate('dash');
+                        // App.history.navigate('');
                     },
                     success: function(){
                         // Resolve deferred (in case anyone is listening)

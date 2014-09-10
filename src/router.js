@@ -31,15 +31,14 @@ define(function(require, exports, module) {
                 '' : function(){
                     console.info('homeAlso');
                     if(App.history.data.length == 0){
-                        // window.location = window.location.href.split('#')[0];
-                        App.history.navigate('dash');
+                        window.location = window.location.href.split('#')[0];
+                        // App.history.navigate('dash');
                     }
                 },
                 'random(:anynumber)' : function(){
-                    console.info('homeAlso');
                     if(App.history.data.length == 0){
-                        // window.location = window.location.href.split('#')[0];
-                        App.history.navigate('dash');
+                        window.location = window.location.href.split('#')[0];
+                        // App.history.navigate('dash');
                     }
                 },
 
