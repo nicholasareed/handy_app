@@ -595,17 +595,17 @@ define(function(require, exports, module) {
             });
 
     
-            // // Hide SplashScreen
-            // Timer.setTimeout(function(){
-            //     try {
-            //         if(App.Data.usePg){
-            //             navigator.splashscreen.hide();
-            //         }
-            //     }catch(err){
-            //         alert('failed hiding splash screen');
-            //         alert(err);
-            //     }
-            // },500);
+            // Hide SplashScreen
+            Timer.setTimeout(function(){
+                try {
+                    if(App.Data.usePg){
+                        navigator.splashscreen.hide();
+                    }
+                }catch(err){
+                    alert('failed hiding splash screen');
+                    alert(err);
+                }
+            },500);
 
 
             // Ajax setup for users
