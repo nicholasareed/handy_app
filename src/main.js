@@ -319,6 +319,7 @@ define(function(require, exports, module) {
             App.MainContext.on('resize', function(e) {
                 Utils.Notification.Toast('Resized');
                 App.MainView.SizeMod.setSize(App.mainSize);
+                document.body.setAttribute('style',"height:"+App.mainSize[1]+"px");
             }.bind(this));
 
             // // Add Background
@@ -337,7 +338,7 @@ define(function(require, exports, module) {
             // Add GenericOnlineStatus
             // - we want to effectively communicate to the user when we have lost or are experiencing a degraded internet connection
             // - todo...
-
+            
             // Add Lightbox/RenderController to mainContext
             App.MainView.add(Utils.usePlane('content')).add(App.MainController.SizeMod).add(App.MainController);
 
@@ -432,10 +433,9 @@ define(function(require, exports, module) {
                     offClasses: ['footer-tabbar-default', 'off']
                 });
 
-
                 tmpTabs.on('select', function(result, eventTriggered){
-                    console.error(eventTriggered);
-                    console.error(result);
+                    console.log(eventTriggered);
+                    console.log(result);
                     switch(result.id){
                         
                         case 'todos':
@@ -595,17 +595,17 @@ define(function(require, exports, module) {
             });
 
     
-            // Hide SplashScreen
-            Timer.setTimeout(function(){
-                try {
-                    if(App.Data.usePg){
-                        navigator.splashscreen.hide();
-                    }
-                }catch(err){
-                    alert('failed hiding splash screen');
-                    alert(err);
-                }
-            },500);
+            // // Hide SplashScreen
+            // Timer.setTimeout(function(){
+            //     try {
+            //         if(App.Data.usePg){
+            //             navigator.splashscreen.hide();
+            //         }
+            //     }catch(err){
+            //         alert('failed hiding splash screen');
+            //         alert(err);
+            //     }
+            // },500);
 
 
             // Ajax setup for users

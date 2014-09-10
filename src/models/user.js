@@ -38,6 +38,24 @@ define(function (require) {
                     // Great!
                     //  store the access token
 
+                    // TrackJS
+                    try {
+                      trackJs.configure({
+
+                        // // Custom session identifier.
+                        // sessionId: "",
+
+                        // Custom user identifier.
+                        userId: body.email.toLowerCase(),
+
+                        // // Custom application identifier.
+                        // version: ""
+
+                      });
+                    } catch(err){
+                      console.error('No Track.js');
+                    }
+
                     // Update ajaxSetup with x-token header
                     $.ajaxSetup({
                         headers: {

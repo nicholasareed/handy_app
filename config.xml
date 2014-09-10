@@ -50,7 +50,6 @@
     <preference name="URL_SCHEME" value="http" />
     <preference name="URL_HOST" value="thehandyapp.com" />
 
-
     <gap:plugin name="org.apache.cordova.device" />
     <gap:plugin name="org.apache.cordova.console" />
     <gap:plugin name="org.apache.cordova.contacts" version="0.2.9" />
