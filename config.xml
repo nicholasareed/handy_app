@@ -32,7 +32,7 @@
     <preference name="orientation" value="portrait" />
     <preference name="fullscreen" value="false" />
 
-    <preference name="android-windowSoftInputMode" value="stateUnspecified|adjustResize" />
+    <preference name="android-windowSoftInputMode" value="stateUnspecified|adjustPan" />
 
     <preference name="target-device" value="handset" />
     <preference name="disallowOverscroll" value="true" />
