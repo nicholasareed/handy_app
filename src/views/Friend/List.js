@@ -43,6 +43,7 @@ define(function(require, exports, module) {
     // Notifications SubView
     var ConnectedView      = require('./Subviews/Connected');
     var RecommendedView      = require('./Subviews/Recommended');
+    var NewFriendView      = require('./Subviews/NewFriend');
     // var PotentialView      = require('./Subviews/Potential');
     // var IncomingView      = require('./Subviews/Incoming');
     // var OutgoingView      = require('./Subviews/Outgoing');
@@ -134,7 +135,7 @@ define(function(require, exports, module) {
             // moreClasses: ["normal-header"],
             moreSurfaces: [
                 // this.headerContent.PotentialFriends,
-                this.headerContent.GetRecommendation,
+                // this.headerContent.GetRecommendation,
                 this.headerContent.Invite
             ]
             // moreContent: "New", //'<span class="icon ion-navicon-round"></span>'
@@ -319,7 +320,7 @@ define(function(require, exports, module) {
 
         // New 
         this.TopTabs.Content.New = new View();
-        this.TopTabs.Content.New.View = new RecommendedView();
+        this.TopTabs.Content.New.View = new NewFriendView();
         this.TopTabs.Content.New.View._eventOutput.pipe(this.TopTabs.Content.ScrollView);
         this.TopTabs.Content.New.add(this.TopTabs.Content.New.View);
         this._subviews.push(this.TopTabs.Content.New.View);
