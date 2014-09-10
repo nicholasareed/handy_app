@@ -90,7 +90,7 @@ define(function(require, exports, module) {
         var frontMod = new StateModifier({
             transform: Transform.translate(0,0,1.1)
         });
-        this.contentView.add(this.contentView.BgOpacityMod).add(this.contentView.BgSurface);
+        this.contentView.add(Utils.usePlane('popover')).add(this.contentView.BgOpacityMod).add(this.contentView.BgSurface);
         // this.contentView.add(frontMod).add(this.lightbox);
 
         this.contentScrollView = new View();
@@ -132,7 +132,7 @@ define(function(require, exports, module) {
 
         // show the content in the lightbox
         // this.lightbox.show(this.contentScrollView);
-        this.contentView.add(frontMod).add(this.contentScrollView);
+        this.contentView.add(Utils.usePlane('popover',1)).add(this.contentScrollView);
         this.add(this.contentView);
 
 

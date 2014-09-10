@@ -88,7 +88,7 @@ define(function(require, exports, module) {
             // inTransition: false
         });
 
-        this.contentView.add(Utils.usePlane('popover',1)).add(this.contentView.BgOpacityMod).add(this.contentView.BgSurface);
+        this.contentView.add(Utils.usePlane('popover')).add(this.contentView.BgOpacityMod).add(this.contentView.BgSurface);
 
         this.contentScrollView = new View();
         this.contentScrollView.OriginMod = new StateModifier({
