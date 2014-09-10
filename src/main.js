@@ -309,7 +309,7 @@ define(function(require, exports, module) {
 
             App.defaultSize = [window.innerWidth, window.innerHeight];
             document.body.setAttribute('style',"width:"+window.innerWidth+"px;height:"+window.innerHeight+"px");
-            Utils.Notification.Toast(window.innerHeight);
+            // Utils.Notification.Toast(window.innerHeight);
             App.mainSize = [window.innerWidth, window.innerHeight];
             // Engine.nextTick(function() {
             //     console.log('After tick=' + App.MainContext.getSize());
@@ -317,7 +317,7 @@ define(function(require, exports, module) {
             // });
 
             App.MainContext.on('resize', function(e) {
-                Utils.Notification.Toast('Resized');
+                // Utils.Notification.Toast('Resized');
                 App.MainView.SizeMod.setSize(App.mainSize);
                 document.body.setAttribute('style',"height:"+App.mainSize[1]+"px");
             }.bind(this));
@@ -510,6 +510,7 @@ define(function(require, exports, module) {
                         App.Views.Popover.hide();
                     } else {
                         console.info("NOT HIDING");
+                        console.log();
                     }
                 };
                 App.MainView.add(App.Views.Popover.SizeMod).add(Utils.usePlane('popover')).add(App.Views.Popover);
