@@ -17,6 +17,7 @@ define(function(require, exports, module) {
     var RenderNode         = require('famous/core/RenderNode')
 
     var Utility = require('famous/utilities/Utility');
+    var Timer = require('famous/utilities/Timer');
 
     // Helpers
     var Utils = require('utils');
@@ -288,16 +289,16 @@ define(function(require, exports, module) {
             paginated: true
         });
         this.TopTabs.Content.Bg.pipe(this.TopTabs.Content.ScrollView);
-        this.TopTabs.Content.ScrollView._eventInput.on(['update','end'], function(){
+        Timer.setInterval(function(){
             // highlight the correct TopTab
-            console.log(this);
+            // console.log();
             try {
-                console.log(that.TopTabs.Content.ScrollView.getIndex());
+                var x = that.TopTabs.Content.ScrollView.getIndex();
             }catch(err){
                 console.log(err);
             }
             that._tabSurfaces[that.TopTabs.Content.ScrollView.getIndex()].emit('click');
-        });
+        },500);
         this.TopTabs.Content.Views = [];
 
         this.TopTabs.Content.add(Utils.usePlane('content')).add(this.TopTabs.Content.Bg);
