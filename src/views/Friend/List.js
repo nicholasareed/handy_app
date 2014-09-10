@@ -202,7 +202,7 @@ define(function(require, exports, module) {
         }];
 
         this._tabSurfaces = [];
-        items.forEach(function(item){
+        items.forEach(function(item, index){
 
             var tmpClasses = ['top-tabs-scroller-item-default'];
             // Select default one
@@ -218,11 +218,15 @@ define(function(require, exports, module) {
             });
             // tabView.Model = Model;
             that._tabSurfaces.push(tabView);
-            tabView.on('click', function(){
+            tabView.on('click', function(e){
                 that._tabSurfaces.forEach(function(tmp){
                     tmp.setClasses(['top-tabs-scroller-item-default']);
                 });
                 this.setClasses(['top-tabs-scroller-item-default','selected']);
+                if(e !== undefined){
+                    console.log(index);
+                    that.TopTabs.Content.ScrollView.goToIndex(index, 0.9, 0);
+                }
             });
             tabView.pipe(that.TopTabs.SeqLayout);
             tabView.pipe(that.contentScrollView);
@@ -282,7 +286,7 @@ define(function(require, exports, module) {
             paginated: true
         });
         this.TopTabs.Content.Bg.pipe(this.TopTabs.Content.ScrollView);
-        this.TopTabs.Content.ScrollView.on('pageChange', function(){
+        this.TopTabs.Content.ScrollView._eventInput.on(['update','end'], function(){
             // highlight the correct TopTab
             console.log(this);
             try {

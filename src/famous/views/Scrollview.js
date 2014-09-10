@@ -82,7 +82,7 @@ define(function(require, exports, module) {
         this.drag = new Drag({forceFunction: Drag.FORCE_FUNCTIONS.QUADRATIC});
         this.friction = new Drag({forceFunction: Drag.FORCE_FUNCTIONS.LINEAR});
 
-        this.sync = new GenericSync(['scroll', 'touch'], {direction : this.options.direction});
+        this.sync = new GenericSync(['scroll', 'touch'], {direction : this.options.direction, preventDefault: this.options.preventDefault});
 
         this._eventInput = new EventHandler();
         this._eventOutput = new EventHandler();
@@ -240,8 +240,11 @@ define(function(require, exports, module) {
         var positionNext = position > 0.5 * nodeSize;
         var velocityNext = velocity > 0;
 
-        if ((positionNext && !velocitySwitch) || (velocitySwitch && velocityNext)) this.goToNextPage();
-        else _setSpring.call(this, 0, SpringStates.PAGE);
+        if ((positionNext && !velocitySwitch) || (velocitySwitch && velocityNext)){
+            this.goToNextPage();
+        } else {
+            _setSpring.call(this, 0, SpringStates.PAGE);
+        }
 
         this._needsPaginationCheck = false;
     }
@@ -391,7 +394,8 @@ define(function(require, exports, module) {
 
         this.sync.setOptions({
             rails: this.options.rails,
-            direction: (this.options.direction === Utility.Direction.X) ? GenericSync.DIRECTION_X : GenericSync.DIRECTION_Y
+            direction: (this.options.direction === Utility.Direction.X) ? GenericSync.DIRECTION_X : GenericSync.DIRECTION_Y,
+            preventDefault: this.options.preventDefault
         });
     };
 
