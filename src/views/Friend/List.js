@@ -235,6 +235,7 @@ define(function(require, exports, module) {
             that.TopTabs.SeqLayout.Views.push(tabView);
 
         });
+        that._tabSurfaces[0].emit('click');
 
         this.TopTabs.SeqLayout.sequenceFrom(this.TopTabs.SeqLayout.Views);
 
