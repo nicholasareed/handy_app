@@ -181,145 +181,55 @@ define(function(require, exports, module) {
         // return;
 
 
+        // Create the Tabs
         this.TopTabs = new View();
-        this.TopTabs.SizeMod = new StateModifier({
-            size: [undefined, 60]
+        this.TopTabs.Bar = new TabBar();
+        this.TopTabs.BarSizeMod = new StateModifier({
+            size: [undefined, 80]
         });
-        this.TopTabs.SeqLayout = new ScrollView({
-            direction: 0
+        this.TopTabs.getSize = function(){
+            return [undefined, 80];
+        };
+        this.TopTabs.add(Utils.usePlane('contentTabs')).add(this.TopTabs.BarSizeMod).add(this.TopTabs.Bar);
+
+        this.TopTabs.Bar.defineSection('connected', {
+            content: '<i class="icon ion-arrow-swap"></i><div>Connected</div>',
+            onClasses: ['friend-list-tabbar-default', 'on'],
+            offClasses: ['friend-list-tabbar-default', 'off']
         });
-        this.TopTabs.add(this.TopTabs.SizeMod).add(Utils.usePlane('content',5)).add(this.TopTabs.SeqLayout);
-        this.TopTabs.SeqLayout.Views = [];
-
-        // this._plantSelected = null;
-
-        var items = [{
-            name: 'connected'
-        },{
-            name: 'recommended'
-        },{
-            name: 'new'
-        }];
-
-        this._tabSurfaces = [];
-        items.forEach(function(item){
-
-            var tmpClasses = ['top-tabs-scroller-item-default'];
-            // Select default one
-            // if(that.model.get('plant_type.id') == Model.get('id')){
-            //     tmpClasses.push('selected');
-            //     that._plantSelected = Model.get('id');
-            // }
-            
-            var tabView = new Surface({
-                content: '<div>'+item.name+'</div>',
-                size: [true, undefined],
-                classes: tmpClasses
-            });
-            // tabView.Model = Model;
-            that._tabSurfaces.push(tabView);
-            tabView.on('click', function(){
-                that._tabSurfaces.forEach(function(tmp){
-                    tmp.setClasses(['top-tabs-scroller-item-default']);
-                });
-                this.setClasses(['top-tabs-scroller-item-default','selected']);
-            });
-            tabView.pipe(that.TopTabs.SeqLayout);
-            tabView.pipe(that.contentScrollView);
-
-            that.TopTabs.SeqLayout.Views.push(tabView);
-
+        this.TopTabs.Bar.defineSection('recommended', {
+            content: '<i class="icon ion-thumbsup"></i><div>Recommended</div>',
+            onClasses: ['friend-list-tabbar-default', 'on'],
+            offClasses: ['friend-list-tabbar-default', 'off']
         });
+        // this.TopTabs.Bar.defineSection('incoming', {
+        //     content: '<i class="icon ion-arrow-down-a"></i><div>Incoming</div>',
+        //     onClasses: ['inbox-tabbar-default', 'on'],
+        //     offClasses: ['inbox-tabbar-default', 'off']
+        // });
+        // this.TopTabs.Bar.defineSection('outgoing', {
+        //     content: '<i class="icon ion-ios7-checkmark-outline"></i><div>Outgoing</div>',
+        //     onClasses: ['inbox-tabbar-default', 'on'],
+        //     offClasses: ['inbox-tabbar-default', 'off']
+        // });
 
-        this.TopTabs.SeqLayout.sequenceFrom(this.TopTabs.SeqLayout.Views);
-
+        // Add tabs to sequence
         this.contentScrollView.Views.push(this.TopTabs);
 
-
-
-        // // Create the Tabs
-        // this.TopTabs = new View();
-        // this.TopTabs.Bar = new TabBar();
-        // this.TopTabs.BarSizeMod = new StateModifier({
-        //     size: [undefined, 80]
-        // });
-        // this.TopTabs.getSize = function(){
-        //     return [undefined, 80];
-        // };
-        // this.TopTabs.add(Utils.usePlane('contentTabs')).add(this.TopTabs.BarSizeMod).add(this.TopTabs.Bar);
-
-        // this.TopTabs.Bar.defineSection('connected', {
-        //     content: '<i class="icon ion-arrow-swap"></i><div>Connected</div>',
-        //     onClasses: ['friend-list-tabbar-default', 'on'],
-        //     offClasses: ['friend-list-tabbar-default', 'off']
-        // });
-        // this.TopTabs.Bar.defineSection('recommended', {
-        //     content: '<i class="icon ion-thumbsup"></i><div>Recommended</div>',
-        //     onClasses: ['friend-list-tabbar-default', 'on'],
-        //     offClasses: ['friend-list-tabbar-default', 'off']
-        // });
-        // // this.TopTabs.Bar.defineSection('incoming', {
-        // //     content: '<i class="icon ion-arrow-down-a"></i><div>Incoming</div>',
-        // //     onClasses: ['inbox-tabbar-default', 'on'],
-        // //     offClasses: ['inbox-tabbar-default', 'off']
-        // // });
-        // // this.TopTabs.Bar.defineSection('outgoing', {
-        // //     content: '<i class="icon ion-ios7-checkmark-outline"></i><div>Outgoing</div>',
-        // //     onClasses: ['inbox-tabbar-default', 'on'],
-        // //     offClasses: ['inbox-tabbar-default', 'off']
-        // // });
-
-        // // Add tabs to sequence
-        // this.contentScrollView.Views.push(this.TopTabs);
-
         // Tab content
-        this.TopTabs.Content = new View();
-        this.TopTabs.Content.Bg = new Surface({
-            size: [undefined, undefined]
-        });
-        this.TopTabs.Content.ScrollView = new ScrollView({
-            direction: 0, // horizontal
-            paginated: true
-        });
-        this.TopTabs.Content.Bg.pipe(this.TopTabs.Content.ScrollView);
-        this.TopTabs.Content.ScrollView.on('pageChange', function(){
-            // highlight the correct TopTab
-            console.log(this);
-            try {
-                console.log(that.TopTabs.Content.ScrollView.getIndex());
-            }catch(err){
-                console.log(err);
-            }
-            that._tabSurfaces[that.TopTabs.Content.ScrollView.getIndex()].emit('click');
-        });
-        this.TopTabs.Content.Views = [];
-
-        this.TopTabs.Content.add(Utils.usePlane('content')).add(this.TopTabs.Content.Bg);
-        this.TopTabs.Content.add(Utils.usePlane('content',1)).add(this.TopTabs.Content.ScrollView);
+        this.TopTabs.Content = new RenderController();
 
         // Connected 
         this.TopTabs.Content.Connected = new View();
         this.TopTabs.Content.Connected.View = new ConnectedView();
-        this.TopTabs.Content.Connected.View._eventOutput.pipe(this.TopTabs.Content.ScrollView);
         this.TopTabs.Content.Connected.add(this.TopTabs.Content.Connected.View);
         this._subviews.push(this.TopTabs.Content.Connected.View);
-        this.TopTabs.Content.Views.push(this.TopTabs.Content.Connected.View);
 
         // Recommended 
         this.TopTabs.Content.Recommended = new View();
         this.TopTabs.Content.Recommended.View = new RecommendedView();
-        this.TopTabs.Content.Recommended.View._eventOutput.pipe(this.TopTabs.Content.ScrollView);
         this.TopTabs.Content.Recommended.add(this.TopTabs.Content.Recommended.View);
         this._subviews.push(this.TopTabs.Content.Recommended.View);
-        this.TopTabs.Content.Views.push(this.TopTabs.Content.Recommended.View);
-
-        // New 
-        this.TopTabs.Content.New = new View();
-        this.TopTabs.Content.New.View = new RecommendedView();
-        this.TopTabs.Content.New.View._eventOutput.pipe(this.TopTabs.Content.ScrollView);
-        this.TopTabs.Content.New.add(this.TopTabs.Content.New.View);
-        this._subviews.push(this.TopTabs.Content.New.View);
-        this.TopTabs.Content.Views.push(this.TopTabs.Content.New.View);
 
         // // All 
         // this.TopTabs.Content.AllFriends = new View();
@@ -345,57 +255,55 @@ define(function(require, exports, module) {
         // this.TopTabs.Content.OutgoingInvites.add(this.TopTabs.Content.OutgoingInvites.View);
         // this._subviews.push(this.TopTabs.Content.OutgoingInvites.View);
 
-        this.TopTabs.Content.ScrollView.sequenceFrom(this.TopTabs.Content.Views);
-
-        // Add Scrollview to sequence
+        // Add Lightbox to sequence
         this.contentScrollView.Views.push(this.TopTabs.Content);
 
-        // // Listeners for Tabs
-        // this.TopTabs.Bar.on('select', function(result){
-        //     switch(result.id){
+        // Listeners for Tabs
+        this.TopTabs.Bar.on('select', function(result){
+            switch(result.id){
 
-        //         case 'connected':
-        //             that.TopTabs.Content.show(that.TopTabs.Content.Connected);
-        //             // that.TopTabs.Content.AllFriends.View.collection.fetch();
-        //             break;
+                case 'connected':
+                    that.TopTabs.Content.show(that.TopTabs.Content.Connected);
+                    // that.TopTabs.Content.AllFriends.View.collection.fetch();
+                    break;
 
-        //         case 'recommended':
-        //             that.TopTabs.Content.show(that.TopTabs.Content.Recommended);
-        //             // that.TopTabs.Content.AllFriends.View.collection.fetch();
-        //             break;
+                case 'recommended':
+                    that.TopTabs.Content.show(that.TopTabs.Content.Recommended);
+                    // that.TopTabs.Content.AllFriends.View.collection.fetch();
+                    break;
 
-        //         case 'all':
-        //             that.TopTabs.Content.show(that.TopTabs.Content.AllFriends);
-        //             // that.TopTabs.Content.AllFriends.View.collection.fetch();
-        //             break;
+                case 'all':
+                    that.TopTabs.Content.show(that.TopTabs.Content.AllFriends);
+                    // that.TopTabs.Content.AllFriends.View.collection.fetch();
+                    break;
 
-        //         case 'potential':
-        //             that.TopTabs.Content.show(that.TopTabs.Content.PotentialFriends);
-        //             // that.TopTabs.Content.AllFriends.View.collection.fetch();
-        //             break;
+                case 'potential':
+                    that.TopTabs.Content.show(that.TopTabs.Content.PotentialFriends);
+                    // that.TopTabs.Content.AllFriends.View.collection.fetch();
+                    break;
 
-        //         case 'incoming':
-        //             that.TopTabs.Content.show(that.TopTabs.Content.IncomingInvites);
-        //             // that.TopTabs.Content.IncomingInvites.View.collection.fetch();
-        //             break;
+                case 'incoming':
+                    that.TopTabs.Content.show(that.TopTabs.Content.IncomingInvites);
+                    // that.TopTabs.Content.IncomingInvites.View.collection.fetch();
+                    break;
 
-        //         case 'outgoing':
-        //             that.TopTabs.Content.show(that.TopTabs.Content.OutgoingInvites);
-        //             // that.TopTabs.Content.OutgoingInvites.View.collection.fetch();
-        //             break;
+                case 'outgoing':
+                    that.TopTabs.Content.show(that.TopTabs.Content.OutgoingInvites);
+                    // that.TopTabs.Content.OutgoingInvites.View.collection.fetch();
+                    break;
 
-        //         default:
-        //             alert('none chosen');
-        //             break;
-        //     }
-        // });
+                default:
+                    alert('none chosen');
+                    break;
+            }
+        });
 
-        // // This depends on the previously selected! 
-        // var default_selected = 'connected';
-        // // try {
-        // //     default_selected = App.Cache.FriendListOptions.default || 'all';
-        // // }catch(err){console.error(err);}
-        // this.TopTabs.Bar.select(default_selected);
+        // This depends on the previously selected! 
+        var default_selected = 'connected';
+        // try {
+        //     default_selected = App.Cache.FriendListOptions.default || 'all';
+        // }catch(err){console.error(err);}
+        this.TopTabs.Bar.select(default_selected);
 
         this.layout.content.add(this.ContentStateModifier).add(this.contentScrollView);
 

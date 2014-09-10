@@ -228,6 +228,7 @@ define(function(require, exports, module) {
              classes: ['select-friends-list-item-default']
         });
         userView.Surface.pipe(that.contentLayout);
+        userView.Surface.pipe(that._eventOutput);
         userView.Surface.on('click', function(){
             // App.history.navigate('player/' + Model.get('_id'));
         });

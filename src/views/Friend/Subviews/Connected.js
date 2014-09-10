@@ -49,6 +49,7 @@ define(function(require, exports, module) {
 
         // this.contentLayout = new SequentialLayout();
         this.contentLayout = new ScrollView();
+        // this.contentLayout.pipe(this._eventOutput);
         this.contentLayout.Views = [];
         this.contentLayout.sequenceFrom(this.contentLayout.Views);
 
@@ -218,6 +219,7 @@ define(function(require, exports, module) {
             return [undefined, userView.Surface._size ? userView.Surface._size[1] : undefined]
         };
         userView.Surface.pipe(that.contentLayout);
+        userView.Surface.pipe(that._eventOutput);
         userView.Surface.on('click', function(){
             App.history.navigate('user/' + Model.get('_id'));
         });

@@ -134,6 +134,29 @@ body {
 }
 
 
+
+/* Plant Types */
+
+.top-tabs-scroller-item-default {
+  color: #444;
+  line-height: 60px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.top-tabs-scroller-item-default > div {
+  display: inline-block;
+  padding: 4px 14px;
+
+  line-height: 20px;
+}
+.top-tabs-scroller-item-default.selected > div {
+  background: #444;
+  color: white;
+}
+
+
+
 /* Select Friends for Sentence */
   
 .select-friends-list-item-default {
@@ -318,7 +341,6 @@ body {
   background: #E74C3C;
   color: white;
 }
-
 
 
 
@@ -2364,6 +2386,8 @@ textarea {
 .leaflet-marker-iconlabel-left:after {
   content: "";
 }
+
+
 
 
 
