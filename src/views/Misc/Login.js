@@ -169,7 +169,13 @@ define(function(require, exports, module) {
             classes: ['login-forgot-pass-button']
         });
         this.forgotPassword.Surface.on('click', function(){
-            App.history.navigate('forgot');
+            // App.history.navigate('forgot');
+            Utils.Popover.Prompt('title','default','saveit')
+            .then(function(result){
+                if(result && $.trim(result) != ''){
+                    alert(result);
+                }
+            });
         });
         this.forgotPassword.add(this.forgotPassword.StateModifier).add(this.forgotPassword.Surface);
         this.contentScrollView.Views.push(this.forgotPassword);
