@@ -88,7 +88,7 @@ define(function(require, exports, module) {
                     defaultRoute('Welcome', 'User/Welcome', arguments, {cache: false});
                 },
 
-                'modal/popoverbuttons' : function(){
+                'popover/buttons' : function(){
                     // eh, I should be able to cache this route before login, then destroy after login
                     // defaultRoute('OptionModal', 'Misc/OptionModal', arguments, {cache: false});
                     App.Flags.InPopover = true;
@@ -96,7 +96,7 @@ define(function(require, exports, module) {
                     defaultRoute('PopoverButtons', 'Misc/PopoverButtons', arguments, {cache: false, popover: true});
                 },
 
-                'modal/helppopover' : function(){
+                'popover/help' : function(){
                     // eh, I should be able to cache this route before login, then destroy after login
                     // defaultRoute('OptionModal', 'Misc/OptionModal', arguments, {cache: false});
                     App.Flags.InPopover = true;

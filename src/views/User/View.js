@@ -811,20 +811,23 @@ define(function(require, exports, module) {
 
         this.contentLightbox = new RenderController();
         this.loadingUser = new View();
-        this.loadingUser.StateModifier = new StateModifier({
+        this.loadingUser.SizeMod = new StateModifier({
+            size: [undefined, undefined]
+        });
+        this.loadingUser.OriginMod = new StateModifier({
             origin: [0.5, 0.5]
         });
         this.loadingUser.Surface = new Surface({
             content: '<i class="icon ion-loading-c"></i>',
-            size: [true, true],
+            size: [undefined, undefined],
             properties: {
                 fontSize: "40px",
                 textAlign: "center",
                 color: "#444",
-                lineHeight: "50px"
+                lineHeight: "100px"
             }
         });
-        this.loadingUser.add(this.loadingUser.StateModifier).add(this.loadingUser.Surface);
+        this.loadingUser.add(this.loadingUser.SizeMod).add(this.loadingUser.OriginMod).add(this.loadingUser.Surface);
         this.contentLightbox.show(this.loadingUser);
 
         // this.layout.content.add(this.ContentStateModifier).add(this.mainNode);

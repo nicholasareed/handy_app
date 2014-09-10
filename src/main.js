@@ -506,14 +506,10 @@ define(function(require, exports, module) {
                 });
                 App.Views.Popover.hideIf = function(thisView){
                     if(App.Views.Popover.CurrentPopover === thisView){
-                        console.info('HIDING');
                         App.Views.Popover.hide();
-                    } else {
-                        console.info("NOT HIDING");
-                        console.log();
                     }
                 };
-                App.MainView.add(App.Views.Popover.SizeMod).add(Utils.usePlane('popover')).add(App.Views.Popover);
+                App.MainView.add(Utils.usePlane('popover')).add(App.Views.Popover);
 
             };
             createPopover();

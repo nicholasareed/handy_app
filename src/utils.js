@@ -196,7 +196,7 @@ define(function (require) {
                 });
                 App.Cache.HelpPopoverModal = opts;
                 // navigate
-                App.history.navigate('modal/helppopover', {history: false});
+                App.history.navigate('popover/help', {history: false});
             },
             Buttons: function(opts){
                 // default options
@@ -212,7 +212,7 @@ define(function (require) {
                 App.Cache.OptionModal = opts;
 
                 // Change history (must)
-                App.history.navigate('modal/popoverbuttons', {history: false});
+                App.history.navigate('popover/buttons', {history: false});
             },
             Alert: function(text, button){
                 // default options
