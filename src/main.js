@@ -340,7 +340,7 @@ define(function(require, exports, module) {
             // - todo...
 
             // Add Lightbox/RenderController to mainContext
-            App.MainView.add(Utils.usePlane('content')).add(App.MainController.SizeMod).add(App.MainController);
+            App.MainView.add(Utils.usePlane('content')).add(App.MainController);
 
             var colors = new Array(
               [62,35,255],

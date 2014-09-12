@@ -36,8 +36,8 @@ define(function(require, exports, module) {
     var _ = require('underscore');
     var $ = require('jquery');
 
-    // Models
-    var PlayerModel = require('models/player');
+    // // Models
+    // var PlayerModel = require('models/player');
 
     function PageView(params) {
         var that = this;

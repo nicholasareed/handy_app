@@ -92,7 +92,7 @@ define(function(require, exports, module) {
                     // eh, I should be able to cache this route before login, then destroy after login
                     // defaultRoute('OptionModal', 'Misc/OptionModal', arguments, {cache: false});
                     App.Flags.InPopover = true;
-                    App.history.navigate('', {history: false});
+                    App.history.navigate('random' + Utils.randomInt(0,10000), {history: false});
                     defaultRoute('PopoverButtons', 'Misc/PopoverButtons', arguments, {cache: false, popover: true});
                 },
 
@@ -100,8 +100,8 @@ define(function(require, exports, module) {
                     // eh, I should be able to cache this route before login, then destroy after login
                     // defaultRoute('OptionModal', 'Misc/OptionModal', arguments, {cache: false});
                     App.Flags.InPopover = true;
-                    App.history.navigate('random', {history: false});
-                    defaultRoute('HelpPopover', 'Misc/HelpPopover', arguments, {cache: false, popover: true});
+                    App.history.navigate('random' + Utils.randomInt(0,10000), {history: false});
+                    defaultRoute('PopoverHelp', 'Misc/PopoverHelp', arguments, {cache: false, popover: true});
                 },
 
                 'popover/alert' : function(){
@@ -124,8 +124,8 @@ define(function(require, exports, module) {
                     // eh, I should be able to cache this route before login, then destroy after login
                     // defaultRoute('OptionModal', 'Misc/OptionModal', arguments, {cache: false});
                     App.Flags.InPopover = true;
-                    App.history.navigate('random', {history: false});
-                    defaultRoute('Popover', 'Misc/PopoverList', arguments, {cache: false, popover: true});
+                    App.history.navigate('random' + Utils.randomInt(0,10000), {history: false});
+                    defaultRoute('PopoverList', 'Misc/PopoverList', arguments, {cache: false, popover: true});
                 },
 
                 'misc/help' : function(){

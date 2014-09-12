@@ -30,8 +30,8 @@ define(function(require, exports, module) {
     var Utils = require('utils');
     var _ = require('underscore');
 
-    // Models
-    var PlayerModel = require('models/player');
+    // // Models
+    // var PlayerModel = require('models/player');
 
     function PageView(params) {
         var that = this;
