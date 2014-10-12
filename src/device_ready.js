@@ -246,6 +246,9 @@ define(function(require, exports, module) {
                     App.MainContext.emit('resize');
                 // });
 
+                App.Events.emit('KeyboardShowHide', true);
+                App.KeyboardShowing = true;
+
                 // App.mainSize = App.MainContext.getSize();
                 // if (App.MainController)
                 //     App.MainController.setOptions({size: [App.mainSize[0], App.mainSize[1]]});
@@ -256,6 +259,10 @@ define(function(require, exports, module) {
                 
                 App.mainSize = [App.defaultSize[0],App.defaultSize[1]];
                 App.MainContext.emit('resize');
+
+                // Update the page (tell 'em)
+                App.Events.emit('KeyboardShowHide', false);
+                App.KeyboardShowing = false;
 
                 // App.mainSize = App.MainContext.getSize();
                 // if (App.MainController)

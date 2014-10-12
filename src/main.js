@@ -158,6 +158,7 @@ define(function(require, exports, module) {
         Utils: Utils,
         Flags: {},
         Functions: {}, // some global functions, like Pulsate
+        KeyboardShowing: false,
         MainContext: null,
         MainController: null,
         MainView: null,
