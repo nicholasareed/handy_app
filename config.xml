@@ -21,7 +21,7 @@
     <gap:platform name="ios" />
     <gap:platform name="android" />
 
-    <preference name="phonegap-version" value="3.5.0" />
+    <preference name="phonegap-version" value="3.6.3" />
 
     <!-- Android SDK Version -->
     <preference name="android-minSdkVersion" value="14" />
