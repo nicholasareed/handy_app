@@ -13,7 +13,9 @@ define(function(require, exports, module) {
     var Transform = require('famous/core/Transform');
     var Matrix = require('famous/core/Transform');
     var RenderNode         = require('famous/core/RenderNode')
+
     var Utility = require('famous/utilities/Utility');
+    var Timer = require('famous/utilities/Timer');
 
     // Curves
     var Easing = require('famous/transitions/Easing');
@@ -27,7 +29,9 @@ define(function(require, exports, module) {
     var Utils = require('utils');
 
     // Views
+    var StandardPageView = require('views/common/StandardPageView');
     var StandardHeader = require('views/common/StandardHeader');
+    var FormHelper = require('views/common/FormHelper');
     
     var EventHandler = require('famous/core/EventHandler');
 
@@ -40,7 +44,7 @@ define(function(require, exports, module) {
 
     function PageView(options) {
         var that = this;
-        View.apply(this, arguments);
+        StandardPageView.apply(this, arguments);
         this.options = options;
 
         // Look for expected options
@@ -60,7 +64,7 @@ define(function(require, exports, module) {
 
     }
 
-    PageView.prototype = Object.create(View.prototype);
+    PageView.prototype = Object.create(StandardPageView.prototype);
     PageView.prototype.constructor = PageView;
 
 
@@ -86,31 +90,26 @@ define(function(require, exports, module) {
         })
 
         // Attach header to the layout        
-        this.layout.header.add(this.header);
+        this.layout.header.add(Utils.usePlane('header')).add(this.header);
 
     };
 
     PageView.prototype.createContent = function(){
         var that = this;
         
-        // create the scrollView of content
-        this.contentScrollView = new ScrollView(App.Defaults.ScrollView);
-        this.scrollSurfaces = [];
-
-        // link endpoints of layout to widgets
+        this.form = new FormHelper({
+            type: 'form',
+            scroll: true
+        });
 
         // Add surfaces to content (buttons)
         this.addSurfaces();
-
-        // Sequence
-        this.contentScrollView.sequenceFrom(this.scrollSurfaces);
 
         // Content Modifiers
         this.layout.content.StateModifier = new StateModifier();
 
         // Now add content
-        this.layout.content.add(this.layout.content.StateModifier).add(this.contentScrollView);
-
+        this.layout.content.add(this.layout.content.StateModifier).add(Utils.usePlane('content')).add(this.form);
 
     };
 
@@ -118,51 +117,50 @@ define(function(require, exports, module) {
         var that = this;
 
         // Build Surfaces
-        // - add to scrollView
-        this.inputFeedbackSurface = new TextAreaSurface({
-            name: 'feedback',
-            placeholder: 'Please tell us how we can improve, and be as specific as you can! ',
-            type: 'text',
+
+        this.inputFeedback = new FormHelper({
+
+            margins: [10,10],
             size: [undefined, window.innerHeight * 0.5],
+
+            form: this.form,
+            name: 'feedback',
+            placeholder: '...',
+            type: 'textarea',
             value: ''
         });
-        window.onresize = function(){
-            // todo: unattach the onresize
-            that.inputFeedbackSurface.setSize([undefined, window.innerHeight * 0.5]);
-        };
 
-        this.inputFeedbackSurface.View = new View();
-        this.inputFeedbackSurface.View.StateModifier = new StateModifier();
-        this.inputFeedbackSurface.View.add(this.inputFeedbackSurface.View.StateModifier).add(this.inputFeedbackSurface);
-        this.scrollSurfaces.push(this.inputFeedbackSurface.View);
-
-        this.submitButtonSurface = new Surface({
-            content: 'Send Feedback',
-            size: [undefined, 60],
-            classes: ['form-button-submit-default']
+        this.submitButton = new FormHelper({
+            form: this.form,
+            type: 'submit',
+            value: 'Send Feedback',
+            margins: [10,10],
+            click: this.send_feedback.bind(this)
         });
-        this.submitButtonSurface.View = new View();
-        this.submitButtonSurface.View.StateModifier = new StateModifier();
-        this.submitButtonSurface.View.add(this.submitButtonSurface.View.StateModifier).add(this.submitButtonSurface);
-        this.scrollSurfaces.push(this.submitButtonSurface.View);
 
-        // Events for surfaces
-        this.submitButtonSurface.on('click', this.send_feedback.bind(this));
-
+        this.form.addInputsToForm([
+            this.inputFeedback,
+            this.submitButton
+        ]);
 
     };
 
     PageView.prototype.send_feedback = function(ev){
         var that = this;
 
+        if(this.checking === true){
+            return;
+        }
+        this.checking = true;
+
         // validate feedback
-        var feedback = $.trim(this.inputFeedbackSurface.getValue().toString());
+        var feedback = $.trim(this.inputFeedback.getValue().toString());
         if(feedback.length === 0){
             return;
         }
 
         // Disable submit
-        this.submitButtonSurface.setSize([0,0]);
+        this.submitButton.setContent('One moment...');
 
         // Submit the feedback
         $.ajax({
@@ -174,8 +172,9 @@ define(function(require, exports, module) {
             },
             error: function(err){
                 // failed
-
-                Utils.Notification.Toast('Sorry, failed saving your feedback, kindly try again!');
+                that.checking = false;
+                that.submitButton.setContent('Send Feedback');
+                Utils.Notification.Toast('Sorry, failed saving your feedback. Please try again!');
 
                 // todo: hande failed feedback submission
 
@@ -183,11 +182,16 @@ define(function(require, exports, module) {
             success: function(response){
                 // real success
 
+                that.checking = false;
+                that.submitButton.setContent('Send Feedback');
+
                 // Toast a "Thank You"
                 Utils.Notification.Toast('Thank you for the Feedback!');
 
                 // Go back a page
-                App.history.back();//.history.go(-1);
+                if(that.showing){
+                    App.history.back();
+                }
 
             }
 
@@ -200,7 +204,7 @@ define(function(require, exports, module) {
         var that = this;
 
         this._eventOutput.emit('inOutTransition', arguments);
-
+        this.showing = direction === 'showing' ? true:false;
         switch(direction){
             case 'hiding':
                 switch(otherViewName){
@@ -210,10 +214,10 @@ define(function(require, exports, module) {
                         transitionOptions.outTransform = Transform.identity;
 
                         // Hide/move elements
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
 
                             // Slide content left
-                            that.layout.content.StateModifier.setTransform(Transform.translate(0,window.innerHeight,0), transitionOptions.outTransition);
+                            that.layout.content.StateModifier.setTransform(Transform.translate(0,window.innerWidth,0), transitionOptions.outTransition);
 
                         }, delayShowing);
 
@@ -223,7 +227,7 @@ define(function(require, exports, module) {
                 break;
             case 'showing':
                 if(this._refreshData){
-                    // window.setTimeout(that.refreshData.bind(that), 1000);
+                    // Timer.setTimeout(that.refreshData.bind(that), 1000);
                 }
                 this._refreshData = true;
                 switch(otherViewName){
@@ -240,20 +244,22 @@ define(function(require, exports, module) {
                         //     that.layout.content.StateModifier.setTransform(Transform.translate(window.innerWidth + 100,0,0));
                         // }
                         that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0));
-                        that.scrollSurfaces.forEach(function(surf, index){
+                        console.log(that.form._formScrollView.Views);
+                        that.form._formScrollView.Views.forEach(function(surf, index){
+                            console.log(surf);
                             surf.StateModifier.setTransform(Transform.translate(0,window.innerHeight,0));
                         });
 
                         // Content
                         // - extra delay for other content to be gone
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
 
                             // // Bring content back
                             // that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
 
                             // Bring in button surfaces individually
-                            that.scrollSurfaces.forEach(function(surf, index){
-                                window.setTimeout(function(){
+                            that.form._formScrollView.Views.forEach(function(surf, index){
+                                Timer.setTimeout(function(){
                                     surf.StateModifier.setTransform(Transform.translate(0,0,0), {
                                         duration: 750,
                                         curve: Easing.inOutElastic
