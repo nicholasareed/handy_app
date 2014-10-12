@@ -172,8 +172,8 @@ define(function(require, exports, module) {
             },
 
             {
-                title: 'New Connection',
-                desc: 'Every time you make a connection',
+                title: 'New Friend',
+                desc: 'Every time you befriend someone',
                 scheme_key: 'new_friend'
             },
 

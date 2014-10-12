@@ -1,0 +1,42 @@
+{
+  "name": "famous-boxlayout",
+  "version": "0.0.3",
+  "homepage": "https://github.com/IjzerenHein/famous-boxlayout",
+  "authors": [
+    "Hein Rutjes <hrutjes@gmail.com>"
+  ],
+  "description": "Box-layout view for famo.us",
+  "keywords": [
+    "famo.us",
+    "famous",
+    "layout",
+    "box",
+    "boxLayout",
+    "margin",
+    "margins"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "tests",
+    "examples",
+    "docs",
+    "Gruntfile.js"
+  ],
+  "dependencies": {
+    "requirejs": "~2.1.11",
+    "famous": "~0.2.0"
+  },
+  "_release": "0.0.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.0.3",
+    "commit": "56b6c18e94e67c1ac0f7651c7b53aba308a76431"
+  },
+  "_source": "git://github.com/IjzerenHein/famous-boxlayout.git",
+  "_target": "~0.0.3",
+  "_originalSource": "famous-boxlayout",
+  "_direct": true
+}

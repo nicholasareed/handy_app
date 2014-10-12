@@ -1,3 +1,6 @@
+
+/* This is now part of ScrollView (not officially, of course) */
+
 define(function(require,module,exports){
     var Scrollview = require('famous/views/Scrollview');
     var ViewSequence = require('famous/core/ViewSequence');

@@ -24,9 +24,11 @@ define(function(require, exports, module) {
      */
     function InputSurface(options) {
         this._placeholder = options.placeholder || '';
+        this._id          = options.id || '';
         this._value       = options.value || '';
         this._type        = options.type || 'text';
         this._name        = options.name || '';
+        this._attr        = options.attr || {};
 
         Surface.apply(this, arguments);
 
@@ -146,6 +148,25 @@ define(function(require, exports, module) {
         return this._name;
     };
 
+
+    InputSurface.prototype.setId = function setId(str) {
+        this._id = str;
+        this._contentDirty = true;
+        return this;
+    };
+
+    /**
+     * Get the name attribute of the element.
+     *
+     * @method getName
+     * @return {string} name of element
+     */
+    InputSurface.prototype.getId = function getId() {
+        return this._id;
+    };
+
+
+
     /**
      * Place the document element this component manages into the document.
      *
@@ -155,9 +176,16 @@ define(function(require, exports, module) {
      */
     InputSurface.prototype.deploy = function deploy(target) {
         if (this._placeholder !== '') target.placeholder = this._placeholder;
+        // if(this._id != '') target._id = this._id;
         target.value = this._value;
         target.type = this._type;
         target.name = this._name;
+
+        var that = this;
+        Object.keys(this._attr).forEach((function(key){
+            target.setAttribute(key, that._attr[key]);
+        }).bind(this));
+
     };
 
     module.exports = InputSurface;

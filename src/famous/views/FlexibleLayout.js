@@ -74,26 +74,31 @@ define(function(require, exports, module) {
         for (i = 0; i < ratios.length; i++){
             ratio = ratios[i];
             node = this._nodes[i];
-            if(node.getSize() === null){
+            if(!node || !node.getSize || node.getSize() === null){
                 still_dirty = true;
             }
-            if (typeof ratio !== 'number')
-                flexLength -= (node.getSize() ? node.getSize()[direction] : 0) || 0;
-            else
+            if (typeof ratio !== 'number'){
+                if(!node || !node.getSize){
+                    flexLength = 0;
+                } else {
+                    flexLength -= (node.getSize() ? node.getSize()[direction] : 0) || 0;
+                }
+            } else {
                 ratioSum += ratio;
+            }
         }
 
         for (i = 0; i < ratios.length; i++) {
             node = this._nodes[i];
             ratio = ratios[i];
 
-            if(node.getSize() === null){
+            if(!node || !node.getSize || node.getSize() === null){
                 still_dirty = true;
             }
 
             length = (typeof ratio === 'number')
                 ? flexLength * ratio / ratioSum
-                : (node.getSize() ? node.getSize()[direction] : 0);
+                : (node.getSize ? (node.getSize() ? node.getSize()[direction] : 0) : 0);
 
             currTransform = (direction === FlexibleLayout.DIRECTION_X)
                 ? Transform.translate(translation, 0, 0)

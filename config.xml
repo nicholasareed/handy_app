@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget 
-    id="com.handy.app.pub" 
-    version="0.0.1.21" 
+    id="com.waiting.app.pub" 
+    version="0.0.1.22" 
     xmlns="http://www.w3.org/ns/widgets" 
     xmlns:gap="http://phonegap.com/ns/1.0" 
     xmlns:android="http://schemas.android.com/apk/res/android" 
@@ -28,7 +28,6 @@
     <!-- iOS Version -->
     <preference name="deployment-target" value="7.0" />
 
-
     <preference name="orientation" value="portrait" />
     <preference name="fullscreen" value="false" />
 
@@ -40,8 +39,8 @@
     <preference name="exit-on-suspend" value="false" />
     <preference name="detect-data-types" value="false" />
 
-    <preference name="StatusBarOverlaysWebView" value="false" />
-    <preference name="StatusBarBackgroundColor" value="#34495E" />
+    <preference name="StatusBarOverlaysWebView" value="true" />
+    <preference name="StatusBarBackgroundColor" value="#000000" />
     <preference name="StatusBarStyle" value="lightcontent" />
 
     <preference name="AutoHideSplashScreen" value="false" />
@@ -49,6 +48,7 @@
 
     <preference name="URL_SCHEME" value="http" />
     <preference name="URL_HOST" value="thehandyapp.com" />
+
 
     <gap:plugin name="org.apache.cordova.device" />
     <gap:plugin name="org.apache.cordova.console" />
@@ -64,15 +64,16 @@
     <gap:plugin name="com.phonegap.plugins.pushplugin" />
     <gap:plugin name="com.phonegap.plugins.barcodescanner" />
     <gap:plugin name="com.verso.cordova.clipboard" />
+    <gap:plugin name="org.apache.cordova.splashscreen" />
 
-    <gap:plugin name="com.plugin.datepicker" />
+    <!-- <gap:plugin name="com.plugin.datepicker" /> -->
     <gap:plugin name="nl.x-services.plugins.socialsharing" />
     <gap:plugin name="info.asankan.phonegap.smsplugin" />
     <gap:plugin name="nl.x-services.plugins.toast" />
     <gap:plugin name="de.appplant.cordova.plugin.local-notification" />
-    <gap:plugin name="org.apache.cordova.splashscreen" />
+    <gap:plugin name="com.pylonproducts.wifiwizard" version="0.1.0" />
 
-    <gap:plugin name="com.ionic.keyboard" version="1.0.2" />
+    <gap:plugin name="com.ionic.keyboard" version="1.0.3" />
 
     <gap:plugin name="com.adobe.plugins.gaplugin" />
 
@@ -87,6 +88,7 @@
         <param name="URL_SCHEME" value="handy" />
     </gap:plugin>
 
+
     <feature name="SplashScreen">
         <param name="android-package" value="org.apache.cordova.splashscreen.SplashScreen"/>
         <param name="ios-package" value="CDVSplashScreen"/>
@@ -94,9 +96,9 @@
     </feature>
 
     <feature name="StatusBar">
-    	<param name="ios-package" value="CDVStatusBar" onload="true" />
+        <param name="ios-package" value="CDVStatusBar" onload="true" />
     </feature>
-    
+
     <feature name="Keyboard">
         <param name="ios-package" value="IonicKeyboard" onload="true" />
     </feature>
@@ -199,21 +201,21 @@
 
     <!--<gap:config-file target="AndroidManifest.xml" parent="/*/application/activity">-->
     <!-- <gap:config-file platform="android" parent="/manifest/application" overwrite="false">
-        <activity android:label="@string/app_name" android:name=".handy">
+        <activity android:label="@string/app_name" android:name=".waiting">
           <intent-filter>
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
-            <data android:scheme="http" android:host="handyapp.com" />
+            <data android:scheme="http" android:host="waitingapp.com" />
           </intent-filter>
       </activity>
     </gap:config-file> -->
 
     <!-- <gap:plugin name="com.machenmusik.plugins.launchmyapp" version="3.1.2">
-        <param name="URL_SCHEME" value="handy" />
-        <param name="HTTP_HOST" value="handyapp.com" />
+        <param name="URL_SCHEME" value="waiting" />
+        <param name="HTTP_HOST" value="waitingapp.com" />
         <param name="HTTP_PATHPREFIX" value="/" />
-        <param name="HTTPS_HOST" value="handyapp.com" />
+        <param name="HTTPS_HOST" value="waitingapp.com" />
         <param name="HTTPS_PATHPREFIX" value="/" />
     </gap:plugin> -->
 

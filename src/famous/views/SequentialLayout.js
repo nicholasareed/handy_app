@@ -13,6 +13,8 @@ define(function(require, exports, module) {
     var ViewSequence = require('famous/core/ViewSequence');
     var Utility = require('famous/utilities/Utility');
 
+    var EventHandler = require('famous/core/EventHandler');
+
     /**
      * SequentialLayout will lay out a collection of renderables sequentially in the specified direction.
      * @class SequentialLayout
@@ -30,6 +32,9 @@ define(function(require, exports, module) {
         this._items = null;
         this._size = null;
         this._outputFunction = SequentialLayout.DEFAULT_OUTPUT_FUNCTION;
+
+        this._eventOutput = new EventHandler();
+        this._eventOutput.bindThis(this);
 
         this.options = Object.create(this.constructor.DEFAULT_OPTIONS);
         this.optionsManager = new OptionsManager(this.options);
@@ -115,6 +120,9 @@ define(function(require, exports, module) {
      * @return {number} Render spec for this component
      */
     SequentialLayout.prototype.render = function render() {
+        
+        this._eventOutput.emit('render');
+        
         var length = 0;
         var girth = 0;
 
@@ -149,6 +157,7 @@ define(function(require, exports, module) {
         this._size[girthDim] = girth;
 
         this._outputCache.size = this.getSize();
+
         return this._outputCache;
     };
 

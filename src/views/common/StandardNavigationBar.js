@@ -16,6 +16,9 @@ define(function(require, exports, module) {
 
     var StateModifier = require('famous/modifiers/StateModifier');
 
+    var Timer = require('famous/utilities/Timer');
+    var Utils = require('utils');
+
     var FlexibleLayout = require('famous/views/FlexibleLayout');
     var SequentialLayout = require('famous/views/SequentialLayout');
 
@@ -46,12 +49,24 @@ define(function(require, exports, module) {
             content: this.options.content
         });
         this.title.View = new View();
+        // this.title.View.
         this.title.PositionModifier = new StateModifier();
         this.title.OpacityModifier = new StateModifier();
         this.title.View.add(this.title.PositionModifier).add(this.title.OpacityModifier).add(this.title);
 
-        // console.log(this.options.size[1]);
-        // debugger;
+        // Longtap title
+        this.title.on('longtap', function(){
+            // Utils.Popover.Confirm('Clear and Start Over?','Yes, CLEAR ALL', 'Nevermind')
+            // .then(function(result){
+            //     if(!result){
+            //         return;
+            //     }
+
+            //     Utils.logout();
+            //     // App.history.eraseUntilTag('all-of-em');
+            //     // App.history.navigate('landing');
+            // });
+        });
 
         var tmpBackWidth = 20;
         if(this.options.back){
@@ -164,45 +179,81 @@ define(function(require, exports, module) {
         this.layout = new FlexibleLayout({
             ratios: [true, 1, true]
         });
+
+        
         this.layout.sequenceFrom([
             this.back.View,
             this.title.View,
             this.more.View
         ]);
 
+        console.log(this.back.View.getSize());
+        console.log(this.title.View.getSize());
+        console.log(this.more.View.getSize());
+        
+        var that = this;
+        this.back.on('deploy', function(){
+            console.log('deployed');
+            that.layout.setRatios([true, 1, true]);
+        });
+        this.title.on('deploy', function(){
+            console.log('deployed');
+            that.layout.setRatios([true, 1, true]);
+        });
+        this.more.on('deploy', function(){
+            console.log('deployed');
+            that.layout.setRatios([true, 1, true]);
+        });
+        if(this.more.Grid){
+            this.more.Grid._eventOutput.on('render', function(){
+                // debugger;
+                // return;
+                // console.log('DEPLOYED');
+                that.layout.setRatios([true, 1, true]);
+            });
+        }
+        // Timer.setTimeout(function(){
+        //     that.layout.setRatios([true, 1, true]);
+        // },1);
+
+
+
+        App.More = this;
+
         this._add(this.layout);
 
         this._optionsManager.on('change', function(event) {
-            debugger;
-            return;
-            var key = event.id;
-            var data = event.value;
-            if (key === 'size') {
-                this.layout.id.master.setSize(data);
-                this.title.setSize(data);
-                this.back.setSize([data[1], data[1]]);
-                this.more.setSize([data[1], data[1]]);
-            }
-            else if (key === 'backClasses') {
-                this.back.setOptions({classes: this.options.classes.concat(this.options.backClasses)});
-            }
-            else if (key === 'backContent') {
-                this.back.setContent(this.options.backContent);
-            }
-            else if (key === 'classes') {
-                this.title.setOptions({classes: this.options.classes});
-                this.back.setOptions({classes: this.options.classes.concat(this.options.backClasses)});
-                this.more.setOptions({classes: this.options.classes.concat(this.options.moreClasses)});
-            }
-            else if (key === 'content') {
-                this.setContent(this.options.content);
-            }
-            else if (key === 'moreClasses') {
-                this.more.setOptions({classes: this.options.classes.concat(this.options.moreClasses)});
-            }
-            else if (key === 'moreContent') {
-                this.more.setContent(this.options.content);
-            }
+            // console.error('fUCKFUCKFUCKFUCKFUCKLJFKLDJSFJSDLFJSFJD:FJ');
+            // debugger;
+            // return;
+            // var key = event.id;
+            // var data = event.value;
+            // if (key === 'size') {
+            //     this.layout.id.master.setSize(data);
+            //     this.title.setSize(data);
+            //     this.back.setSize([data[1], data[1]]);
+            //     this.more.setSize([data[1], data[1]]);
+            // }
+            // else if (key === 'backClasses') {
+            //     this.back.setOptions({classes: this.options.classes.concat(this.options.backClasses)});
+            // }
+            // else if (key === 'backContent') {
+            //     this.back.setContent(this.options.backContent);
+            // }
+            // else if (key === 'classes') {
+            //     this.title.setOptions({classes: this.options.classes});
+            //     this.back.setOptions({classes: this.options.classes.concat(this.options.backClasses)});
+            //     this.more.setOptions({classes: this.options.classes.concat(this.options.moreClasses)});
+            // }
+            // else if (key === 'content') {
+            //     this.setContent(this.options.content);
+            // }
+            // else if (key === 'moreClasses') {
+            //     this.more.setOptions({classes: this.options.classes.concat(this.options.moreClasses)});
+            // }
+            // else if (key === 'moreContent') {
+            //     this.more.setContent(this.options.content);
+            // }
         }.bind(this));
     }
 

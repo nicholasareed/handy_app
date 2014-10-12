@@ -49,13 +49,6 @@ define(function(require, exports, module) {
      * @return {EventHandler} this
      */
    EventEmitter.prototype.on = function on(type, handler) {
-        var that = this;
-        if(type instanceof Array){
-            type.forEach(function(t){
-                that.on(t, handler);
-            });
-            return;
-        }
         if (!(type in this.listeners)) this.listeners[type] = [];
         var index = this.listeners[type].indexOf(handler);
         if (index < 0) this.listeners[type].push(handler);

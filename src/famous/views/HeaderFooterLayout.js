@@ -32,6 +32,8 @@ define(function(require, exports, module) {
         this._optionsManager = new OptionsManager(this.options);
         if (options) this.setOptions(options);
 
+        this._headerSize = options.headerSize; // nick
+
         this._entityId = Entity.register(this);
 
         this.header = new RenderNode();
@@ -88,6 +90,18 @@ define(function(require, exports, module) {
      */
     HeaderFooterLayout.prototype.setOptions = function setOptions(options) {
         return this._optionsManager.setOptions(options);
+    };
+
+    HeaderFooterLayout.prototype.keyboardShowHide = function keyboardShowHide(showing){
+        if(showing){
+            this.setOptions({
+                headerSize: 0
+            });
+        } else {
+            this.setOptions({
+                headerSize: this._headerSize
+            });
+        }
     };
 
     function _resolveNodeSize(node, defaultSize) {

@@ -86,10 +86,7 @@ define(function(require, exports, module) {
         this.lightbox = new Lightbox({
             // inTransition: false
         });
-
-        var frontMod = new StateModifier({
-            transform: Transform.translate(0,0,1.1)
-        });
+        
         this.contentView.add(Utils.usePlane('popover')).add(this.contentView.BgOpacityMod).add(this.contentView.BgSurface);
         // this.contentView.add(frontMod).add(this.lightbox);
 

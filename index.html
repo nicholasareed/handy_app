@@ -6,11 +6,17 @@
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+        <!-- leaflet / open street maps -->
+        <script src="src/lib2/leaflet/leaflet.js"></script>
         <link rel="stylesheet" type="text/css" href="src/lib2/leaflet/leaflet.css" />
+
         <link rel="stylesheet" type="text/css" href="src/famous/core/famous.css" />
         <link rel="stylesheet" type="text/css" href="css/ionicons.css" />
         <link rel="stylesheet" type="text/css" href="css/spectrum.css" />
         <link rel="stylesheet" type="text/css" href="css/bootflat.css" />
+
+        <link rel="stylesheet" type="text/css" href="css/general.css" />
         <link rel="stylesheet" type="text/css" href="css/app.css" />
 
         <script type="text/javascript" src="src/lib2/firebase.js"></script>
@@ -31,9 +37,22 @@
         <script type="text/javascript">
             var GLOBAL_onReady = false;
 
+            // temp fix for iOS8 beta 1 (fixed in beta 2), add it after the reference to cordova.js
+            if (navigator.userAgent === undefined) {
+                navigator.__defineGetter__('userAgent', function() {
+                    return("Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit");
+                });
+            }
+
+
             window.addEventListener('load', function() {
                 FastClick.attach(document.body);
             }, false);
+
+            // track.js customer id
+            // var _trackJs = { 
+            //     token: '2138571d0e004d109396748e01e291a0'
+            // };
 
             // Required scripts to add after deviceready
             var require_scripts = [
@@ -134,5 +153,5 @@
         
 
     </head>
-    <body onload="onLoad()" style="background:#666;"></body>
+    <body onload="onLoad()" style="background:#000;"></body>
 </html>

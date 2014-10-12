@@ -134,20 +134,23 @@ define(function(require, exports, module) {
 
                 'landing' : function(){
                     // eh, I should be able to cache this route before login, then destroy after login
+                    Timer.setTimeout(function(){
+                        App.Views.SplashLoading.hide();
+                    },3000);
                     defaultRoute('Landing', 'Misc/Landing', arguments, {cache: false});
                 },
 
                 'login' : function(){
                     // eh, I should be able to cache this route before login, then destroy after login
-                    defaultRoute('Login', 'Misc/Login', arguments, {cache: false});
+                    defaultRoute('Login', 'User/Login', arguments, {cache: false});
                 },
 
                 'signup' : function(){
-                    defaultRoute('Signup', 'Misc/Signup', arguments, {cache: false});
+                    defaultRoute('Signup', 'User/Signup', arguments, {cache: false});
                 },
 
                 'forgot' : function(){
-                    defaultRoute('Forgot', 'Misc/Forgot', arguments, {cache: false});
+                    defaultRoute('Forgot', 'User/Forgot', arguments, {cache: false});
                 },
 
                 'settings/push': function(){
@@ -197,6 +200,11 @@ define(function(require, exports, module) {
                 },
 
                 'dash(/:id)' : function(){
+                    
+                    Timer.setTimeout(function(){
+                        App.Views.SplashLoading.hide();
+                    },3000);
+
                     console.error("DASH");
                     App.history.modifyLast({
                         tag: 'Dash'

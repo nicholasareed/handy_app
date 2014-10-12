@@ -1,19 +1,16 @@
 define(function(require, exports, module) {
     'use strict';
 
+    var Timer = require('famous/utilities/Timer');
+
     var $ = require('jquery');
     var Utils = require('utils');
     var Credentials = JSON.parse(require('text!credentials.json'));
 
     var readyDeferred = $.Deferred();
 
-    // require('famous/inputs/FastClick');
-    // var attachFastClick = require('fastclick');
-    
-
     module.exports = {
 
-        test: "hello",
         readyDeferred: readyDeferred,
         ready: readyDeferred.promise(),
         init: function(){
@@ -90,6 +87,33 @@ define(function(require, exports, module) {
             }
             this.isReady = true;
 
+            // Overwrite console.log and console.info
+
+            // console.log('overwrite log');
+            // console.log = (function(){
+            //     var originalLog = console.log;
+            //     var newLog = function(){
+            //         if(1==1){
+            //             return;
+            //         }
+            //         originalLog.apply(this, arguments);
+            //     }
+            //     return newLog;
+            // })();
+
+            // console.info('overwrite info');
+            // console.info = (function(){
+            //     var originalLog = console.info;
+            //     var newLog = function(){
+            //         if(1==1){
+            //             return;
+            //         }
+            //         originalLog.apply(this, arguments);
+            //     }
+            //     return newLog;
+            // })();
+
+
             // // FastClick attachment to document.body
             // console.log(document.body);
             // attachFastClick.attach(document.body);
@@ -101,13 +125,15 @@ define(function(require, exports, module) {
             }catch(err){}
             $('head').append('<link rel="stylesheet" href="css/'+ App.Config.devicePlatform +'.css" type="text/css" />');
 
-            // Resolve deferred
-            this.readyDeferred.resolve();
-
             // Status bar colors
             try {
+
                 if(App.Config.devicePlatform == 'ios'){
-                    StatusBar.overlaysWebView(false);
+
+                    // App.MainView has NOT been created yet
+                    App.StatusBar = true;
+
+                    StatusBar.overlaysWebView(true);
                     StatusBar.backgroundColorByHexString(App.ConfigImportant.StatusBarBackgroundColor);
                     // Utils.Notification.Toast('OK status bar');
                 }
@@ -116,8 +142,8 @@ define(function(require, exports, module) {
                 Utils.Notification.Toast('Failed status bar');
             }
 
-            // Stripe
-            Stripe.setPublishableKey(Credentials['stripe_publishable_key_' + Credentials.stripe_mode]);
+            // Resolve deferred
+            this.readyDeferred.resolve();
 
             // Track.js
             // - only using in production
@@ -133,19 +159,56 @@ define(function(require, exports, module) {
                 window._trackJs = Credentials.trackjs_opts;
                 window._trackJs.version = App.ConfigImportant.Version;
                 $("body").append( script );
+
+                // // Need to init it first
+                // console.error();
+
+                // //override the error function (the immediate call function pattern is used for data hiding)
+                // console.error = (function () {
+                //   //save a reference to the original error function.
+                //   var originalConsole = console.error;
+                //   //this is the function that will be used instead of the error function
+                //   function myError (stackTrace) {
+                //     // alert( 'Error is called. ' );
+                //     try {
+                //         trackJs.track(stackTrace);
+                //     }catch(err){
+                //         console.log('trackJs.track non-existant for now');
+                //     }
+
+                //     //the arguments array contains the arguments that was used when console.error() was called
+                //     originalConsole.apply( this, arguments );
+                //   }
+                //   //return the function which will be assigned to console.error
+                //   return myError;
+                // })();
+
+                // // Overwrite window.onerror
+                // window.onerror = function (errorMsg, url, lineNumber) {
+                //     // lineNumber doesn't mean anything, it is relative to the function that was called! (not the page)
+                //     console.error(errorMsg, url, lineNumber);
+                // }
+
+                
+                // // Testing in production
+                // window.setTimeout(function(){
+                //     // Throw a failure
+                //     throw WeAreInProduction
+                // },3000);
+
             }
 
-            // <script type="text/javascript" src="//dl1d2m8ri9v3j.cloudfront.net/releases/1.2.4/tracker.js" data-customer="2138571d0e004d109396748e01e291a0"></script>
 
             // try {
-            //  window.plugin.notification.local.add({ id: 1, title: "Wehicle Title", message: 'Great app!' });
+            //  window.plugin.notification.local.add({ id: 1, title: "Waiting Title", message: 'Great app!' });
             // }catch(err){
             //  alert('noti error');
             //  console.log(err);
             // }
 
-            // Push notifications
-            this.initPush();
+            // // Push notifications
+            // this.initPush();
+
 
             // Keyboard
             // - requires ionic keyboard plugin
@@ -159,8 +222,29 @@ define(function(require, exports, module) {
             window.addEventListener('native.keyboardshow', function(e){
                 // Utils.Notification.Toast('Keyboard Show');
 
-                App.mainSize = [App.defaultSize[0],App.defaultSize[1] - e.keyboardHeight];
-                App.MainContext.emit('resize');
+                var keyboardHeight = e.keyboardHeight;
+
+                // Has the body changed in height?
+                // if yes, set that as the keyboardHeight
+                if(App.defaultSize[1] != window.innerHeight){
+                    keyboardHeight = App.defaultSize[1] - window.innerHeight;
+                } else {
+                    // if no, use the supplied keyboardHeight
+                    switch(App.Config.devicePlatform){
+                        case 'android':
+                            keyboardHeight -= 40;
+                            break;
+                        case 'ios':
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                // Timer.setTimeout(function(){
+                    App.mainSize = [App.defaultSize[0],App.defaultSize[1] - keyboardHeight];
+                    App.MainContext.emit('resize');
+                // });
 
                 // App.mainSize = App.MainContext.getSize();
                 // if (App.MainController)
@@ -186,6 +270,8 @@ define(function(require, exports, module) {
 
                 App.Data.paused = true;
                 App.Data.was_paused = true;
+                
+                App.Events.trigger('pause');
 
             }, false);
 
@@ -317,6 +403,9 @@ define(function(require, exports, module) {
         initPush: function(){
             console.info('Registering for PushNotification');
 
+            // disabled!
+            return;
+
             // Disable Push in debug mode
             if(App.Prod != true){
                 console.error('Development mode');
@@ -427,7 +516,7 @@ define(function(require, exports, module) {
                 window.setTimeout(runGpsUpdateFunc, 1000 * 60 * 5); // 5 minutes
             };
 
-            // runGpsUpdateFunc(); // uncomment for coordinate uploads
+            runGpsUpdateFunc(); // uncomment for coordinate uploads
 
         },
 
@@ -584,7 +673,7 @@ function onNotificationGCM(e){
                     // var alert_trigger_id = payload.alert_trigger_id;
 
                     // // Go to alert_trigger
-                    // App.history.navigate('alert_trigger/' + alert_trigger_id, {trigger: true});
+                    // App.history.navigate('alert_trigger/' + alert_trigger_id);
 
                     // require(["utils"], function (Utils) {
                     //     // Utils.process_push_notification_message(e);

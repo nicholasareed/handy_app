@@ -32,8 +32,8 @@ define(function(require, exports, module) {
     var Credentials         = JSON.parse(require('text!credentials.json'));
     var numeral = require('lib2/numeral.min');
 
-    // Side menu of options
-    var GameMenuView      = require('views/Game/GameMenu');
+    // // Side menu of options
+    // var GameMenuView      = require('views/Game/GameMenu');
 
     // Models
     var GameModel = require('models/game');
@@ -114,10 +114,10 @@ define(function(require, exports, module) {
         }.bind(this));
 
         // Create the menu that swings out
-        this.sideView = new GameMenuView({
-            model: this.model
-        });
-        this.sideView.OpacityModifier = new StateModifier();
+        // this.sideView = new GameMenuView({
+        //     model: this.model
+        // });
+        // this.sideView.OpacityModifier = new StateModifier();
 
 
         // Wait for model to get data, and then render the content

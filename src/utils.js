@@ -5,10 +5,8 @@ define(function (require) {
     var $ = require('jquery-adapter'),
         _ = require('underscore');
 
-    // var leaflet = require('lib2/leaflet/leaflet');
-    // // require('lib2/leaflet/leaflet.label');
-    // require('lib2/leaflet/leaflet.iconlabel');
-    // require('lib2/leaflet/tile.stamen');
+    var Modifier = require('famous/core/Modifier');
+    var ImageSurface = require('famous/surfaces/ImageSurface');
 
     var Transform = require('famous/core/Transform');
     var StateModifier = require('famous/modifiers/StateModifier');
@@ -18,6 +16,8 @@ define(function (require) {
 
     var Help = require('help');
     // var thisHelp = new Help();
+
+    var tinycolor = require('lib2/tinycolor');
 
     var Utils = {
 
@@ -191,7 +191,7 @@ define(function (require) {
                     title: null,
                     body: null,
                     on_done: function(){
-                        App.history.navigate('random2',{history: false});
+                        // App.history.navigate('random2',{history: false});
                     }
                 });
                 App.Cache.HelpPopoverModal = opts;
@@ -242,6 +242,36 @@ define(function (require) {
 
                 return def.promise();
             },
+            Confirm: function(text, buttonYes, buttonNo){
+                // default options
+
+                var def = $.Deferred();
+
+                buttonYes = buttonYes || 'Yes';
+                buttonNo = buttonNo || 'No';
+
+                // default options
+                var opts = {
+                    text: text,
+                    buttonYes: buttonYes,
+                    buttonNo: buttonNo
+                };
+
+                opts.on_done = function(){
+                    def.resolve(true);
+                };
+                opts.on_cancel = function(){
+                    def.resolve(false);
+                };
+
+                // Options and details
+                App.Cache.OptionModal = opts;
+
+                // Change history (must)
+                App.history.navigate('popover/confirm', {history: false});
+
+                return def.promise();
+            },
             Prompt: function(text, defaultValue, button, buttonCancel){ // use callback pattern instead?
 
                 var def = $.Deferred();
@@ -288,6 +318,20 @@ define(function (require) {
                 // Change history (must)
                 App.history.navigate('popover/list', {history: false});
             },
+            ColorPicker: function(opts){
+
+                // defaults
+                opts = _.defaults(opts, {
+                    color: '#000'
+                });
+
+                // Options and details
+                App.Cache.ColorPickerOptions = opts;
+
+
+                // Change history (must)
+                App.history.navigate('popover/colorpicker', {history: false});
+            },
         },
 
         Help: function(key){
@@ -306,7 +350,7 @@ define(function (require) {
 
         },
 
-        usePlane: function(plane_name, add){
+        usePlane: function(plane_name, add, returnValue){
             // return new StateModifier();
 
             add = add || 0;
@@ -316,8 +360,12 @@ define(function (require) {
             }
             // console.log(App.Planes[plane_name] + add);
             // console.log(0.001 + (App.Planes[plane_name] + add)/1000000);
+            var value = 0.001 + (App.Planes[plane_name] + add)/1000000;
+            if(returnValue){
+                return value;
+            }
             return new StateModifier({
-                transform: Transform.translate(0,0, 0.001 + (App.Planes[plane_name] + add)/1000000)
+                transform: Transform.translate(0,0, value)
             });
 
         },
@@ -475,13 +523,13 @@ define(function (require) {
             trackRoute: function(pageRoute){
                 // needs to wait for Utils.Analytics.init()? (should be init'd)
                 try{
-                    App.Analytics.trackPage( function(){
+                    App.Analytics.trackPage(function(){
                         // success
-                        console.log('success');
+                        // console.log('success');
                     }, function(){
                         // error
-                        // console.error('error');
-                    }, 'handy.app/' + pageRoute);
+                        // console.error('ganalyticserror');
+                    }, 'waiting.app/' + pageRoute);
                 }catch(err){
                     if(App.Data.usePg){
                         console.error('Utils.Analytics.trackPage');
@@ -791,16 +839,71 @@ define(function (require) {
          
         },
 
+        PairingCode: (function (undefined) {
+            var ns = {
+                alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567",
+                checkSalt : "grass",
+                decode: function(inStr, nPos) {
+                    var val = this.alphabet.indexOf(inStr.charAt(nPos).toUpperCase());
+                    if (val == -1) throw "Decoding error";
+                    return val;
+                },
+                CalculateCheckDigit : function(inStr ) {
+                    if(inStr.length!=5)
+                        throw "Invalid length";
+                    var arrDecode = new Uint8Array(5);
+                    arrDecode[0] = this.decode(inStr,0);
+                    arrDecode[1] = this.decode(inStr,1);
+                    arrDecode[2] = this.decode(inStr,2);
+                    arrDecode[3] = this.decode(inStr,3);
+                    arrDecode[4] = this.decode(inStr,4);
+                    var arrBytes = CryptoJS.lib.WordArray.create(arrDecode);
+                    var arrSalt  = CryptoJS.enc.Latin1.parse( this.checkSalt );
+                    arrSalt.concat(arrBytes);
+                    var arrSha1 = CryptoJS.SHA1(arrSalt);
+                    var strHash = arrSha1.toString();
+                    var firstByte = strHash.charAt(0) + strHash.charAt(1);
+                    var value = parseInt(firstByte,16) & 0x1F;
+                    var letter = this.alphabet.charAt(value);
+                    return letter;
+                }
+            };
+
+            return ns;
+        }()),
+
+
         logout: function(){
             
             // Reset caches
-            App.Cache = {}; //_.defaults({},App.DefaultCache);
+            App.Cache = {};
+            App.Cache = _.defaults({},App.DefaultCache);
             // console.log(App.Cache);
             App.Data = {
                 User: null,
                 Players: null // preloaded
             };
+
+            // Maintain some localStorage (temporary, during development)
+            // - address
+            var doSave = true; // toggle for on/off
+            var it = ['address_street','address_street2','address_city','address_state','address_zipcode'];
+            var saved = [];
+            it.forEach(function(k){
+                saved.push({
+                    key: k,
+                    value: localStorage.getItem(k)
+                });
+            });
+
+            // Clear storage
             localStorage.clear();
+
+            if(doSave){
+                saved.forEach(function(k){
+                    localStorage.setItem(k.key,k.value);
+                });
+            }
             
             // Unregister from Push
             console.info('Unregisering from PushNotification');
@@ -1125,6 +1228,262 @@ define(function (require) {
         },
 
 
+        addLabelsToMap : function(EventOutput, mapView, MapNode, cars, zoomLevel){
+            // Putting a label for each leg of the trip
+            // - only the beginning of the trip has the "start"
+            // - unless the GPS has moved a ton? (we could do haversine)
+
+            var map = mapView.getMap();
+
+            if(map && map.markerList){
+                // Map already exists
+                // - clear out markers
+                _.each(map.markerList, function(marker){
+                    map.removeLayer(marker);
+                });
+                map.markerList = [];
+                // return map;
+                // return;
+
+            } else {
+
+                // // var mapOptions = {
+                // //     zoom: 4,
+                // //     // maxZoom: 17,
+                // //     mapTypeId: google.maps.MapTypeId.ROADMAP,
+                // //     // disableDefaultUI: true
+                // //     panControl: false,
+                // //     streetViewControl: false,
+                // //     zoomControl: false,
+                // //     zoomControlOptions: {
+                // //         style: google.maps.ZoomControlStyle.SMALL,
+                // //         position: google.maps.ControlPosition.RIGHT_BOTTOM
+                // //     },
+                // //     mapTypeControl: false,
+                // //     mapTypeControlOptions: {
+                // //         style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+                // //     },
+                // //     scaleControl: false
+                // // };
+                // // map = new google.maps.Map(mapElem, mapOptions);
+
+                // var layer = new L.StamenTileLayer("toner-lite");
+
+                // map = L.map(mapElem, {
+                //     zoomControl: false,
+                //     attributionControl: false
+                // }); //.setView([51.505, -0.09], 13);
+                // map.Events = _.extend({}, Backbone.Events);
+
+                // map.on('load', function(){
+                //     window.setTimeout(function(){
+                //         map.Events.trigger('load');
+                //     },300);
+                // });
+
+                // // add an OpenStreetMap tile layer
+                // // L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                // //     updateWhenIdle: false,
+                // //     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                // // }).addTo(map);
+                // map.addLayer(layer);
+
+            }
+
+            if(cars.length < 1){
+                console.log('No cars');
+                return '';
+            }
+
+            var markers = [],
+                bounds = [],
+                paths = [],
+                foundCar = false;
+  
+            console.log(App.Cache.geolocation_coords);
+
+            // First do my current position (if available)
+            if(App.Cache.geolocation_coords){
+
+                var me_label = 'Me';
+                var latLng = [App.Cache.geolocation_coords.latitude, App.Cache.geolocation_coords.longitude];
+
+                bounds.push(latLng);
+
+                var image = new ImageSurface({
+                    size: [true, true],
+                    content: 'http://cdn.leafletjs.com/leaflet-0.7.3/images/marker-icon.png'
+                });
+                var modifier = new Modifier({
+                    align: [0, 0],
+                    origin: [0.5, 0.5]
+                });
+                var mapModifier = new MapStateModifier({
+                    mapView: mapView,
+                    position: latLng,
+                    // zoomBase: 15
+                });
+                // image.on('click', _panToLandmark.bind(mapModifier));
+                MapNode.add(mapModifier).add(modifier).add(Utils.usePlane('content',10)).add(image);
+
+
+                var meMarker = L.marker(latLng);
+                markers.push(meMarker);
+
+                // var me_marker = L.marker(latLng, {
+                //     icon: new L.Icon.Label.Default({
+                //         iconUrl: 'never-exist.png',
+                //         iconSize: [1,1],
+                //         shadowUrl: 'never-exist.png',
+                //         shadowSize: [1,1],
+                //         labelText: 'Me',
+                //         classStyle: {
+                //             'color' : 'blue'
+                //         } 
+                //     })
+                // });
+
+                // // me_marker.bindLabel('Me', {
+                // //     noHide: true,
+                // //     className: 'leaflet-label'
+                // // });
+
+                // me_marker.addTo(map);
+
+                // me_marker.showLabel();
+
+
+                // new MarkerWithLabel({
+                //     position: latLng,
+                //     draggable: false,
+                //     map: map,
+                //     icon: 'never_exist.png', // effectively hides the icon
+                //     labelContent: me_label,
+                //     labelAnchor: new google.maps.Point(22, 0),
+                //     labelClass: "map-label", // the CSS class for the label
+                //     labelStyle: {
+                //         opacity: 1.0,
+                //         background: "blue"
+                //     },
+                //     labelInBackground: false
+                // });
+
+                // me_marker.me_marker = true;
+                
+                // markers.push(me_marker);
+            }
+
+            // Now do Cars
+            for(var index in cars){
+                var car = _.clone(cars[index]);
+                // console.log(tripLegs[index]); // trip object
+                try {
+                    var gps_position = cars[index].latest_data.lastWaypoint,
+                        label = '',
+                        latLng = [gps_position.latitude, gps_position.longitude];
+
+                    bounds.push(latLng);
+
+                    index = parseInt(index, 10);
+
+                    // console.log(label);
+                    // console.log(cars[index]);
+                    // var marker = new google.maps.Marker({
+                    //     position: latLng,
+                    //     map: map,
+                    //     title: label
+                    // });
+        
+                    var marker = L.marker(latLng, {
+                        // icon: transparentIcon
+                        icon: new L.Icon.Label.Default({
+                            iconUrl: 'never-exist.png',
+                            iconSize: [1,1],
+                            shadowUrl: 'never-exist.png',
+                            shadowSize: [1,1],
+                            labelText: car.name,
+                            classStyle: {
+                                'border-color' : car.color,
+                                'background-color' : car.color,
+                                'color' : tinycolor.mostReadable(car.color, ["#000", "#fff"]).toHexString()
+                            } 
+                        })
+                    });
+
+                    marker.on('click', function(e){
+                        EventOutput.trigger('mapclick', {e: e, car: this.car});
+                    });
+
+                    // marker.bindLabel(car.name, {
+                    //     noHide: true,
+                    //     clickable: true,
+                    //     className: 'leaflet-label',
+                    //     classStyle: {
+                    //         'border-color' : car.color
+                    //     }
+                    // });
+
+                    marker.car = car;
+                    marker.car_id = car._id;
+
+                    marker.addTo(map);
+                    // marker.showLabel();
+
+                    // var marker = new MarkerWithLabel({
+                    //     car: car,
+                    //     car_id: car._id,
+
+                    //     position: latLng,
+                    //     draggable: false,
+                    //     map: map,
+                    //     icon: 'never_exist.png', // effectively hides the icon
+                    //     labelContent: car.name,
+                    //     labelAnchor: new google.maps.Point(22, 0),
+                    //     labelClass: "map-label", // the CSS class for the label
+                    //     labelStyle: {
+                    //         opacity: 1.0,
+                    //         background: car.color
+                    //     },
+                    //     labelInBackground: false
+                    // });
+                    markers.push(marker);
+
+
+                    // google.maps.event.addListener(markers[markers.length-1], "click", function (e) {
+                    //     // console.log(e);
+                    //     EventOutput.trigger('mapclick', {e: e, car: this.car});
+                    // });
+
+                    foundCar = true;
+
+                } catch(err){
+                    // Failed finding a waypoint for a car
+                    // - skipping it for now
+                    console.error(err);
+                }
+
+            }
+
+            // Find any cars?
+            if(foundCar === false){
+                // return 'no_cars_with_datapoints';
+            }
+            console.log(map);
+            console.log(bounds);
+
+            map.fitBounds(bounds, {
+                maxZoom: 18,
+                padding: [20,20]
+            });
+
+            map.markerList = markers;
+
+            console.log(bounds);
+            // debugger;
+
+        },
+
+
         haversine : function(lat1,lat2,lon1,lon2){
 
             // Run haversine formula
@@ -1162,63 +1521,6 @@ define(function (require) {
             return isNaN(tmp) ? '--' : tmp;
         },
 
-        displayGameListDate: function(carvoyant_datetime, short_or_long){
-            // return Today, Yesterday, or the actual date
-            var date_string = '';
-            var m;
-            try {
-                if(carvoyant_datetime.length == 20){
-                    m = moment(carvoyant_datetime, "YYYYMMDD HHmmss Z"); // 20131106T230554+0000
-                } else {
-                    m = moment(carvoyant_datetime);
-                }
-            } catch(err){
-                return "";
-            }
-            
-            if(!m.isValid()){
-                return "Unknown"
-            }
-
-            var now = moment().startOf('day');
-
-            if(now.diff(m.startOf('day'), 'days') == 0){
-                return "Today";
-            }
-            if(now.diff(m.startOf('day'), 'days') == 1){
-                return "Yesterday";
-            }
-
-            if(short_or_long == "long"){
-                return m.format("MMMM Do");
-            } else {
-                return m.format("MMM Do");
-            }
-        },
-
-        displayGameListTime: function(carvoyant_datetime){
-            // return "3:40pm" or similar
-            var date_string = '';
-            var m;
-            try {
-                if(carvoyant_datetime.length == 20){
-                    m = moment(carvoyant_datetime, "YYYYMMDD HHmmss Z"); // 20131106T230554+0000
-                } else {
-                    m = moment(carvoyant_datetime);
-                }
-            } catch(err){
-                return "";
-            }
-            
-            if(!m.isValid()){
-                return "Unknown"
-            }
-            var tmp_format = m.format("h:mma");
-            // console.log(tmp_format);
-            // console.log(tmp_format.substr(0,tmp_format.length - 1));
-            return tmp_format.substr(0,tmp_format.length - 1); // like remove the "m" in "am" or "pm"
-        },
-
         isElementInViewport: function(el) {
             var rect = el.getBoundingClientRect();
             return (
@@ -1231,6 +1533,10 @@ define(function (require) {
 
 
     };
+
+    String.prototype.capitalize = function() {
+        return this.charAt(0).toUpperCase() + this.slice(1);
+    }
 
     return Utils;
 
