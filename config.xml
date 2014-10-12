@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget 
     id="com.handy.app.pub" 
-    version="0.1.1" 
+    version="0.1.2" 
     xmlns="http://www.w3.org/ns/widgets" 
     xmlns:gap="http://phonegap.com/ns/1.0" 
     xmlns:android="http://schemas.android.com/apk/res/android" 
@@ -30,8 +30,6 @@
 
     <preference name="orientation" value="portrait" />
     <preference name="fullscreen" value="false" />
-
-    <preference name="android-windowSoftInputMode" value="stateUnspecified|adjustPan" />
 
     <preference name="target-device" value="handset" />
     <preference name="disallowOverscroll" value="true" />
@@ -201,21 +199,21 @@
 
     <!--<gap:config-file target="AndroidManifest.xml" parent="/*/application/activity">-->
     <!-- <gap:config-file platform="android" parent="/manifest/application" overwrite="false">
-        <activity android:label="@string/app_name" android:name=".waiting">
+        <activity android:label="@string/app_name" android:name=".handy">
           <intent-filter>
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
-            <data android:scheme="http" android:host="waitingapp.com" />
+            <data android:scheme="http" android:host="handyapp.com" />
           </intent-filter>
       </activity>
     </gap:config-file> -->
 
     <!-- <gap:plugin name="com.machenmusik.plugins.launchmyapp" version="3.1.2">
-        <param name="URL_SCHEME" value="waiting" />
-        <param name="HTTP_HOST" value="waitingapp.com" />
+        <param name="URL_SCHEME" value="handy" />
+        <param name="HTTP_HOST" value="handyapp.com" />
         <param name="HTTP_PATHPREFIX" value="/" />
-        <param name="HTTPS_HOST" value="waitingapp.com" />
+        <param name="HTTPS_HOST" value="handyapp.com" />
         <param name="HTTPS_PATHPREFIX" value="/" />
     </gap:plugin> -->
 
