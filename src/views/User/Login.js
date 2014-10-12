@@ -91,8 +91,8 @@ define(function(require, exports, module) {
             content: "Login",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
-            moreClasses: ["normal-header"],
-            moreContent: "&nbsp;"
+            // moreClasses: ["normal-header"],
+            moreContent: false, //"&nbsp;"
             // moreSurfaces: [
             //     this.headerContent.Settings
             // ]
@@ -110,7 +110,7 @@ define(function(require, exports, module) {
         this.header.pipe(this._eventInput);
         this._eventOutput.on('inOutTransition', function(args){
             this.header.inOutTransition.apply(this.header, args);
-        })
+        });
 
         // Attach header to the layout        
         this.layout.header.add(Utils.usePlane('header')).add(this.header);
@@ -133,6 +133,7 @@ define(function(require, exports, module) {
 
         // Now add content
         this.layout.content.add(this.layout.content.StateModifier).add(Utils.usePlane('content')).add(this.form);
+
 
     };
 
@@ -164,6 +165,7 @@ define(function(require, exports, module) {
         });
 
         this.submitButton = new FormHelper({
+            form: this.form,
             type: 'submit',
             value: 'Login',
             margins: [10,10],
@@ -176,9 +178,10 @@ define(function(require, exports, module) {
         this.forgotPassword.StateModifier = new StateModifier();
         this.forgotPassword.Surface = new Surface({
             content: 'Forgot your password? Reset Now',
-            size: [undefined, 60],
+            size: [undefined, 80], 
             classes: ['login-forgot-pass-button']
         });
+        this.forgotPassword.Surface.pipe(this.form._formScrollView);
         this.forgotPassword.Surface.on('click', function(){
             App.history.navigate('forgot');
         });
@@ -227,7 +230,7 @@ define(function(require, exports, module) {
         .fail(function(){
             // invalid login
 
-            alert('Failed logging in');
+            Utils.Popover.Alert('Sorry, wrong email or password', 'Try Again');
             that.checking = false;
             that.submitButton.setContent('Login');
 
