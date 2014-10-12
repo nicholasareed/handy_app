@@ -49,11 +49,6 @@
                 FastClick.attach(document.body);
             }, false);
 
-            // track.js customer id
-            // var _trackJs = { 
-            //     token: '2138571d0e004d109396748e01e291a0'
-            // };
-
             // Required scripts to add after deviceready
             var require_scripts = [
                 {
@@ -119,7 +114,6 @@
                     // alert('deviceready listener fired!');
                     GLOBAL_onReady = true;
                     addScripts(require_scripts);
-                    // loadGoogleMapsScript();
                 }, false);
 
 
