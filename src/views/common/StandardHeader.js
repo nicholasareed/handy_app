@@ -54,7 +54,7 @@ define(function(require, exports, module) {
 
         // EVERY SINGLE HEADER MOVES/ANIMATES RIGHT NOW!!!
         // - we should only animate the currently displayed PageView!
-
+        
         if(showing){
             that.HeaderNode.StateMod.setTransform(Transform.translate(0,-100,0),{
                 curve: 'linear',

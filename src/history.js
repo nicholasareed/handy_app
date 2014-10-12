@@ -300,6 +300,21 @@ define(function(require, exports, module) {
         };
 
 
+        // Keyboard
+        App.Events.on('KeyboardShowHide', function(showing){
+            try {
+                if(typeof App.Views.currentPageView.keyboardHandler == "function"){
+                    console.log('launching keyboardHandler with True');
+                    App.Views.currentPageView.keyboardHandler.apply(App.Views.currentPageView, [showing]);
+                    return;
+                } else {
+                    console.log('no keyboardHandler handler in PageView');
+                }
+            } catch(err){
+                console.error(err);
+            }
+        });
+
         // Backbutton
         // - launches history.back, unless a backbuttonHandler is set on the currently displayed View
         App.Events.on('backbutton', function(){
