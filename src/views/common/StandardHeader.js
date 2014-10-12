@@ -35,9 +35,11 @@ define(function(require, exports, module) {
 
         // add to tree
         this.HeaderNode = new RenderNode();
-        this.HeaderNode.add(Utils.usePlane('header')).add(this.background);
+        this.HeaderNode.StateMod = new StateModifier();
+        this.HeaderNodeView = this.HeaderNode.add(this.HeaderNode.StateMod);
+        this.HeaderNodeView.add(Utils.usePlane('header')).add(this.background);
         // this.HeaderNode.add(new StateModifier({transform: Transform.translate(0,0,1.0)})).add(this.OpacityModifier).add(this.PositionModifier).add(this.navBar);
-        this.HeaderNode.add(Utils.usePlane('header',1)).add(this.navBar);
+        this.HeaderNodeView.add(Utils.usePlane('header',1)).add(this.navBar);
 
         this.add(this.HeaderNode);
 
@@ -45,6 +47,35 @@ define(function(require, exports, module) {
 
     StandardHeader.prototype = Object.create(View.prototype);
     StandardHeader.prototype.constructor = StandardHeader;
+
+
+    StandardHeader.prototype.keyboardShowHide = function(showing){
+        var that = this;
+
+        // EVERY SINGLE HEADER MOVES/ANIMATES RIGHT NOW!!!
+        // - we should only animate the currently displayed PageView!
+
+        if(showing){
+            that.HeaderNode.StateMod.setTransform(Transform.translate(0,-100,0),{
+                curve: 'linear',
+                duration: 250
+            });
+        } else {
+
+            that.HeaderNode.StateMod.setTransform(Transform.translate(0,0,0),{
+                curve: 'linear',
+                duration: 250
+            });
+        }
+
+        // App.Events.emit('KeyboardShowHide', function(e){
+        //     that.HeaderNode.StateMod.setTransform(Transform.translate(0,0,0),{
+        //         curve: 'linear',
+        //         duration: 250
+        //     });
+        // });
+
+    };
 
 
     StandardHeader.prototype.inOutTransition = function(direction, otherViewName, transitionOptions, delayShowing, otherView, goingBack){
