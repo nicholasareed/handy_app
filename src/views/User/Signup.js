@@ -207,8 +207,6 @@ define(function(require, exports, module) {
             
             that.submitButton.setContent('Logging In');
 
-            debugger;
-
             // Login
             // - same as Login.js
             that.model.login(dataBody)

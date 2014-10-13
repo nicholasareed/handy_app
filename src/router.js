@@ -43,7 +43,7 @@ define(function(require, exports, module) {
                 },
 
                 'logout(/:force)' : function(){
-
+                    
                     if(arguments[0] === 'force'){
                         App.DeviceReady.ready.then(function(){
                             Utils.logout();

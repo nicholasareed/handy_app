@@ -121,17 +121,17 @@ define(function(require, exports, module) {
         // Sequence
         this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
 
-        // Content bg
-        // - for handling clicks
-        this.contentBg = new Surface({
-            size: [undefined, undefined],
-            properties: {
-                zIndex: "-1"
-            }
-        });
-        this.contentBg.on('click', function(){
-            App.history.back();
-        });
+        // // Content bg
+        // // - for handling clicks
+        // this.contentBg = new Surface({
+        //     size: [undefined, undefined],
+        //     properties: {
+        //         background: 'red'
+        //     }
+        // });
+        // this.contentBg.on('click', function(){
+        //     // App.history.back();
+        // });
 
         // Content
         this.layout.content.StateModifier = new StateModifier({
@@ -144,7 +144,7 @@ define(function(require, exports, module) {
 
 
         // Now add content
-        this.layout.content.add(this.contentBg);
+        // this.layout.content.add(Utils.usePlane('content',-1)).add(this.contentBg);
         this.layout.content.add(this.layout.content.SizeModifier).add(this.layout.content.StateModifier).add(Utils.usePlane('content')).add(this.contentScrollView);
         // this.layout.content.add(this.layout.content.SizeModifier).add(this.layout.content.StateModifier).add(container);
 
