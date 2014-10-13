@@ -169,6 +169,7 @@ define(function(require, exports, module) {
         BackboneModels: _.extend({}, Backbone.Events),
         Router: null,
         Views: {
+            Popover: {},
             MainFooter: null
         },
         Analytics: null,

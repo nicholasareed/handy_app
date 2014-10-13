@@ -412,9 +412,9 @@ define(function(require, exports, module) {
         // Back button pressed
         // alert('back button pressed for popover');
         this.closePopover();
-        // if(that.params.passed.on_cancel){
-        that.params.passed.on_cancel();
-        // }
+        if(that.params.passed.on_cancel){
+            that.params.passed.on_cancel();
+        }
     };
 
     PageView.prototype.closePopover = function(){

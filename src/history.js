@@ -302,6 +302,21 @@ define(function(require, exports, module) {
 
         // Keyboard
         App.Events.on('KeyboardShowHide', function(showing){
+
+            // Popover
+            try {
+                if(typeof App.Views.Popover.CurrentPopover.keyboardHandler == "function"){
+                    console.log('launching keyboardHandler with True');
+                    App.Views.Popover.CurrentPopover.keyboardHandler.apply(App.Views.Popover.CurrentPopover, [showing]);
+                    return;
+                } else {
+                    console.log('no keyboardHandler handler in CurrentPopover');
+                }
+            } catch(err){
+                console.error(err);
+            }
+
+            // Normal PageView
             try {
                 if(typeof App.Views.currentPageView.keyboardHandler == "function"){
                     console.log('launching keyboardHandler with True');
@@ -320,9 +335,25 @@ define(function(require, exports, module) {
         App.Events.on('backbutton', function(){
             // Backbutton handler?
             // - otherwise, initiate a "back" on the App.Navigate
+
+
+            // Popover
+            try {
+                if(typeof App.Views.Popover.CurrentPopover.backbuttonHandler == "function"){
+                    console.log('launching Popover.backbuttonHander');
+                    App.Views.Popover.CurrentPopover.backbuttonHandler.apply(App.Views.Popover.CurrentPopover);
+                    return;
+                } else {
+                    console.log('no backbutton handler in CurrentPopover');
+                }
+            } catch(err){
+                console.error(err);
+            }
+
+            // Normal PageView
             try {
                 if(typeof App.Views.currentPageView.backbuttonHandler == "function"){
-                    console.log('launching backbuttonHanderl');
+                    console.log('launching Normal PageView.backbuttonHander');
                     App.Views.currentPageView.backbuttonHandler.apply(App.Views.currentPageView);
                     return;
                 } else {

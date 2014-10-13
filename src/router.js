@@ -478,6 +478,7 @@ define(function(require, exports, module) {
                     App.Views.Popover.show(PageView);
                     return;
                 }
+                App.Views.Popover.CurrentPopover = false; // No popover right now!
                 
                 // Cache pageview
                 App.Views.currentPageView = PageView;

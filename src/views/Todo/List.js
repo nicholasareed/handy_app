@@ -106,11 +106,7 @@ define(function(require, exports, module) {
         this.headerContent.Create.on('click', function(){
 
             Utils.Popover.Prompt('Todo Title', '', 'Create', 'Cancel').then(function(p){
-
-                console.log(p);
-                alert(p);
-                alert(!p);
-
+                
                 if(!p || p.trim() == ''){
                     return;
                 }
