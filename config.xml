@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget 
-    id="com.handy.app.pub" 
-    version="0.1.2" 
+    id="com.oddjob.app.pub" 
+    version="0.1.0" 
     xmlns="http://www.w3.org/ns/widgets" 
     xmlns:gap="http://phonegap.com/ns/1.0" 
     xmlns:android="http://schemas.android.com/apk/res/android" 
     xmlns:cdv="http://cordova.apache.org/ns/1.0">
 
-    <name>handy</name>
+    <name>OddJob</name>
     <description>
-        The people-helping-people app
+        Do Work. Or Get Work Done.
     </description>
     <author email="nicholas.a.reed@gmail.com" href="http://cordova.io">
         Nick Reed + Team

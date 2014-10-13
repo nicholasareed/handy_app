@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var Transform = require('famous/core/Transform');
     var View = require('famous/core/View');
 
+    var Modifier = require('famous/core/Modifier');
     var StateModifier = require('famous/modifiers/StateModifier');
 
     var Surface = require('famous/core/Surface');
@@ -101,6 +102,30 @@ define(function(require, exports, module) {
 
         // sequenceFrom
         contentScrollView.sequenceFrom(contentScrollView.Views);
+
+        // background if necessary
+        if(opts.bg){
+            this._bg = new View();
+            this._bg.Surface = new Surface({
+                size: [undefined, undefined],
+                properties: {
+                    background: opts.bg
+                }
+            });
+            this._bg.SizeMod = new Modifier({
+                size: function(){
+                    // console.log(FormContainer.getSize());
+                    // console.log(FormContainer.getSize(true));
+                    // console.log(contentScrollView);
+                    // console.log(contentScrollView.getSize());
+                    // debugger;
+                    // console.log(contentScrollView._trueSize);
+                    return [undefined, contentScrollView.getSize() ? contentScrollView.getSize()[1]+20 : undefined]
+                }
+            });
+            this._bg.add(this._bg.SizeMod).add(this._bg.Surface);
+            FormContainer.add(Transform.translate(0,0,0.0000001)).add(this._bg);
+        }
 
         this._form = FormContainer;
         this._formScrollView = contentScrollView;

@@ -7,7 +7,7 @@
 
 
 .status-bar-default {
-  background: #2980b9;
+  background: #1F2D2D;
   opacity: 0.7;
 }
 
@@ -16,6 +16,10 @@
 
 /* Splash Screen */
 
+.splash-background-default {
+  background-color: #FFECB2;
+}
+
 .splash-surface-default {
   font-size: 36px;
   font-weight: bold;
@@ -23,7 +27,7 @@
 
   line-height: 70px;
 
-  color: white;
+  color: #1F2D2D;
 
 
   text-align: center;
@@ -504,8 +508,8 @@
   text-transform: uppercase;
 
   background: rgba(255,255,255,0.5);
-  border-top: 1px solid #037fde;
-  border-bottom: 1px solid #037fde;
+  border-top: 1px solid #1f2d2d;
+  border-bottom: 1px solid #1f2d2d;
 }
 
 .todo-filter-tabs-item-default {
@@ -515,7 +519,7 @@
 }
 
 .todo-filter-tabs-item-default.selected {
-  background: #037fde;
+  background: #1f2d2d;
   color: white;
 }
 
@@ -539,7 +543,7 @@
 }
 
 .invoice-filter-tabs-item-default.selected {
-  /*background: #037fde;*/
+  /*background: #1f2d2d;*/
   background: #000;
   color: white;
 }
@@ -697,11 +701,23 @@
 }
 
 .landing-title-bg-gradient {
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(36%,rgba(255,255,255,1)), color-stop(44%,rgba(255,255,255,0.92)), color-stop(100%,rgba(255,255,255,0))); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 36%,rgba(255,255,255,0.92) 44%,rgba(255,255,255,0) 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 36%,rgba(255,255,255,0.92) 44%,rgba(255,255,255,0) 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 36%,rgba(255,255,255,0.92) 44%,rgba(255,255,255,0) 100%); /* IE10+ */
-background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 36%,rgba(255,255,255,0.92) 44%,rgba(255,255,255,0) 100%); /* W3C */
+
+  background: rgb(212,161,118); /* Old browsers */
+  background: -moz-linear-gradient(top, rgba(212,161,118,1) 0%, rgba(255,236,178,1) 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(212,161,118,1)), color-stop(100%,rgba(255,236,178,1))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, rgba(212,161,118,1) 0%,rgba(255,236,178,1) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba(212,161,118,1) 0%,rgba(255,236,178,1) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, rgba(212,161,118,1) 0%,rgba(255,236,178,1) 100%); /* IE10+ */
+  background: linear-gradient(to bottom, rgba(212,161,118,1) 0%,rgba(255,236,178,1) 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d4a176', endColorstr='#ffecb2',GradientType=0 ); /* IE6-9 */
+
+  /*
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(36%,rgba(255,255,255,1)), color-stop(44%,rgba(255,255,255,0.92)), color-stop(100%,rgba(255,255,255,0)));
+  background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 36%,rgba(255,255,255,0.92) 44%,rgba(255,255,255,0) 100%);
+  background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 36%,rgba(255,255,255,0.92) 44%,rgba(255,255,255,0) 100%);
+  background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 36%,rgba(255,255,255,0.92) 44%,rgba(255,255,255,0) 100%);
+  background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 36%,rgba(255,255,255,0.92) 44%,rgba(255,255,255,0) 100%);
+  */
 }
 
 .landing-signup-button {
@@ -712,18 +728,24 @@ background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,1
 
 .landing-signup-button > div {
   display: inline-block;
-  background: #182030;
+  /*background: #182030;*/
+  background: #307A87;
   padding: 14px 8px;
   width: 80%;
 
   white-space: nowrap;
   overflow: hidden;
+
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+
 }
 
 .landing-login-button {
   text-align: center;
   padding: 16px 8px 8px 8px;
-  color: white;
+  /*color: white;*/
+  color: #1F2D2D;
 }
 
 .landing-login-button span {
@@ -731,7 +753,7 @@ background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,1
 }
 
 .header-landing-page-text {
-  color: red;
+  color: #1F2D2D;
   text-align: left;
   line-height: 60px;
 

@@ -29,7 +29,11 @@ define(function(require, exports, module) {
     var GridLayout = require("famous/views/GridLayout");
 
     // Views
+    var StandardPageView = require('views/common/StandardPageView');
     var StandardHeader = require('views/common/StandardHeader');
+    var FormHelper = require('views/common/FormHelper');
+
+    var BoxLayout = require('famous-boxlayout');
 
     // Extras
     var Utils = require('utils');
@@ -60,15 +64,16 @@ define(function(require, exports, module) {
             button: 'OK'
         }, this.modalOptions || {});
 
-        // // create the layout
-        // this.layout = new HeaderFooterLayout({
-        //     headerSize: App.Defaults.Header.size,
-        //     footerSize: App.Defaults.Footer.size
-        // });
+        this.createContent();
 
-        // this.createHeader();
+        this.add(Utils.usePlane('popover')).add(this.contentView);
 
-        // Background
+    }
+
+    PageView.prototype = Object.create(View.prototype);
+    PageView.prototype.constructor = PageView;
+
+    PageView.prototype.createContent = function(){
 
         this.contentView = new View();
         this.contentView.BgSurface = new Surface({
@@ -83,85 +88,104 @@ define(function(require, exports, module) {
         });
 
 
-        // Create Content Views
-        this.lightbox = new Lightbox({
-            // inTransition: false
-        });
+        // // Create Content Views
+        // this.lightbox = new Lightbox({
+        //     // inTransition: false
+        // });
 
         this.contentView.add(Utils.usePlane('popover')).add(this.contentView.BgOpacityMod).add(this.contentView.BgSurface);
 
-        this.contentScrollView = new View();
-        this.contentScrollView.OriginMod = new StateModifier({
+
+        this.popoverContent = new View();
+        this.popoverContent.PositionMod = new StateModifier({
+        });
+        this.popoverContent.OriginMod = new StateModifier({
             origin: [0.5, 0.5]
         });
-        this.contentScrollView.SizeMod = new StateModifier({
-            size: [window.innerWidth - 40, true]
+        this.popoverContent.OuterSizeMod = new StateModifier({
+            size: [window.innerWidth - 40, window.innerHeight]
         });
-        this.contentScrollView.PositionMod = new StateModifier({
-            transform: Transform.translate(0, window.innerHeight, 0)
+        this.popoverContent.SizeMod = new StateModifier({
+            size: [undefined, true]
         });
 
-        // ScrollView or SequentialLayout
-        switch(this.modalOptions.type){
-            case 'scroll':
-                this.contentScrollView.SeqLayout = new ScrollView(); //App.Defaults.ScrollView);
-                this.contentScrollView.SizeMod.setSize([window.innerWidth - 40, window.innerHeight - 40]);
-                break
-            case 'static':
-            default:
-                this.contentScrollView.SeqLayout = new SequentialLayout(); //App.Defaults.ScrollView);
-                break;
-        }
-        
-        this.contentScrollView.Views = [];
+        this.form = new FormHelper({
+            bg: 'white',
+            type: 'form',
+            scroll: false
+        });
 
-        // Add Surfaces
+        // Add surfaces to content (buttons)
         this.addSurfaces();
 
-        // sequenceFrom
-        this.contentScrollView.SeqLayout.sequenceFrom(this.contentScrollView.Views);
+        this.popoverContent.add(this.popoverContent.OuterSizeMod).add(this.popoverContent.OriginMod).add(this.popoverContent.SizeMod).add(this.popoverContent.PositionMod).add(this.form);
 
-        // add sizing and everything
-        this.contentScrollView.add(this.contentScrollView.OriginMod).add(this.contentScrollView.PositionMod).add(this.contentScrollView.SizeMod).add(this.contentScrollView.SeqLayout);
+        // // Content Modifiers
+        // this.layout.content.StateModifier = new StateModifier();
+
+        // // Now add content
+        // this.layout.content.add(this.layout.content.StateModifier).add(Utils.usePlane('content')).add(this.form);
+
+
+        // this.contentScrollView = new View();
+        // this.contentScrollView.OriginMod = new StateModifier({
+        //     origin: [0.5, 0.5]
+        // });
+        // this.contentScrollView.SizeMod = new StateModifier({
+        //     size: [window.innerWidth - 40, true]
+        // });
+        // this.contentScrollView.PositionMod = new StateModifier({
+        //     transform: Transform.translate(0, window.innerHeight, 0)
+        // });
+
+        // // ScrollView or SequentialLayout
+        // switch(this.modalOptions.type){
+        //     case 'scroll':
+        //         this.contentScrollView.SeqLayout = new ScrollView(); //App.Defaults.ScrollView);
+        //         this.contentScrollView.SizeMod.setSize([window.innerWidth - 40, window.innerHeight - 40]);
+        //         break
+        //     case 'static':
+        //     default:
+        //         this.contentScrollView.SeqLayout = new SequentialLayout(); //App.Defaults.ScrollView);
+        //         break;
+        // }
+        
+        // this.contentScrollView.Views = [];
+
+        // // Add Surfaces
+        // this.addSurfaces();
+
+        // // sequenceFrom
+        // this.contentScrollView.SeqLayout.sequenceFrom(this.contentScrollView.Views);
+
+        // // add sizing and everything
+        // this.contentScrollView.add(this.contentScrollView.OriginMod).add(this.contentScrollView.PositionMod).add(this.contentScrollView.SizeMod).add(this.contentScrollView.SeqLayout);
 
         // show the content in the lightbox
         // this.lightbox.show(this.contentScrollView);
-        this.contentView.add(Utils.usePlane('popover',2)).add(this.contentScrollView);
-        this.add(Utils.usePlane('popover')).add(this.contentView);
+        this.contentView.add(Utils.usePlane('popover',2)).add(this.popoverContent);
+        
+    };
 
-
-        // Events (background on_cancel)
-        this.contentView.BgSurface.on('click', function(){
-            // // close the popover, call on_cancel
-            // that.closePopover();
-            // if(that.params.passed.on_cancel){
-            //     that.params.passed.on_cancel();
-            // }
-        });
-
-    }
-
-    PageView.prototype = Object.create(View.prototype);
-    PageView.prototype.constructor = PageView;
-
-    PageView.prototype.addSurfaces = function(Model) { 
+    PageView.prototype.addSurfaces = function() { 
         var that = this;
-        ModelIndex = this.contentScrollView.Views.length;
-        // Text
-        // Buttons
+
+
+        // Build Surfaces
+
 
         // Text
         this.textView = new View();
         this.textView.Surface = new Surface({
             size: [undefined, true],
-            content: this.params.passed.text,
+            content: '<div>' + S(this.params.passed.text) + '</div>',
             classes: ['modal-option-buttons-text-default']
         });
         this.textView.add(this.textView.Surface);
         this.textView.getSize = function(){
             return [undefined, that.textView.Surface._trueSize ? that.textView.Surface._trueSize[1] : undefined];
         };
-        this.textView.Surface.pipe(that.contentScrollView.SeqLayout);
+        this.textView.Surface.pipe(this.form._formScrollView);
         this.textView.Surface.on('click', function(){
             
             // that.closePopover();
@@ -170,45 +194,152 @@ define(function(require, exports, module) {
             // }
 
         });
-        that.contentScrollView.Views.push(this.textView);
 
-        // Input
-        this.inputView = new View();
-        this.inputView.Bg = new Surface({
-            size: [undefined, 40],
-            properties: {
-                backgroundColor: 'white'
-            }
-        });
-        this.inputView.Surface = new InputSurface({
-            name: 'input',
-            size: [undefined, true],
+        this.inputText = new FormHelper({
+
+            margins: [10,10],
+
+            form: this.form,
+            name: 'email',
+            placeholder: this.params.passed.placeholder || '',
             value: this.params.passed.defaultValue,
             type: this.params.passed.type || 'text'
         });
-        this.inputView.Surface.OriginMod = new StateModifier({
-            // origin: [0.5,0.5]
-        });
-        this.inputView.Surface.SizeMod = new Modifier({
-            size: function(){
-                return [undefined, 40];
+
+
+        this.submitButton = new FormHelper({
+            form: this.form,
+            type: 'submit',
+            value: this.params.passed.button,
+            margins: [10,10],
+            click: function(){
+
+                var value = that.inputText.getValue();
+
+                that.closePopover();
+                if(that.params.passed.on_done){
+                    that.params.passed.on_done(value);
+                }
             }
         });
-        this.inputView.add(Utils.usePlane('popover',1)).add(this.inputView.Bg);
-        this.inputView.add(Utils.usePlane('popover',2)).add(this.inputView.Surface.SizeMod).add(this.inputView.Surface.OriginMod).add(this.inputView.Surface);
-        this.inputView.getSize = function(){
-            return [undefined, 40];
-        };
-        this.inputView.Surface.pipe(that.contentScrollView.SeqLayout);
-        this.inputView.Surface.on('click', function(){
-            
-            // that.closePopover();
-            // if(that.params.passed.on_done){
-            //     that.params.passed.on_done();
-            // }
+        this.cancelButton = new FormHelper({
+            form: this.form,
+            type: 'submit',
+            value: this.params.passed.buttonCancel,
+            margins: [10,10],
+            click: function(){
 
+                that.closePopover();
+                if(that.params.passed.on_cancel){
+                    that.params.passed.on_cancel();
+                }
+            }
         });
-        that.contentScrollView.Views.push(this.inputView);
+
+        this.buttonsView = new View();
+        this.buttonsView.SizeMod = new StateModifier({
+            size: [undefined, 60]
+        });
+        this.buttonsView.GridLayout = new FlexibleLayout({
+            direction: 0, // x, horizontal
+            ratios: [2, 1]
+        });
+        this.buttonsView.GridLayout.Views = [];
+
+        this.buttonsView.GridLayout.Views.push(this.submitButton);
+        this.buttonsView.GridLayout.Views.push(this.cancelButton);
+
+        this.buttonsView.GridLayout.sequenceFrom(this.buttonsView.GridLayout.Views);
+
+        this.buttonsView.add(this.buttonsView.SizeMod).add(this.buttonsView.GridLayout);
+
+        // // Forgot password
+        // this.forgotPassword = new View();
+        // this.forgotPassword.StateModifier = new StateModifier();
+        // this.forgotPassword.Surface = new Surface({
+        //     content: 'Forgot your password? Reset Now',
+        //     size: [undefined, 80], 
+        //     classes: ['login-forgot-pass-button']
+        // });
+        // this.forgotPassword.Surface.pipe(this.form._formScrollView);
+        // this.forgotPassword.Surface.on('click', function(){
+        //     App.history.navigate('forgot');
+        // });
+        // this.forgotPassword.add(this.forgotPassword.StateModifier).add(this.forgotPassword.Surface);
+
+
+        this.form.addInputsToForm([
+            this.textView,
+            this.inputText,
+            this.buttonsView
+        ]);
+
+
+        return;
+
+
+        // // Text
+        // // Buttons
+
+        // // Text
+        // this.textView = new View();
+        // this.textView.Surface = new Surface({
+        //     size: [undefined, true],
+        //     content: this.params.passed.text,
+        //     classes: ['modal-option-buttons-text-default']
+        // });
+        // this.textView.add(this.textView.Surface);
+        // this.textView.getSize = function(){
+        //     return [undefined, that.textView.Surface._trueSize ? that.textView.Surface._trueSize[1] : undefined];
+        // };
+        // this.textView.Surface.pipe(that.contentScrollView.SeqLayout);
+        // this.textView.Surface.on('click', function(){
+            
+        //     // that.closePopover();
+        //     // if(that.params.passed.on_done){
+        //     //     that.params.passed.on_done();
+        //     // }
+
+        // });
+        // that.contentScrollView.Views.push(this.textView);
+
+        // // Input
+        // this.inputView = new View();
+        // this.inputView.Bg = new Surface({
+        //     size: [undefined, 40],
+        //     properties: {
+        //         backgroundColor: 'white'
+        //     }
+        // });
+        // this.inputView.Surface = new InputSurface({
+        //     name: 'input',
+        //     size: [undefined, true],
+        //     value: this.params.passed.defaultValue,
+        //     type: this.params.passed.type || 'text'
+        // });
+        // this.inputView.Surface.OriginMod = new StateModifier({
+        //     // origin: [0.5,0.5]
+        // });
+        // this.inputView.Surface.SizeMod = new Modifier({
+        //     size: function(){
+        //         return [undefined, 40];
+        //     }
+        // });
+        // this.inputView.add(Utils.usePlane('popover',1)).add(this.inputView.Bg);
+        // this.inputView.add(Utils.usePlane('popover',2)).add(this.inputView.Surface.SizeMod).add(this.inputView.Surface.OriginMod).add(this.inputView.Surface);
+        // this.inputView.getSize = function(){
+        //     return [undefined, 40];
+        // };
+        // this.inputView.Surface.pipe(that.contentScrollView.SeqLayout);
+        // this.inputView.Surface.on('click', function(){
+            
+        //     // that.closePopover();
+        //     // if(that.params.passed.on_done){
+        //     //     that.params.passed.on_done();
+        //     // }
+
+        // });
+        // that.contentScrollView.Views.push(this.inputView);
 
 
         // Buttons (FlexibleLayout)
@@ -323,7 +454,7 @@ define(function(require, exports, module) {
                     curve: 'easeOut'
                 });
 
-                that.contentScrollView.PositionMod.setTransform(Transform.translate(0,-1 * window.innerHeight,0),{
+                that.popoverContent.PositionMod.setTransform(Transform.translate(0,-1 * window.innerHeight,0),{
                     duration: 250,
                     curve: 'easeIn' //Easing.inElastic
                 });
@@ -341,7 +472,7 @@ define(function(require, exports, module) {
                 });
 
 
-                that.contentScrollView.PositionMod.setTransform(Transform.translate(0,0,0),{
+                that.popoverContent.PositionMod.setTransform(Transform.translate(0,0,0),{
                     duration: 250,
                     curve: 'easeOut'
                 });

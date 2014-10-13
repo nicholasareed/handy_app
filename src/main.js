@@ -484,9 +484,7 @@ define(function(require, exports, module) {
                 App.Views.SplashLoading.BgSurface = new Surface({
                     content: '',
                     size: [undefined, undefined],
-                    properties: {
-                        backgroundColor: '#444'
-                    }
+                    classes: ['splash-background-default']
                 });
 
 
@@ -494,7 +492,7 @@ define(function(require, exports, module) {
 
                 // 0 - innermost
                 App.Views.SplashLoading.Logo = new Surface({
-                    content: 'Handy',
+                    content: 'OddJob',
                     classes: ['splash-surface-default'],
                     properties: {
                         // 'backface-visibility' : 'visible'

@@ -53,7 +53,7 @@ define(function(require, exports, module) {
 
         // create the layout
         this.layout = new HeaderFooterLayout({
-            headerSize: App.Defaults.Header.size,
+            headerSize: 0, //App.Defaults.Header.size,
             footerSize: 132
         });
 
@@ -63,7 +63,7 @@ define(function(require, exports, module) {
             classes: ['landing-page-bg-default']
         });
 
-        this.createHeader();
+        // this.createHeader();
         this.createContent();
         this.createFooter();
         
@@ -83,8 +83,8 @@ define(function(require, exports, module) {
         // create the header
         this.header = new StandardHeader({
             content: " ",
-            bgClasses: ['header-bg-white'],
-            classes: ["normal-header","white-bg"],
+            bgClasses: ['normal-header'],
+            classes: ["normal-header"],
             backContent: false,
             moreContent: false
         }); 
@@ -150,19 +150,24 @@ define(function(require, exports, module) {
         
         // Landing Page Title
         this.landingTitle = new View();
+        this.landingTitle.OriginMod = new StateModifier({
+            origin: [0.5, 0.5]
+        });
         this.landingTitle.Bg = new Surface({
             content: '',
             size: [undefined, 300],
             classes: ['landing-title-bg-gradient']
         });
         this.landingTitle.Surface = new Surface({
-            content: '<div>handy</div><div>Work. Done.</div>',
-            size: [undefined, undefined],
+            content: '<div>OddJob</div><div>Work. Done.</div>',
+            size: [undefined, 200],
             classes: ['landing-page-logo-tagline']
         });
 
         this.landingTitle.add(Utils.usePlane('content',2)).add(this.landingTitle.Bg);
-        this.landingTitle.add(Utils.usePlane('content',3)).add(this.landingTitle.Surface);
+
+        this.landingNode = this.landingTitle.add(this.landingTitle.OriginMod);
+        this.landingNode.add(Utils.usePlane('content',3)).add(this.landingTitle.Surface);
 
 
         // Content Modifiers
@@ -241,10 +246,10 @@ define(function(require, exports, module) {
                         transitionOptions.outTransform = Transform.identity;
 
                         // Hide/move elements
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
 
                             // Slide content left
-                            that.layout.content.StateModifier.setTransform(Transform.translate(0,window.innerHeight,0), transitionOptions.outTransition);
+                            that.layout.content.StateModifier.setTransform(Transform.translate(window.innerWidth * -1,0,0), transitionOptions.outTransition);
 
                         }, delayShowing);
 
@@ -254,7 +259,7 @@ define(function(require, exports, module) {
                 break;
             case 'showing':
                 if(this._refreshData){
-                    // window.setTimeout(that.refreshData.bind(that), 1000);
+                    // Timer.setTimeout(that.refreshData.bind(that), 1000);
                 }
                 this._refreshData = true;
                 switch(otherViewName){
@@ -270,21 +275,23 @@ define(function(require, exports, module) {
                         // } else {
                         //     that.layout.content.StateModifier.setTransform(Transform.translate(window.innerWidth + 100,0,0));
                         // }
-                        that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0));
+                        // that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0));
                         // that.contentScrollView.Views.forEach(function(surf, index){
                         //     surf.StateModifier.setTransform(Transform.translate(0,window.innerHeight,0));
                         // });
 
                         // Content
                         // - extra delay for other content to be gone
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
 
                             // // Bring content back
                             // that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
 
+                            that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0),transitionOptions.inTransition);
+
                             // // Bring in button surfaces individually
                             // that.contentScrollView.Views.forEach(function(surf, index){
-                            //     window.setTimeout(function(){
+                            //     Timer.setTimeout(function(){
                             //         surf.StateModifier.setTransform(Transform.translate(0,0,0), {
                             //             duration: 250,
                             //             curve: Easing.easeOut

@@ -311,11 +311,15 @@ body {
 
 .modal-option-buttons-text-default {
   color: #111;
-  background: white;
+  /*background: white;*/
   line-height: 30px;
   font-size: 16px;
+  /*padding: 10px 8px;*/
+  /*border-bottom: 1px solid #eee;*/
+}
+
+.modal-option-buttons-text-default div {
   padding: 10px 8px;
-  border-bottom: 1px solid #eee;
 }
 
 
@@ -568,7 +572,8 @@ iframe {
   /*background: white;*/
 
   /*color: #182030;*/
-  color: #2980b9;
+  /*color: #2980b9;*/
+  color: #87603E;
 
   padding-left: 8px;
   text-align: left;
@@ -661,7 +666,8 @@ iframe {
 
 .header-tab-icon-text i {
   /*color: white;*/
-  color: #2980b9;
+  /*color: #2980b9;*/
+  color: #87603E;
 
   font-size: 36px;
   line-height: 24px;
@@ -679,7 +685,8 @@ iframe {
 
 .header-tab-icon-text-big i {
   /*color: white;*/
-  color: #2980b9;
+  /*color: #2980b9;*/
+  color: #87603E;
 
   font-size: 30px;
   line-height: 60px;
@@ -864,7 +871,9 @@ input[type="submit"] {
 .form-button-submit-default,
 input[type="submit"].form-button-submit-default {
   /*background: #3D5C99;*/
-  background: #2980b9;
+  /*background: #2980b9;*/
+  background: #307A87;
+
   border: 1px solid rgba(255,255,255,0.5);
   color: white;
   text-align: center;
@@ -901,7 +910,8 @@ input[type="submit"].form-button-submit-default {
   /*background: #5786c1;*/
   /*background: #2C3E50;*/
   /*background: #56799C;*/
-  background: #33c5c3;
+  /*background: #33c5c3;*/
+  background: #307A87;
 
   border-radius: 4px;
   -webkit-border-radius: 4px;
@@ -935,8 +945,10 @@ input[type="submit"].form-button-submit-default {
 /* Footer */
 
 .footer-tabbar-default {
-  border-top: 1px solid #3498db;
-  background: #2980b9; /*#202A40;*/
+  border-top: 1px solid #CC4323;
+  /*background: #2980b9; /*#202A40;*/
+  background: #992B14;
+
   text-align: center;
   /*line-height: 80px;*/
   color: #f8f8f8;
@@ -961,7 +973,7 @@ input[type="submit"].form-button-submit-default {
 }
 
 .footer-tabbar-default.on {
-  border-bottom: 4px solid #34495e;
+  border-bottom: 4px solid #1F2D2D;
 }
 
 

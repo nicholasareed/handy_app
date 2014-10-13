@@ -200,7 +200,7 @@ define(function(require, exports, module) {
                 },
 
                 'dash(/:id)' : function(){
-                    
+
                     Timer.setTimeout(function(){
                         App.Views.SplashLoading.hide();
                     },3000);

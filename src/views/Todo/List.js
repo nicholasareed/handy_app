@@ -105,12 +105,13 @@ define(function(require, exports, module) {
         });
         this.headerContent.Create.on('click', function(){
 
-            // Timer.setTimeout(function(){
+            Utils.Popover.Prompt('Todo Title', '', 'Create', 'Cancel').then(function(p){
 
-            var p = prompt('Todo title');
-            if(p && p.trim() != ''){
+                if(p && p.trim() != ''){
+                    return;
+                }
 
-                Utils.Notification.Toast('Create a new Todo!');
+                Utils.Notification.Toast('Created a new Todo!');
 
                 var newModel = new TodoModel.Todo({
                     title: p
@@ -132,9 +133,36 @@ define(function(require, exports, module) {
 
                 });
 
-            }
+            });
 
-            // },200);
+            // var p = prompt('Todo title');
+            // if(p && p.trim() != ''){
+
+            //     Utils.Notification.Toast('Create a new Todo!');
+
+            //     var newModel = new TodoModel.Todo({
+            //         title: p
+            //     });
+
+            //     newModel.save()
+            //     .then(function(result){
+            //         // that.ListContent.Todos.collection.fetch();
+            //         that._subviews.forEach(function(sv){
+            //             sv.collection.fetch();
+            //         });
+
+            //         App.history.navigate('todo/' + result._id);
+
+            //         // // show new todos
+            //         // that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowTodo);
+            //         // that.ListContent.show(that.ListContent.Todos);
+            //         // that.ListContent.Todos.collection.fetch();
+
+            //     });
+
+            // }
+
+            // // },200);
 
 
         });
