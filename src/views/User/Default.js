@@ -71,12 +71,20 @@ define(function(require, exports, module) {
         // }
 
         // Determine my user._id
-        App.Data.User.populated().then(function(){
-            Timer.setTimeout(function(){
-                that.user_id = App.Data.User.get('_id');
-                App.history.navigate('user/' + that.user_id);
-            },1000);
-        });
+        if(App.Data.User.hasFetched){
+            console.log('HAS FETCHED', App.Data.User.toJSON());
+            that.user_id = App.Data.User.get('_id');
+            App.history.navigate('user/' + that.user_id);
+        } else {
+            App.Data.User.populated().then(function(){
+                console.log('user POPULATED');
+                Timer.setTimeout(function(){
+                    that.user_id = App.Data.User.get('_id');
+                    App.history.navigate('user/' + that.user_id);
+                },1000);
+            });
+        }
+        console.log('PST POPULATION');
 
     }
 
