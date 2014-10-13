@@ -107,14 +107,14 @@ define(function(require, exports, module) {
 
             Utils.Popover.Prompt('Todo Title', '', 'Create', 'Cancel').then(function(p){
 
-                if(p && p.trim() != ''){
+                if(!p || p.trim() == ''){
                     return;
                 }
 
                 Utils.Notification.Toast('Created a new Todo!');
 
                 var newModel = new TodoModel.Todo({
-                    title: p
+                    title: p.trim()
                 });
 
                 newModel.save()

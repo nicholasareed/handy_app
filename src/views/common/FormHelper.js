@@ -108,9 +108,7 @@ define(function(require, exports, module) {
             this._bg = new View();
             this._bg.Surface = new Surface({
                 size: [undefined, undefined],
-                properties: {
-                    background: opts.bg
-                }
+                classes: ['form-bg-default']
             });
             this._bg.SizeMod = new Modifier({
                 size: function(){

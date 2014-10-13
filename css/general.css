@@ -835,6 +835,13 @@ input[type="submit"] {
 
 /* Forms / Buttons */
 
+.form-bg-default {
+  background: white;
+  -webkit-box-shadow: 0px 2px 2px 0px rgba(50, 50, 50, 0.75);
+  -moz-box-shadow:    0px 2px 2px 0px rgba(50, 50, 50, 0.75);
+  box-shadow:         0px 2px 2px 0px rgba(50, 50, 50, 0.75);
+}
+
 .button-default { 
   /* expecting a div to be inside this guy */
 

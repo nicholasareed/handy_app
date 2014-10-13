@@ -130,7 +130,7 @@ define(function(require, exports, module) {
         });
         this.loadingSurface.pipe(this._eventOutput);
         this.emptyListSurface = new Surface({
-            content: "No updates to Invoice yet",
+            content: "No messages",
             size: [undefined, 100],
             classes: ['empty-list-surface-default'],
             properties: {
