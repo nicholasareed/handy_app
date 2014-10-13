@@ -32,7 +32,7 @@ define(function(require, exports, module) {
                     console.info('homeAlso');
                     if(App.history.data.length == 0){
                         window.location = window.location.href.split('#')[0];
-                        // App.history.navigate('dash');
+                        App.history.navigate(App.Credentials.home_route);
                     }
                 },
                 'random(:anynumber)' : function(){
@@ -199,21 +199,21 @@ define(function(require, exports, module) {
                     defaultRoute('MessageAdd', 'Message/Add', arguments, {cache: false});
                 },
 
-                'dash(/:id)' : function(){
+                // 'dash(/:id)' : function(){
 
-                    Timer.setTimeout(function(){
-                        App.Views.SplashLoading.hide();
-                    },3000);
+                //     Timer.setTimeout(function(){
+                //         App.Views.SplashLoading.hide();
+                //     },3000);
 
-                    console.error("DASH");
-                    App.history.modifyLast({
-                        tag: 'Dash'
-                    });
-                    App.Views.MainFooter.route_show = true;
-                    App.Views.MainFooter.Tabs.select('profiles', false);
-                    // defaultRoute('Dash', 'Player/Player', arguments); // used to be Player/Dash
-                    defaultRoute('Dash', 'User/View', arguments); // used to be Player/Dash
-                },
+                //     console.error("DASH");
+                //     App.history.modifyLast({
+                //         tag: 'Dash'
+                //     });
+                //     App.Views.MainFooter.route_show = true;
+                //     App.Views.MainFooter.Tabs.select('profiles', false);
+                //     // defaultRoute('Dash', 'Player/Player', arguments); // used to be Player/Dash
+                //     defaultRoute('Dash', 'User/View', arguments); // used to be Player/Dash
+                // },
 
                 // 'user/sentence' : function(){
                 //     defaultRoute('UserSentence', 'User/Sentence', arguments, {cache: false});
@@ -229,8 +229,24 @@ define(function(require, exports, module) {
                 //     defaultRoute('UserFriendInvites', 'User/FriendInvites', arguments, {cache: true});
                 // },
 
+                'user' : function(){
+                    
+                    Timer.setTimeout(function(){
+                        App.Views.SplashLoading.hide();
+                    },3000);
+                    
+                    App.Views.MainFooter.route_show = true;
+                    App.Views.MainFooter.Tabs.select('profiles', false);
+                    defaultRoute('UserDefault', 'User/Default', arguments, { cache: false });
+                },
+
                 'user/:id' : function(){
                     console.log('User/:id');
+
+                    Timer.setTimeout(function(){
+                        App.Views.SplashLoading.hide();
+                    },3000);
+
                     App.Views.MainFooter.route_show = true;
                     App.Views.MainFooter.Tabs.select('profiles', false);
                     defaultRoute('UserView', 'User/View', arguments);

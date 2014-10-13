@@ -51,7 +51,7 @@ define(function(require, exports, module) {
                     // Utils.Notification.Toast('Exiting App');
                     console.error('exiting app');
                     historyObj.data = [];
-                    historyObj.navigate('dash');
+                    historyObj.navigate(App.Credentials.home_route);
                     return;
                 }
 
@@ -76,7 +76,7 @@ define(function(require, exports, module) {
                     // No last arguments exist
                     // Utils.Notification.Toast('Exiting App');
                     console.error('Exiting app, reloadCurrent failed');
-                    historyObj.navigate('dash');
+                    historyObj.navigate(App.Credentials.home_route);
                     return;
                 }
 
@@ -204,6 +204,39 @@ define(function(require, exports, module) {
             // });
 
             // historyObj.data.reverse();
+        };
+        historyObj.findLastTag = function(tag){
+            // Find if a tag exists in the history
+
+            var tmp = _.clone(historyObj.data);
+            tmp.reverse();
+
+            var continueSearching = true;
+            var foundTag = _.filter(tmp, function(args){
+                // check options for tag that matches
+                if(continueSearching !== true){
+                    return true;
+                }
+                if(args.length < 2){
+                    return false;
+                }
+                if(!args[1].tag){
+                    return false;
+                }
+                if(typeof args[1].tag == "string" && args[1].tag != tag){
+                    return false
+                }
+                if(typeof args[1].tag === typeof [] && args[1].tag.indexOf(tag) === -1){
+                    return false;
+                }
+                console.log('FOUND tag in eraseUntilTag');
+                // debugger;
+                continueSearching = false;
+                return true;
+
+            });
+
+            return foundTag.length > 0;
         };
         historyObj.eraseUntilTag = function(tag, eraseLast){
             // Erase entries up until the last tag

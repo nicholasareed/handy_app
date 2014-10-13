@@ -413,7 +413,14 @@ define(function(require, exports, module) {
                             break;
 
                         case 'profiles':
-                            App.history.navigate('dash');
+                            // display the "last" profile we looked at
+                            if(App.history.findLastTag('user')){
+                                // found a tag to go back to
+                                App.history.backTo('user');
+                            } else {
+                                // show the default user
+                                App.history.navigate('user');
+                            }
                             break;
 
                         case 'updates':

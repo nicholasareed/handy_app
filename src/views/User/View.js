@@ -69,34 +69,40 @@ define(function(require, exports, module) {
         View.apply(this, arguments);
         this.options = options;
 
-        // Are we getting a profile_id, or do we need to get the current user's profile_id?
-        this.KnowProfileId = $.Deferred();
-        var profile_id; 
-        if(this.options.args.length > 0 && this.options.args[0]){
-            // It is set
-            // - resolve now
-            profile_id = this.options.args[0];
-            this.profile_id = this.options.args[0];
-        } else {
-            // Trying to go to the ond "Dash" (the current user)
-            // Sometimes we don't immediately know the current owner's ID
-            // this.KnowProfileId = $.Deferred();
-            this.profile_id = App.Data.User.get('_id'); //localStorage.getItem('home_profile_id');
-            // this.profile_id = profile_id && profile_id.length == 24 ? profile_id : false;
-        }
+        this.profile_id = this.options.args[0];
+        var profile_id = this.profile_id;
 
-        // If profile_id is set, then use it, otherwise get the user's profile_id)
-        if(this.profile_id){
-            // Resolve the KnowProfileId right away
-            // - might use it later in a Deferred context
-            this.KnowProfileId.resolve(this.profile_id);
-        } else {
-            // Determine my user._id
-            App.Data.User.populated().then(function(){
-                that.profile_id = App.Data.User.get('_id');
-                that.KnowProfileId.resolve(App.Data.User.get('_id'));
-            });
-        }
+        App.history.modifyLast({
+            tag: 'user'
+        });
+
+        // // Are we getting a profile_id, or do we need to get the current user's profile_id?
+        // this.KnowProfileId = $.Deferred();
+        // var profile_id; 
+        // if(this.options.args.length > 0 && this.options.args[0]){
+        //     // It is set
+        //     // - resolve now
+        //     profile_id = this.options.args[0];
+        // } else {
+        //     // Trying to go to the ond "Dash" (the current user)
+        //     // Sometimes we don't immediately know the current owner's ID
+        //     // this.KnowProfileId = $.Deferred();
+        //     this.profile_id = App.Data.User.get('_id'); //localStorage.getItem('home_profile_id');
+        //     // this.profile_id = profile_id && profile_id.length == 24 ? profile_id : false;
+        // }
+
+        // // If profile_id is set, then use it, otherwise get the user's profile_id)
+        // if(this.profile_id){
+        //     // Resolve the KnowProfileId right away
+        //     // - might use it later in a Deferred context
+        //     this.KnowProfileId.resolve(this.profile_id);
+        // } else {
+        //     // Determine my user._id
+        //     App.Data.User.populated().then(function(){
+        //         that.profile_id = App.Data.User.get('_id');
+        //         that.KnowProfileId.resolve(App.Data.User.get('_id'));
+        //     });
+        // }
 
         // create the layout
         this.layout = new HeaderFooterLayout({
@@ -111,90 +117,86 @@ define(function(require, exports, module) {
         // Attach the main transform and the comboNode to the renderTree
         this.add(this.layout);
 
-        // Models
-        this.tmpModel = $.Deferred();
-
-        this.KnowProfileId.promise().then(function(profile_id){
-
-            // Get Profile (Me)
-            that.model = new UserModel.User({
-                profile_id: profile_id
-            });
-            that.model.fetch({prefill: true});
-
-            // Get Friend relationship
-            that.friend_model = new FriendModel.Friend({
-                friend_id: profile_id
-            });
-            that.friend_model.fetch({prefill: true});
-
-            // Listen for 'showing' events
-            that._eventInput.on('inOutTransition', function(args){
-                // 0 = direction
-                if(args[0] == 'showing'){
-                    that.model.fetch();
-                }
-            });
-
-            that.model.populated().then(function(){
-
-                // Show user information
-                that.contentLightbox.show(that.contentScrollView);
-
-                // The following is only run once
-                that.is_me = true;
-
-                // Show Edit or Connect
-                // - determine is_me
-                if(that.model.get('_id') == App.Data.User.get('_id')){
-                    console.error('is_me!');
-                    // that.profileMiddle.Layout.show(that.profileMiddle.EditProfile);
-                    that.profileMiddle.Layout.hide();
-                } else {
-                    that.is_me = false;
-                    console.error('Not is_me!');
-                    // var my_friend_profile_ids = _.pluck(App.Data.Profiles.toJSON(), '_id');
-                    
-                    // that.profileMiddle.Layout.show(that.profileMiddle.Connect);
-                    that.profileMiddle.Layout.hide();
-
-                    // // if(_.intersection(that.model.get('related_profile_ids'),my_friend_profile_ids).length > 0){
-                    // //     that.profileMiddle.Layout.show(that.profileMiddle.Connected);
-                    // // } else {
-                    //     that.profileMiddle.Layout.show(that.profileMiddle.Connect);
-                    // // }
-                }
-
-                // // compare/against
-                // // only do this one time
-                // if(that.is_me === false){
-
-                //     that.tabBar.defineSection('compare', {
-                //         content: '<i class="icon ion-android-contacts"></i><div>Compare</div>',
-                //         onClasses: ['profile-tabbar-default', 'on'],
-                //         offClasses: ['profile-tabbar-default', 'off']
-                //     });
-
-                // }
-
-                // update going forward
-                that.update_content();
-                that.friend_model.on('change', that.update_content.bind(that));
-                that.model.on('change', that.update_content.bind(that));
-
-            });
-
-        });
-
-        // window.setTimeout(function(){
-        //     KnowProfileId.resolve("529c02f00705435badb1dff5");
-        // },3000);
+        this.loadModels();
 
     }
 
     PageView.prototype = Object.create(View.prototype);
     PageView.prototype.constructor = PageView;
 
+
+    PageView.prototype.loadModels = function(){
+        var that = this;
+
+        // Get Profile (Me)
+        that.model = new UserModel.User({
+            profile_id: this.profile_id
+        });
+        that.model.fetch({prefill: true});
+
+        // Get Friend relationship
+        that.friend_model = new FriendModel.Friend({
+            friend_id: this.profile_id
+        });
+        that.friend_model.fetch({prefill: true});
+
+        // Listen for 'showing' events
+        that._eventInput.on('inOutTransition', function(args){
+            // 0 = direction
+            if(args[0] == 'showing'){
+                that.model.fetch();
+            }
+        });
+
+        that.model.populated().then(function(){
+
+            // Show user information
+            that.contentLightbox.show(that.contentScrollView);
+
+            // The following is only run once
+            that.is_me = true;
+
+            // Show Edit or Connect
+            // - determine is_me
+            if(that.model.get('_id') == App.Data.User.get('_id')){
+                console.error('is_me!');
+                // that.profileMiddle.Layout.show(that.profileMiddle.EditProfile);
+                that.profileMiddle.Layout.hide();
+            } else {
+                that.is_me = false;
+                console.error('Not is_me!');
+                // var my_friend_profile_ids = _.pluck(App.Data.Profiles.toJSON(), '_id');
+                
+                // that.profileMiddle.Layout.show(that.profileMiddle.Connect);
+                that.profileMiddle.Layout.hide();
+
+                // // if(_.intersection(that.model.get('related_profile_ids'),my_friend_profile_ids).length > 0){
+                // //     that.profileMiddle.Layout.show(that.profileMiddle.Connected);
+                // // } else {
+                //     that.profileMiddle.Layout.show(that.profileMiddle.Connect);
+                // // }
+            }
+
+            // // compare/against
+            // // only do this one time
+            // if(that.is_me === false){
+
+            //     that.tabBar.defineSection('compare', {
+            //         content: '<i class="icon ion-android-contacts"></i><div>Compare</div>',
+            //         onClasses: ['profile-tabbar-default', 'on'],
+            //         offClasses: ['profile-tabbar-default', 'off']
+            //     });
+
+            // }
+
+            // update going forward
+            that.update_content();
+            that.friend_model.on('change', that.update_content.bind(that));
+            that.model.on('change', that.update_content.bind(that));
+
+        });
+
+    };
 
     PageView.prototype.createHeader = function(){
         var that = this;
