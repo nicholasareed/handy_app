@@ -228,7 +228,7 @@ define(function(require, exports, module) {
             value: this.params.passed.buttonCancel,
             margins: [10,10],
             click: function(){
-                alert('canceled');
+                
                 that.closePopover();
                 if(that.params.passed.on_cancel){
                     that.params.passed.on_cancel();
