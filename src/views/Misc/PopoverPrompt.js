@@ -78,7 +78,7 @@ define(function(require, exports, module) {
         this.contentView = new View();
         this.contentView.BgSurface = new Surface({
             content: '',
-            size: [undefined, undefined],
+            size: [window.innerWidth * 2, window.innerHeight * 2], // make sure it covers everything
             properties: {
                 backgroundColor: 'black'
             }
