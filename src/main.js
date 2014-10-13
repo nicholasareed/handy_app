@@ -358,7 +358,7 @@ define(function(require, exports, module) {
                 };
                 App.StatusBarView.Surface = new Surface({
                     size: [undefined, 20],
-                    classes: ['status-bar-background']
+                    classes: ['status-bar-default']
                 });
                 App.StatusBarView.add(Utils.usePlane('statusBar')).add(App.StatusBarView.Surface);
                 if(App.StatusBar === true){
