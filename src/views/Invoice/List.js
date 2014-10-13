@@ -120,7 +120,7 @@ define(function(require, exports, module) {
                     App.history.navigate('invoice/' + result._id);
                 });
 
-            }
+            });
 
 
         });

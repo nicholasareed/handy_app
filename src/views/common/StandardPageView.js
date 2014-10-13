@@ -19,6 +19,7 @@ define(function(require, exports, module) {
         };
 
         // Layout
+        // - expecting a HeaderFooterLayout
         if(this.layout){
             Timer.setTimeout(function(){
                 that.layout.keyboardShowHide(showing);
