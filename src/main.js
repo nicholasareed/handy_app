@@ -584,7 +584,7 @@ define(function(require, exports, module) {
                     outTransition: false,
                 });
                 App.Views.Popover.hideIf = function(thisView){
-                    if(App.Views.Popover.CurrentPopover === thisView){
+                    if(App.Views.Popover.CurrentPopover === thisView || App.Views.Popover.CurrentPopover === false){
                         App.Views.Popover.hide();
                     }
                 };

@@ -454,7 +454,7 @@ define(function(require, exports, module) {
                     curve: 'easeOut'
                 });
 
-                that.popoverContent.PositionMod.setTransform(Transform.translate(0,-1 * window.innerHeight,0),{
+                that.popoverContent.PositionMod.setTransform(Transform.translate(0,-2 * window.innerHeight,0),{
                     duration: 250,
                     curve: 'easeIn' //Easing.inElastic
                 });
