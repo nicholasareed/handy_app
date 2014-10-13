@@ -492,14 +492,16 @@ define(function(require, exports, module) {
                 // spinning logo
 
                 // 0 - innermost
-                App.Views.SplashLoading.Logo = new Surface({
-                    content: 'OddJob',
+                App.Views.SplashLoading.Logo = new ImageSurface({
+                    // content: 'OddJob',
+                    content: 'icon.png',
                     classes: ['splash-surface-default'],
                     properties: {
                         // 'backface-visibility' : 'visible'
                     },
                     // content: 'https://dl.dropboxusercontent.com/u/6673634/wehicle_square.svg',
-                    size: [window.innerWidth, 70]
+                    // size: [window.innerWidth, 70]
+                    size: [150, 150]
                 });
                 App.Views.SplashLoading.Logo.useOpacity = 0;
                 var splashOpacity = 0;
