@@ -105,9 +105,10 @@ define(function(require, exports, module) {
         });
         this.headerContent.Create.on('click', function(){
 
-            Utils.Popover.Prompt('Todo Title', '', 'Create', 'Cancel').then(function(p){
-                
+            Utils.Popover.Prompt('Title of new Todo', '', 'Create', 'Cancel').then(function(p){
+
                 if(!p || p.trim() == ''){
+                    Utils.Notification.Toast('Todo NOT created');
                     return;
                 }
 

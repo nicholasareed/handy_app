@@ -94,20 +94,20 @@ define(function(require, exports, module) {
         });
         this.headerContent.Create.on('click', function(){
 
-            // var a = prompt('Amount');
-            // if(!a){
-            //     return;
-            // }
-            var p = prompt('Title of Invoice');
-            if(p && p.trim() != ''){
+            Utils.Popover.Prompt('Title of new Invoice', '', 'Create', 'Cancel').then(function(p){
+                
+                if(!p || p.trim() == ''){
+                    Utils.Notification.Toast('Invoice NOT created');
+                    return;
+                }
 
-                Utils.Notification.Toast('Create a new Invoice!');
+                Utils.Notification.Toast('Created a new Invoice!');
 
                 var newModel = new InvoiceModel.Invoice({
                     // friend_id: that.model.get('_id'),
                     // amount: a,
                     // details: p
-                    title: p
+                    title: p.trim()
                 });
 
                 newModel.save()
