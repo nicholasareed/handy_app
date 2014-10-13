@@ -85,6 +85,7 @@ define(function(require, exports, module) {
         // prevent submit from actually submitting the form
         FormContainer.on('submit', function(ev){
             ev.preventDefault();
+            ev.stopPropagation();
             return false;
         });
 
@@ -320,10 +321,10 @@ define(function(require, exports, module) {
         // callback already specified for click?
         if(opts.click){
             submitButtonSurface.on('click', opts.click);
-        } else{
-            // emit event
-            submitButtonSurface.on('click', this._eventOutput.emit('click'));
         }
+
+        // emit event
+        submitButtonSurface.on('click', this._eventOutput.emit('click'));
 
         this.add(submitButtonSurface.View);
 
