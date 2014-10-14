@@ -168,6 +168,7 @@ define(function(require, exports, module) {
                 attr: opts.attr || {}
             });
         }
+        this.Surface = inputSurface;
 
         // Build Margins
         var boxLayout = new BoxLayout({ margins: opts.margins });
@@ -182,11 +183,11 @@ define(function(require, exports, module) {
 
             inputSurface.on('focus', function(){
                 var myIndex = opts.form._formScrollView.Views.indexOf(that);
-                console.log(opts.form._formScrollView.Views);
-                console.log(inputSurface.View);
-                console.log(myIndex);
-                console.log(opts.form._formScrollView);
-                if(App.KeyboardShowing != true){
+                // console.log(opts.form._formScrollView.Views);
+                // console.log(inputSurface.View);
+                // console.log(myIndex);
+                // console.log(opts.form._formScrollView);
+                if(App.KeyboardShowing != true && opts.form._formScrollView.goToIndex){
                     opts.form._formScrollView.goToIndex(myIndex,0,60);
                 }
             });

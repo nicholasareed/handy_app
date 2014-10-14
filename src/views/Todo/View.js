@@ -347,7 +347,7 @@ define(function(require, exports, module) {
                     Utils.Popover.Prompt('Email Address', '', 'Add Email', 'Cancel', 'email').then(function(p){
 
                         if(!p || p.trim() == ''){
-                            Utils.Notification.Toast('Todo NOT created');
+                            // Utils.Notification.Toast('Todo NOT created');
                             return;
                         }
 

@@ -210,7 +210,8 @@ define(function(require, exports, module) {
             footer: 500,
             mainfooter: 500,
             popover: 2000,
-            splashLoading: 2100
+            splashLoading: 2100,
+            statusBar: 3000
         }
     };
 

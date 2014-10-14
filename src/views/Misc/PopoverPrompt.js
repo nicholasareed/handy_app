@@ -61,7 +61,8 @@ define(function(require, exports, module) {
         // Add to new ".passed" options, separate from this.options.App and other root-level arguments/objects
         this.params.passed = _.extend({
             text: null,
-            button: 'OK'
+            button: 'OK',
+            type: 'text'
         }, this.modalOptions || {});
 
         this.createContent();
@@ -204,6 +205,12 @@ define(function(require, exports, module) {
             placeholder: this.params.passed.placeholder || '',
             value: this.params.passed.defaultValue,
             type: this.params.passed.type || 'text'
+        });
+        console.log(this.inputText);
+        this.inputText.Surface.on('deploy', function(){
+            Timer.setTimeout(function(){
+                that.inputText.Surface.focus();
+            },2000);
         });
 
 
