@@ -141,22 +141,25 @@ define(function (require) {
                     localStorage.setItem(App.Credentials.local_token_key, token);
                     App.Data.UserToken = token;
 
-                    // Preload Models
-                    require(['models/preload'], function(PreloadModels){
-                        PreloadModels(App);
-                    });
-
-                    // Register for Push Notifications
-                    App.DeviceReady.initPush();
-
-
                     console.log(response);
-                    // debugger;
-                    // def.reject('fuckle');
-                    // return;
 
                     App.Data.UserToken = token;
-                    App.Data.User = new User();
+
+                    // Update ajaxSetup with x-token header
+                    $.ajaxSetup({
+                        headers: {
+                            "x-token" : token
+                            // 'Authorization' : 'Bearer ' + response.access_token
+                        }
+                    });
+
+                    App.Data.User = new User({
+                      _id: response._id
+                    });
+                    App.Data.User.fetch();
+                    App.Data.User.populated().then(function(){
+                      localStorage.setItem(App.Credentials.local_user_key, JSON.stringify(App.Data.User.toJSON()));
+                    });
 
                     try {
                       // window._trackJs.userId = body.email;
@@ -176,16 +179,17 @@ define(function (require) {
                       console.error('No Track.js');
                     }
 
-                    // Update ajaxSetup with x-token header
-                    $.ajaxSetup({
-                        headers: {
-                            "x-token" : token
-                            // 'Authorization' : 'Bearer ' + response.access_token
-                        }
-                    });
-
                     // Save user email
                     localStorage.setItem(Credentials.local_user_email, body.email)
+
+                    // Preload Models
+                    require(['models/preload'], function(PreloadModels){
+                        PreloadModels(App);
+                    });
+
+                    // Register for Push Notifications
+                    App.DeviceReady.initPush();
+                    
 
                     // Return to original
                     def.resolve(response);

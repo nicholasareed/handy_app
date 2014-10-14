@@ -105,7 +105,8 @@
       instance.populatedPromise = $.Deferred();
       instance.populated = function(){
         // return population after we make sure it has been populated
-        
+        console.log(instance.populatedPromise.promise());
+        // debugger;
         var newDef = $.Deferred();
         instance.populatedPromise.promise().then(function(){
           // debugger;
@@ -120,6 +121,7 @@
           // debugger;
           instance.hasFetched = true;
           newDef.resolve();
+          
         });
         // return this.populatedPromise.promise();
         return newDef.promise();

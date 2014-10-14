@@ -343,22 +343,28 @@ define(function(require, exports, module) {
             listData.push({
                 text: '<i class="icon ion-plus-round"></i> Add new Email',
                 success: function(){
-                    var e = prompt('Email address');
-                    if(!e){
-                        return;
-                    }
 
-                    $.ajax({
-                        url: App.Credentials.server_root + 'todo/emailinvite/' + that.model.get('_id'),
-                        method: 'post',
-                        data: {
-                            email: e
-                        },
-                        success: function(result, status){
-                            console.log(result);
-                            console.log(status);
-                            that.model.fetch();
+                    Utils.Popover.Prompt('Email Address', '', 'Add Email', 'Cancel', 'email').then(function(p){
+
+                        if(!p || p.trim() == ''){
+                            Utils.Notification.Toast('Todo NOT created');
+                            return;
                         }
+
+                        $.ajax({
+                            url: App.Credentials.server_root + 'todo/emailinvite/' + that.model.get('_id'),
+                            method: 'post',
+                            data: {
+                                email: p.trim()
+                            },
+                            success: function(result, status){
+                                console.log(result);
+                                console.log(status);
+                                that.model.fetch();
+                                Utils.Notification.Toast('Email added');
+                            }
+                        });
+
                     });
 
 

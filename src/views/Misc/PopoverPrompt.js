@@ -200,7 +200,7 @@ define(function(require, exports, module) {
             margins: [10,10],
 
             form: this.form,
-            name: 'email',
+            name: 'input',
             placeholder: this.params.passed.placeholder || '',
             value: this.params.passed.defaultValue,
             type: this.params.passed.type || 'text'

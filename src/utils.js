@@ -272,13 +272,14 @@ define(function (require) {
 
                 return def.promise();
             },
-            Prompt: function(text, defaultValue, button, buttonCancel){ // use callback pattern instead?
+            Prompt: function(text, defaultValue, button, buttonCancel, type){ // use callback pattern instead?
 
                 var def = $.Deferred();
 
                 defaultValue = defaultValue || '';
                 button = button || 'OK';
                 buttonCancel = buttonCancel || 'X';
+                type = type || 'text';
 
                 // default options
                 var opts = {
@@ -286,6 +287,7 @@ define(function (require) {
                     defaultValue: defaultValue,
                     button: button,
                     buttonCancel: buttonCancel,
+                    type: type
                 };
 
                 opts.on_done = function(value){

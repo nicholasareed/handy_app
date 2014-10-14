@@ -723,7 +723,7 @@ define(function(require, exports, module) {
                 // Redirect after setting ajax credentials
                 if(localUser && !initialUrl){
                     // Navigate to my Profiles page
-                    window.setTimeout(function(){
+                    Timer.setTimeout(function(){
                         App.Views.MainFooter.Tabs.select('profiles');
                         // App.history.navigate('user/sentence');
                     }, 100);
