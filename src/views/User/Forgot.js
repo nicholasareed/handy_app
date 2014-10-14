@@ -199,11 +199,7 @@ define(function(require, exports, module) {
                     var successSurface = new Surface({
                         content: "Sent Reset Email",
                         size: [undefined, 80],
-                        properties: {
-                            color: "white",
-                            lineHeight: "80px",
-                            textAlign: "center"
-                        }
+                        classes: ['sent-reset-email-surface']
                     });
 
                     that.form._formScrollView.Views = [successSurface];

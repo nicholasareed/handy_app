@@ -1001,6 +1001,11 @@ textarea {
   line-height: 60px;
 }
 
+/* Forgot password */
+.sent-reset-email-surface {
+  line-height: 80px;
+  text-align: center;;
+}
 
 
 /* Color Picker */
