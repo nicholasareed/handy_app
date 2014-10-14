@@ -319,7 +319,7 @@ define(function(require, exports, module) {
         // Line Items 
         this.ListContent.LineItems = new AllView({
             // empty_string: 'Add Invoices by tapping the <i class="icon ion-ios7-plus-outline"></i>',
-            empty_string: 'Add Invoices from the People (<i class="icon ion-android-friends"></i>) page',
+            empty_string: 'No attached invoices',
             invoice_id: that.model.get('_id')
             // filter: {
             //     tags: {

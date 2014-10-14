@@ -264,6 +264,64 @@
 
 
 
+/* Friend List */
+
+.friend-list-tabbar-default {
+  /*border-top: 2px solid #444;*/
+  border-bottom: 1px solid #ddd;
+  /*background: white;*/
+  background: rgba(255,255,255,0.5);
+  text-align: center;
+  line-height: 15px;
+  font-size: 12px;
+  color: #444;
+
+  text-transform: uppercase;
+}
+.friend-list-tabbar-default.on {
+  color: #339bcb;
+}
+.friend-list-tabbar-default i {
+  font-size: 32px;
+  line-height: 50px;
+}
+
+.friend-list-tabbar-default div {
+  font-size: 12px;
+}
+
+
+
+/* Select Friend(s) */
+  
+.select-friends-list-item-default {
+  line-height: 44px;
+  background: white;
+
+  padding: 0px 8px;
+
+  border-bottom: 1px dashed #ddd;
+}
+
+.select-friends-list-item-default > div:nth-child(1) {
+
+  padding-top: 8px;
+
+  font-size: 28px;
+  line-height: 34px;
+  color: #333;
+}
+
+
+.select-friends-list-item-default > div:nth-child(2) {
+  font-size: 14px;
+  line-height: 20px;
+  color: #333;
+
+  padding-bottom: 16px;
+}
+
+
 
 /* Todo List */
 
