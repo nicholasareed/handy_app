@@ -71,7 +71,7 @@
     <gap:plugin name="de.appplant.cordova.plugin.local-notification" />
     <gap:plugin name="com.pylonproducts.wifiwizard" version="0.1.0" />
 
-    <gap:plugin name="com.ionic.keyboard" version="1.0.3" />
+    <gap:plugin name="com.ionic.keyboard" version="1.0.2" />
 
     <gap:plugin name="com.adobe.plugins.gaplugin" />
 
