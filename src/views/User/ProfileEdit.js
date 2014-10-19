@@ -106,7 +106,7 @@ define(function(require, exports, module) {
         })
 
         // Attach header to the layout        
-        this.layout.header.add(Utils.usePlane('header')).add(this.header);
+        this.layout.header.add(Utils.usePlane('header',100)).add(this.header);
 
     };
 
