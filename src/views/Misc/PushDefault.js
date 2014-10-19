@@ -271,8 +271,8 @@ define(function(require, exports, module) {
                 isToggled = !isToggled;
             }
 
-            pushOpt.ToggleView.add(pushOpt.Toggle);
-            pushOpt.ToggleView.add(toggleModifier).add(Transform.translate(0,0,0.00001)).add(pushOpt.ToggleButton);
+            pushOpt.ToggleView.add(Transform.translate(0,0,0.001)).add(toggleModifier).add(pushOpt.ToggleButton);
+            pushOpt.ToggleView.add(Transform.translate(0,0,-0.001)).add(pushOpt.Toggle);
 
             // Handle toggle button click
             pushOpt.Toggle.on('select', function(m){

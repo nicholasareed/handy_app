@@ -154,6 +154,11 @@ define(function(require, exports, module) {
                 },
 
                 'settings/push': function(){
+
+                    Timer.setTimeout(function(){
+                        App.Views.SplashLoading.hide();
+                    },3000);
+                    
                     defaultRoute('PushDefault', 'Misc/PushDefault', arguments);
                 },
 
@@ -176,7 +181,7 @@ define(function(require, exports, module) {
                     Timer.setTimeout(function(){
                         App.Views.SplashLoading.hide();
                     },3000);
-                    
+
                     // App.Views.MainFooter.route_show = true;
                     // App.Views.MainFooter.Tabs.select('messages', false);
                     // defaultRoute('Inbox', 'Message/Inbox', arguments);
