@@ -298,6 +298,10 @@ define(function(require, exports, module) {
         var that = this;
 
         this.newMessageContent = new View();
+        this.newMessageContent.Bg = new Surface({
+            size: [undefined, undefined],
+            classes: ['msg-form-bg-surface']
+        });
 
         // Form Container
         var FormContainer = new FormContainerSurface();
@@ -354,9 +358,9 @@ define(function(require, exports, module) {
         this.msgLayout.sequenceFrom(this.msgLayout.Views);
 
         FormContainer.add(this.msgLayout);
-        var formNode = this.newMessageContent.add(FormContainer);
+        this.newMessageContent.add(this.newMessageContent.Bg);
+        this.newMessageContent.add(FormContainer);
         
-
     };
 
     PageView.prototype.createDefaultSurfaces = function(){

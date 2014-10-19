@@ -925,6 +925,11 @@
 
 /* Messages */
 
+.msg-form-bg-surface {
+  border-top: 1px solid #dcdcdc;
+  background: #f8f8f8;
+}
+
 .message-byuser-container-default {
   border-bottom: 1px solid #f8f8f8;
 }
@@ -995,6 +1000,7 @@
 input[type="text"].msg-textinput-smaller {
   line-height: 52px;
   border: 1px solid #ddd;
+  border: 0px;
 }
 
 input[type="submit"].msg-button-smaller {
