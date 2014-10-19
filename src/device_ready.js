@@ -241,13 +241,10 @@ define(function(require, exports, module) {
                     }
                 }
 
-                // Timer.setTimeout(function(){
-                    App.mainSize = [App.defaultSize[0],App.defaultSize[1] - keyboardHeight];
-                    App.MainContext.emit('resize');
-                // });
-
-                App.Events.emit('KeyboardShowHide', true);
+                App.mainSize = [App.defaultSize[0],App.defaultSize[1] - keyboardHeight];
+                App.MainContext.emit('resize');
                 App.KeyboardShowing = true;
+                App.Events.emit('KeyboardShowHide', true);
 
                 // App.mainSize = App.MainContext.getSize();
                 // if (App.MainController)
@@ -261,8 +258,8 @@ define(function(require, exports, module) {
                 App.MainContext.emit('resize');
 
                 // Update the page (tell 'em)
-                App.Events.emit('KeyboardShowHide', false);
                 App.KeyboardShowing = false;
+                App.Events.emit('KeyboardShowHide', false);
 
                 // App.mainSize = App.MainContext.getSize();
                 // if (App.MainController)
