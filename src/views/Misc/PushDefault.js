@@ -238,7 +238,7 @@ define(function(require, exports, module) {
             pushOpt.Toggle.pipe(that.contentScrollView);
 
             pushOpt.ToggleButton = new Surface({
-                size: [30,30],
+                size: [26,26],
                 classes: ['push-toggle-top-button']
             });
             pushOpt.ToggleButton.on('click', function(){
@@ -256,7 +256,7 @@ define(function(require, exports, module) {
             var toggleModifier = new Modifier({
                 // toggle between 0 and right x-position
                 transform: function() {
-                    var xPos = state.get() * (70 - 30);
+                    var xPos = 2 + state.get() * (70 - 30);
                     return Transform.translate(xPos, 0, 0);
                 }
             });
