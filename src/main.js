@@ -157,7 +157,7 @@ define(function(require, exports, module) {
         t: null, // for translation
         Utils: Utils,
         Flags: {},
-        Functions: {}, // some global functions, like Pulsate
+        Functions: {}, // some global functions, like for Splash
         KeyboardShowing: false,
         MainContext: null,
         MainController: null,
@@ -608,7 +608,7 @@ define(function(require, exports, module) {
             // - it should be a ViewSequence or something that allows multiple 'toasts' to be displayed at once, with animations)
             // - todo
             var toastNode = new RenderNode();
-            App.MainView.add(toastNode);
+            App.MainView.add(Utils.usePlane('toast')).add(toastNode);
 
             // Add FPS Surface to mainContext
             var fps = new View();
@@ -690,8 +690,6 @@ define(function(require, exports, module) {
                     App.Functions.action();
                     if(App.Data.usePg){
                         navigator.splashscreen.hide();
-                    } else {
-                        App.Functions.action();
                     }
                 }catch(err){
                     alert('failed hiding splash screen');

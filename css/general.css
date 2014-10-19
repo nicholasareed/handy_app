@@ -557,7 +557,7 @@ iframe {
 /* Header */
 
 .header-bg-default {
-  background: rgba(255,255,255,0.5);
+  background: rgba(32,109,154, 1);
   /*background: url('../img/zwartevilt.png') repeat;
   opacity: 0.5;*/
 }
@@ -573,7 +573,7 @@ iframe {
 
   /*color: #182030;*/
   /*color: #2980b9;*/
-  color: #87603E;
+  color: white;
 
   padding-left: 8px;
   text-align: left;
@@ -637,8 +637,7 @@ iframe {
 
 
 .header-tab-text {
-  /*color: white;*/
-  color: #2980b9;
+  color: white;
 
   font-size: 11px;
   line-height: 60px;
@@ -650,8 +649,8 @@ iframe {
   /*background: #182030;
   color: #C0C0C0;*/
   /*color: #182030;*/
-  /*color: white;*/
-  color: #2980b9;
+  color: white;
+  /*color: #2980b9;*/
 
   /*background: white;*/
 
@@ -665,9 +664,9 @@ iframe {
 }
 
 .header-tab-icon-text i {
-  /*color: white;*/
+  color: white;
   /*color: #2980b9;*/
-  color: #87603E;
+  /*color: #87603E;*/
 
   font-size: 36px;
   line-height: 24px;
@@ -684,9 +683,9 @@ iframe {
 }
 
 .header-tab-icon-text-big i {
-  /*color: white;*/
+  color: white;
   /*color: #2980b9;*/
-  color: #87603E;
+  /*color: #87603E;*/
 
   font-size: 30px;
   line-height: 60px;
@@ -952,13 +951,13 @@ input[type="submit"].form-button-submit-default {
 /* Footer */
 
 .footer-tabbar-default {
-  border-top: 1px solid #CC4323;
+  border-top: 1px solid #dcdcdc;
   /*background: #2980b9; /*#202A40;*/
-  background: #992B14;
+  background: #f8f8f8;
 
   text-align: center;
   /*line-height: 80px;*/
-  color: #f8f8f8;
+  color: #9d9d9d;
   line-height: 15px;
   text-transform: uppercase;
 }
@@ -980,7 +979,8 @@ input[type="submit"].form-button-submit-default {
 }
 
 .footer-tabbar-default.on {
-  border-bottom: 4px solid #1F2D2D;
+  color: #206D9A;
+  /*border-bottom: 4px solid #1F2D2D;*/
 }
 
 

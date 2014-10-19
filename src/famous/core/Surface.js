@@ -12,6 +12,8 @@ define(function(require, exports, module) {
 
     var LongTapSync = require("views/common/LongTapSync");
 
+    var $ = require('jquery');
+
     /**
      * A base class for viewable content and event
      *   targets inside a Famo.us application, containing a renderable document
@@ -176,6 +178,13 @@ define(function(require, exports, module) {
         }
         return this;
     };
+    Surface.prototype.setWrap = function setContent(wrap) {
+        if (this.wrap !== wrap) {
+            this.wrap = wrap;
+            this._contentDirty = true; // just dirty the content
+        }
+        return this;
+    };
 
     /**
      * Return inner (HTML) content of this surface.
@@ -200,6 +209,7 @@ define(function(require, exports, module) {
         if (options.classes) this.setClasses(options.classes);
         if (options.properties) this.setProperties(options.properties);
         if (options.content) this.setContent(options.content);
+        if (options.wrap) this.setWrap(options.wrap);
         return this;
     };
 
@@ -378,8 +388,14 @@ define(function(require, exports, module) {
         if (content instanceof Node) {
             while (target.hasChildNodes()) target.removeChild(target.firstChild);
             target.appendChild(content);
+        } else {
+            // wrap the content if necessary
+            if(this.wrap){
+                var wrap = this.wrap.split('><');
+                content = wrap[0] + '>' + content + '<' + wrap[1];
+            }
+            target.innerHTML = content;
         }
-        else target.innerHTML = content;
 
         var size = this.size ? this.size : [undefined, undefined]; //this.getSize() return _size, which we don't want
         if(size.indexOf(true) === -1){

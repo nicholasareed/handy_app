@@ -156,7 +156,8 @@ define(function(require, exports, module) {
                 size: opts.size ? opts.size : [undefined, true],
                 value: opts.value,
                 attr: opts.attr || {},
-                classes: opts.classes || ['textarea-default']
+                classes: opts.classes || ['textarea-default'],
+                properties: opts.properties || {},
             });
         } else {
             inputSurface = new InputSurface({
@@ -165,6 +166,8 @@ define(function(require, exports, module) {
                 type: opts.type,
                 size: opts.size ? opts.size : [undefined, true],
                 value: opts.value,
+                classes: opts.classes || [],
+                properties: opts.properties || {},
                 attr: opts.attr || {}
             });
         }

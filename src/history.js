@@ -401,6 +401,39 @@ define(function(require, exports, module) {
             // RouterContext.currentPageView._eventInput.emit('backbutton');
         });
 
+
+        // Resume
+        App.Events.on('resume', function(){
+            // Resume handler?
+            try {
+                if(typeof App.Views.currentPageView.resumeHandler == "function"){
+                    console.log('launching resumeHandler');
+                    App.Views.currentPageView.resumeHandler.apply(App.Views.currentPageView);
+                    return;
+                } else {
+                    console.log('no resume handler in PageView');
+                }
+            } catch(err){
+                console.error(err);
+            }
+        });
+
+        // Pause
+        App.Events.on('pause', function(){
+            // Pause handler?
+            try {
+                if(typeof App.Views.currentPageView.pauseHandler == "function"){
+                    console.log('launching pauseHandler');
+                    App.Views.currentPageView.pauseHandler.apply(App.Views.currentPageView);
+                    return;
+                } else {
+                    console.log('no pause handler in PageView');
+                }
+            } catch(err){
+                console.error(err);
+            }
+        });
+        
         // Firebase update (update content on page)
         App.Events.on('firebase.child_added', function(snapshot){
 
