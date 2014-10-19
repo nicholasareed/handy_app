@@ -923,6 +923,70 @@
 
 
 
+/* Messages */
+
+.message-byuser-container-default {
+
+}
+
+.message-byuser-container-default > div {
+  padding: 0 8px;
+}
+
+.message-byuser-container-default > div:first-child {
+  padding-top: 12px;
+}
+.message-byuser-container-default > div:last-child {
+  padding-bottom: 12px;
+}
+
+.message-byuser-container-default > div:nth-child(1) {
+  font-weight: bold;
+  font-size: 16px;
+}
+.message-byuser-container-default > div:nth-child(2) {
+  font-size: 12px;
+  color: #999;
+}
+
+.message-text-default {
+  text-align: right;
+  padding: 4px 8px;
+}
+.message-text-default.from_me {
+  text-align: left;
+}
+
+.message-text-default > div {
+
+  display: inline-block;
+  width: 90%;
+
+  color: white;
+  background: #206D9A;
+
+  border: 1px solid #eee;
+
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+
+}
+
+.message-text-default.from_me > div {
+  background: #9A191C;
+}
+
+.message-text-default > div > div:nth-child(1) {
+  font-size: 11px;
+  line-height: 14px;
+  padding: 4px 4px 0;
+}
+
+.message-text-default > div > div:nth-child(2) {
+  font-size: 16px;
+  line-height: 20px;
+  padding: 0 4px 4px;
+}
 
 
 /* Settings */
