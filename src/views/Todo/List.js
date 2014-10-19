@@ -278,13 +278,15 @@ define(function(require, exports, module) {
         var that = this;
 
         // Determine the filter we'll use for this ListView
-        var filter = {};
+        var filter = {},
+            empty_string = '';
 
         // create correct filter
 
         switch(this.tabs.todos){
             case 'my':
                 // todos I am responsible for completing
+                empty_string = 'No Todos for you to complete';
                 filter = {
                     tags: {
                         '$ne' : 'complete'
@@ -312,6 +314,7 @@ define(function(require, exports, module) {
             case 'assigned':
                 
                 // todos that are assigned that you know about
+                empty_string = 'No Todos assigned to someone else';
                 filter = {
                     tags: {
                         '$ne' : 'complete'
@@ -327,6 +330,7 @@ define(function(require, exports, module) {
                 break;
 
             case 'complete':
+                empty_string = 'No Todos have been completed';
                 filter = {
                     tags: 'complete'
                 };
@@ -368,7 +372,7 @@ define(function(require, exports, module) {
         // Create the ListView if it doesn't exist
         if(!cachedView){
             cachedView = new FilterView({
-                empty_string: 'Empty List',
+                empty_string: empty_string,
                 filter: filter
             });
 
