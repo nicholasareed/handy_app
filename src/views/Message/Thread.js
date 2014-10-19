@@ -673,6 +673,7 @@ define(function(require, exports, module) {
         Message.save()
             .then(function(newModel){
 
+                that.checking = false;
                 that.inputSurface.setValue('');
                 that.submitSurface.setValue('Send');
 
