@@ -173,13 +173,21 @@ define(function(require, exports, module) {
 
 
                 'inbox/:user_id' : function(){
-                    App.Views.MainFooter.route_show = true;
-                    App.Views.MainFooter.Tabs.select('messages', false);
+                    Timer.setTimeout(function(){
+                        App.Views.SplashLoading.hide();
+                    },3000);
+                    
+                    // App.Views.MainFooter.route_show = true;
+                    // App.Views.MainFooter.Tabs.select('messages', false);
                     // defaultRoute('Inbox', 'Message/Inbox', arguments);
                     defaultRoute('InboxThread', 'Message/Thread', arguments);
                 },
 
                 'inbox' : function(){
+                    Timer.setTimeout(function(){
+                        App.Views.SplashLoading.hide();
+                    },3000);
+
                     App.Views.MainFooter.route_show = true;
                     App.Views.MainFooter.Tabs.select('messages', false);
                     // defaultRoute('Inbox', 'Message/Inbox', arguments);

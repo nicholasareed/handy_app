@@ -926,7 +926,7 @@
 /* Messages */
 
 .message-byuser-container-default {
-
+  border-bottom: 1px solid #f8f8f8;
 }
 
 .message-byuser-container-default > div {
@@ -942,7 +942,8 @@
 
 .message-byuser-container-default > div:nth-child(1) {
   font-weight: bold;
-  font-size: 16px;
+  font-size: 22px;
+  line-height: 28px;
 }
 .message-byuser-container-default > div:nth-child(2) {
   font-size: 12px;
@@ -986,6 +987,18 @@
   font-size: 16px;
   line-height: 20px;
   padding: 0 4px 4px;
+}
+
+
+/* Message form */
+
+input[type="text"].msg-textinput-smaller {
+  line-height: 52px;
+  border: 1px solid #ddd;
+}
+
+input[type="submit"].msg-button-smaller {
+  line-height: 52px;
 }
 
 

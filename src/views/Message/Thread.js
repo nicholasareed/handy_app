@@ -19,6 +19,11 @@ define(function(require, exports, module) {
     var Utility = require('famous/utilities/Utility');
     var Timer = require('famous/utilities/Timer');
 
+    var InputSurface = require('famous/surfaces/InputSurface');
+    var SubmitInputSurface = require('famous/surfaces/SubmitInputSurface');
+    var FormContainerSurface = require('famous/surfaces/FormContainerSurface');
+
+
     // Helpers
     var Utils = require('utils');
     var $ = require('jquery-adapter');
@@ -30,7 +35,10 @@ define(function(require, exports, module) {
     var GridLayout = require("famous/views/GridLayout");
 
     // Subviews
+    var StandardPageView = require('views/common/StandardPageView');
     var StandardHeader = require('views/common/StandardHeader');
+    var FormHelper = require('views/common/FormHelper');
+    var BoxLayout = require('famous-boxlayout');
 
     // Extras
     var Credentials         = JSON.parse(require('text!credentials.json'));
@@ -59,7 +67,7 @@ define(function(require, exports, module) {
 
     function PageView(params) {
         var that = this;
-        View.apply(this, arguments);
+        StandardPageView.apply(this, arguments);
         this.params = params;
 
         this.loadModels();
@@ -67,7 +75,7 @@ define(function(require, exports, module) {
         // create the layout
         this.layout = new HeaderFooterLayout({
             headerSize: App.Defaults.Header.size,
-            footerSize: 60
+            footerSize: 0
         });
 
         this.createHeader();
@@ -85,7 +93,7 @@ define(function(require, exports, module) {
 
     }
 
-    PageView.prototype = Object.create(View.prototype);
+    PageView.prototype = Object.create(StandardPageView.prototype);
     PageView.prototype.constructor = PageView;
     
     PageView.prototype.loadModels = function(){
@@ -218,10 +226,11 @@ define(function(require, exports, module) {
             backClasses: ["normal-header"],
             // backContent: false,
             moreClasses: ["normal-header"],
+            moreContent: false
             // moreContent: false, //"New", //'<span class="icon ion-navicon-round"></span>'
-            moreSurfaces: [
-                this.headerContent.NewMessage
-            ]
+            // moreSurfaces: [
+            //     this.headerContent.NewMessage
+            // ]
         }); 
         this.header._eventOutput.on('back',function(){
             App.history.back();
@@ -252,30 +261,102 @@ define(function(require, exports, module) {
         // this.HeaderNode.add(this.header.StateModifier).add(this.header);
 
         // Attach header to the layout        
-        this.layout.header.add(this.header);
+        this.layout.header.add(Utils.usePlane('header')).add(this.header);
 
     };
     
     PageView.prototype.createContent = function(){
         var that = this;
 
-        // this.createDefaultSurfaces();
-        // this.createDefaultLightboxes();
-
         // this.contentLayout = new SequentialLayout();
-        this.contentLayout = new ScrollView();
-        this.contentLayout.Views = [];
-        this.contentLayout.sequenceFrom(this.contentLayout.Views);
+        this.contentLayout = new HeaderFooterLayout({
+            headerSize: 0,
+            footerSize: 60
+        });
+
+        this.contentScrollView = new ScrollView();
+        this.contentScrollView.Views = [];
+        this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
 
         this.createDefaultSurfaces();
         this.createDefaultLightboxes();
 
-        this.contentLayout.Views.push(this.lightboxButtons);
+        this.createNewMessageContent();
+
+        this.contentLayout.content.add(this.lightboxContent);
+        this.contentLayout.footer.add(Utils.usePlane('footer')).add(this.newMessageContent);
+
+        this.contentScrollView.Views.push(this.lightboxButtons);
 
         this.ContentStateModifier = new StateModifier();
 
         // Attach header to the layout        
-        this.layout.content.add(this.ContentStateModifier).add(this.lightboxContent);
+        this.layout.content.add(this.ContentStateModifier).add(this.contentLayout);
+
+    };
+
+    PageView.prototype.createNewMessageContent = function(){
+        var that = this;
+
+        this.newMessageContent = new View();
+
+        // Form Container
+        var FormContainer = new FormContainerSurface();
+        
+        // prevent submit from actually submitting the form
+        FormContainer.on('submit', function(ev){
+            ev.preventDefault();
+            ev.stopPropagation();
+            return false;
+        });
+
+        // FlexibleLayout to hold Input and Submit buttons
+        this.msgLayout = new FlexibleLayout({
+            direction: 0,
+            ratios: [1, true] // input, submit
+        });
+        this.msgLayout.Views = [];
+
+        // Build input with slight Margins
+        this.inputSurface = new InputSurface({
+            name: '',
+            placeholder: 'Type Message Here',
+            type: 'text',
+            size: [undefined, true],
+            value: '',
+            classes: ['msg-textinput-smaller'],
+            properties: {},
+            attr: {}
+        });
+
+        var inputBoxLayout = new BoxLayout({ margins: [4] });
+        inputBoxLayout.middleAdd(this.inputSurface);
+        this.msgLayout.Views.push(inputBoxLayout);
+        // this.msgLayout.Views.push(inputSurface);
+
+        // Submit/send button
+
+        this.submitSurface = new SubmitInputSurface({
+            value: 'Send',
+            size: [undefined, true],
+            classes: ['form-button-submit-default','msg-button-smaller']
+        });
+        this.submitSurface.on('click', this.send_message.bind(this));
+        this.submitSurface.SizeMod = new StateModifier({
+            size: [80, undefined]
+        });
+        var submitBoxLayout = new BoxLayout({ margins: [4] });
+        submitBoxLayout.middleAdd(this.submitSurface);
+        submitBoxLayout.View = new View();
+        submitBoxLayout.View.add(this.submitSurface.SizeMod).add(submitBoxLayout);
+
+        this.msgLayout.Views.push(submitBoxLayout.View);
+
+        this.msgLayout.sequenceFrom(this.msgLayout.Views);
+
+        FormContainer.add(this.msgLayout);
+        var formNode = this.newMessageContent.add(FormContainer);
+        
 
     };
 
@@ -302,16 +383,6 @@ define(function(require, exports, module) {
             }
         });
         this.emptyListSurface.pipe(this._eventOutput);
-        this.emptyListSurfaceNoFriends = new Surface({
-            // content: "You should add some friends to hang out with!",
-            content: "You've invited all your friends on handy!",
-            size: [undefined, 100],
-            classes: ['empty-list-surface-default'],
-            properties: {
-                // backgroundColor: 'red'
-            }
-        });
-        this.emptyListSurfaceNoFriends.pipe(this._eventOutput);
 
 
         // Create Loading Renderable
@@ -468,7 +539,7 @@ define(function(require, exports, module) {
 
         Utils.dataModelReplaceOnSurface(messageView.Surface);
         // messageView.Surface.pipe(this._eventOutput);
-        messageView.Surface.pipe(this.contentLayout);
+        messageView.Surface.pipe(this.contentScrollView);
         messageView.Surface.Model = Message;
         messageView.add(messageView.Surface);
         messageView.getSize = function(){
@@ -479,15 +550,15 @@ define(function(require, exports, module) {
         };
 
         // Splice in
-        this.contentLayout.Views.splice(this.contentLayout.Views.length-1,0,messageView);
+        this.contentScrollView.Views.splice(this.contentScrollView.Views.length-1,0,messageView);
         this.collection.infiniteResults += 1;
 
-        // if(!this.contentLayout.isSeq){
-            // this.contentLayout.isSeq = true;
-            this.contentLayout.sequenceFrom(this.contentLayout.Views);
+        // if(!this.contentScrollView.isSeq){
+            // this.contentScrollView.isSeq = true;
+            this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
         // }
 
-        console.log(this.contentLayout.Views);
+        console.log(this.contentScrollView.Views);
 
     };
 
@@ -522,7 +593,7 @@ define(function(require, exports, module) {
             //     nextRenderable = this.emptyListSurfaceNoFriends;
             // }
         } else {
-            nextRenderable = this.contentLayout;
+            nextRenderable = this.contentScrollView;
         }
 
         if(nextRenderable != this.lightboxContent.lastRenderable){
@@ -531,26 +602,26 @@ define(function(require, exports, module) {
         }
 
         // Splice out the lightboxButtons before sorting
-        var popped = this.contentLayout.Views.pop();
-        // this.contentLayout.Views = _.without(this.contentLayout.Views, this.SelectAllButton);
+        var popped = this.contentScrollView.Views.pop();
+        // this.contentScrollView.Views = _.without(this.contentScrollView.Views, this.SelectAllButton);
 
-        // Resort the contentLayout.Views
-        this.contentLayout.Views = _.sortBy(this.contentLayout.Views, function(v){
-            // console.log(v.Model.get('created'));
-            return moment(v.Model.get('created')).format('X');
-        });
-        this.contentLayout.Views.reverse();
+        // // Resort the contentScrollView.Views
+        // this.contentScrollView.Views = _.sortBy(this.contentScrollView.Views, function(v){
+        //     // console.log(v.Model.get('created'));
+        //     return moment(v.Model.get('created')).format('X');
+        // });
+        this.contentScrollView.Views.reverse();
 
         // re-add buttons
         // if(this.collection.length > 0){
-        //     this.contentLayout.Views.unshift(this.SelectAllButton);
+        //     this.contentScrollView.Views.unshift(this.SelectAllButton);
         // }
-        this.contentLayout.Views.push(popped);
+        this.contentScrollView.Views.push(popped);
 
-        console.log(this.contentLayout.Views);
+        console.log(this.contentScrollView.Views);
 
         // Re-sequence?
-        this.contentLayout.sequenceFrom(this.contentLayout.Views);
+        this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
 
         // Show correct infinity buttons (More, All, etc.)
         this.render_infinity_buttons();
@@ -574,6 +645,40 @@ define(function(require, exports, module) {
             // this.lightboxButtons.show(this.infinityShowMoreSurface);
             this.lightboxButtons.hide();
         }
+
+    };
+
+    PageView.prototype.send_message = function(){
+        var that = this;
+
+        if(this.checking){
+            return;
+        }
+        this.checking = true;
+
+        this.submitSurface.setValue('...');
+
+        // Get elements to save
+        var Message = new MessageModel.Message({
+            to_user_id: that.model.get('_id'),
+            text: that.inputSurface.getValue().trim()
+            // media: this.summary.media
+        });
+
+        console.log(Message.toJSON());
+
+        Message.save()
+            .then(function(newModel){
+
+                that.inputSurface.setValue('');
+                that.submitSurface.setValue('Send');
+
+                // Created OK
+                Utils.Notification.Toast('Message sent...Refreshing');
+
+                that.collection.fetch();
+
+            });
 
     };
 

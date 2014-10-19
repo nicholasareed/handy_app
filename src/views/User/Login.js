@@ -34,7 +34,6 @@ define(function(require, exports, module) {
     var StandardPageView = require('views/common/StandardPageView');
     var StandardHeader = require('views/common/StandardHeader');
     var FormHelper = require('views/common/FormHelper');
-
     var BoxLayout = require('famous-boxlayout');
     
     var EventHandler = require('famous/core/EventHandler');
