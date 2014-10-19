@@ -222,8 +222,10 @@ define(function(require, exports, module) {
             });
             pushOpt.Left.pipe(that.contentScrollView);
 
+            pushOpt.ToggleView = new RenderNode(new StateModifier({size:[70,30]}));
+
             pushOpt.Toggle = new ToggleButton({
-                size: [40, 40],
+                size: [70, 30],
                 content: '',
                 classes: ['text-center'],
                 onClasses: ['push-toggle', 'circle-toggle', 'toggle-on'],
@@ -233,6 +235,14 @@ define(function(require, exports, module) {
                 toggleMode: ToggleButton.TOGGLE
             });
             pushOpt.Toggle.pipe(that.contentScrollView);
+
+            pushOpt.ToggleButton = new Surface({
+                size: [30,30]
+                classes: ['push-toggle-top-button']
+            });
+
+            pushOpt.ToggleView.add(pushOpt.Toggle);
+            pushOpt.ToggleView.add(pushOpt.ToggleButton);
 
             // Handle toggle button click
             pushOpt.Toggle.on('select', function(m){
@@ -266,7 +276,7 @@ define(function(require, exports, module) {
 
             pushOpt.Layout.sequenceFrom([
                 pushOpt.Left,
-                pushOpt.Toggle,
+                pushOpt.ToggleView,
                 pushOpt.Right
             ]);
 

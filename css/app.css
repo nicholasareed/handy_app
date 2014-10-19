@@ -998,13 +998,13 @@
 /* Message form */
 
 input[type="text"].msg-textinput-smaller {
-  line-height: 52px;
+  line-height: 50px;
   border: 1px solid #ddd;
   border: 0px;
 }
 
 input[type="submit"].msg-button-smaller {
-  line-height: 52px;
+  line-height: 50px;
 }
 
 

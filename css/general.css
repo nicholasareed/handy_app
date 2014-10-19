@@ -142,8 +142,8 @@ body {
 /* Toggle buttons */
 
 .circle-toggle {
-  border-radius: 50%;
-  -webkit-border-radius: 50%;
+  border-radius: 30px;
+  -webkit-border-radius: 30px;
 }
 
 .square-toggle {
@@ -152,15 +152,30 @@ body {
 }
 
 .toggle-on {
-  background: #2ecc71;
+  /*background: #2ecc71;*/
+  background: rgba(32,109,154, 1);
   color: white;
 }
 
 .toggle-off {
-  background: #E74C3C;
+  /*background: #E74C3C;*/
+  background: #f8f8f8;
   color: white;
 }
 
+.push-toggle-top-button {
+  
+  margin-top: 12px;
+
+  text-align: center;
+  line-height: 30px;
+  background: #eee;
+  border: 1px solid gray;
+
+  border-radius: 30px;
+  -webkit-border-radius: 30px;
+
+}
 
 
 
@@ -955,7 +970,7 @@ input[type="submit"].form-button-submit-default {
   border-top: 1px solid #dcdcdc;
   /*background: #2980b9; /*#202A40;*/
   background: #f8f8f8;
-  
+
 }
 
 .footer-tabbar-default {

@@ -13,6 +13,7 @@ define(function(require, exports, module) {
     var StateModifier = require('famous/modifiers/StateModifier');
     var Transitionable     = require('famous/transitions/Transitionable');
     var Transform = require('famous/core/Transform');
+    var Easing = require('famous/transitions/Easing');
     var Matrix = require('famous/core/Transform');
     var RenderNode         = require('famous/core/RenderNode')
 
@@ -222,8 +223,10 @@ define(function(require, exports, module) {
             });
             pushOpt.Left.pipe(that.contentScrollView);
 
+            pushOpt.ToggleView = new RenderNode(new StateModifier({size:[70,30]}));
+
             pushOpt.Toggle = new ToggleButton({
-                size: [40, 40],
+                size: [70, 30],
                 content: '',
                 classes: ['text-center'],
                 onClasses: ['push-toggle', 'circle-toggle', 'toggle-on'],
@@ -234,9 +237,48 @@ define(function(require, exports, module) {
             });
             pushOpt.Toggle.pipe(that.contentScrollView);
 
+            pushOpt.ToggleButton = new Surface({
+                size: [30,30],
+                classes: ['push-toggle-top-button']
+            });
+            pushOpt.ToggleButton.on('click', function(){
+                // choose opposite
+                var val = that.model.get('scheme.' + Info.scheme_key);
+                if(val){
+                    pushOpt.Toggle.deselect() 
+                } else {
+                    pushOpt.Toggle.select() 
+                }
+            });
+            var TRANSITION = { duration: 350, curve: Easing.outQuad };
+            var state = new Transitionable(0);
+            var isToggled = false;
+            var toggleModifier = new Modifier({
+                // toggle between 0 and right x-position
+                transform: function() {
+                    var xPos = state.get() * (70 - 30);
+                    return Transform.translate(xPos, 0, 0);
+                }
+            });
+            // Toggle state between 0 and 1
+            function moveButton() {
+                // Halts current animation if active
+                if(state.isActive()) state.halt();
+                // Sets end transition state
+                if(isToggled) state.set(1, TRANSITION);
+                else state.set(0, TRANSITION);
+
+                isToggled = !isToggled;
+            }
+
+            pushOpt.ToggleView.add(pushOpt.Toggle);
+            pushOpt.ToggleView.add(toggleModifier).add(Transform.translate(0,0,0.00001)).add(pushOpt.ToggleButton);
+
             // Handle toggle button click
             pushOpt.Toggle.on('select', function(m){
                 console.log('select, saving');
+                isToggled = true;
+                moveButton();
                 if(that.model.get('scheme.' + Info.scheme_key) !== true){
                     var data = {};
                     data['scheme.' + Info.scheme_key] = true;
@@ -245,6 +287,8 @@ define(function(require, exports, module) {
             });
             pushOpt.Toggle.on('deselect', function(){
                 console.log('deselect, saving');
+                isToggled = false;
+                moveButton();
                 if(that.model.get('scheme.' + Info.scheme_key) !== false){
                     var data = {};
                     data['scheme.' + Info.scheme_key] = false;
@@ -266,7 +310,7 @@ define(function(require, exports, module) {
 
             pushOpt.Layout.sequenceFrom([
                 pushOpt.Left,
-                pushOpt.Toggle,
+                pushOpt.ToggleView,
                 pushOpt.Right
             ]);
 
