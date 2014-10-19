@@ -379,6 +379,11 @@ define(function(require, exports, module) {
                 // var that = this;
                 App.Views.MainFooter = new View();
 
+                App.Views.MainFooter.Bg = new Surface({
+                    size: [undefined, undefined],
+                    classes: ['footer-tabbar-background']
+                });
+
                 // create the footer
                 App.Views.MainFooter.Tabs = new StandardTabBar();  
                 var tmpTabs = App.Views.MainFooter.Tabs;
@@ -450,7 +455,9 @@ define(function(require, exports, module) {
                     size: [undefined, 60]
                 });
 
-                App.Views.MainFooter.add(App.Views.MainFooter.originMod).add(App.Views.MainFooter.positionMod).add(App.Views.MainFooter.sizeMod).add(App.Views.MainFooter.Tabs);
+                var node = App.Views.MainFooter.add(App.Views.MainFooter.originMod).add(App.Views.MainFooter.positionMod).add(App.Views.MainFooter.sizeMod);
+                node.add(App.Views.MainFooter.Bg);
+                node.add(App.Views.MainFooter.Tabs);
 
                 App.Views.MainFooter.show = function(transition){
                     transition = transition || {

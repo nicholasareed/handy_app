@@ -950,10 +950,15 @@ input[type="submit"].form-button-submit-default {
 
 /* Footer */
 
-.footer-tabbar-default {
+.footer-tabbar-background {
+
   border-top: 1px solid #dcdcdc;
   /*background: #2980b9; /*#202A40;*/
   background: #f8f8f8;
+  
+}
+
+.footer-tabbar-default {
 
   text-align: center;
   /*line-height: 80px;*/
