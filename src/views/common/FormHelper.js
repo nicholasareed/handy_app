@@ -124,13 +124,13 @@ define(function(require, exports, module) {
                 }
             });
             this._bg.add(this._bg.SizeMod).add(this._bg.Surface);
-            FormContainer.add(Transform.translate(0,0,-0.0000001)).add(this._bg);
+            FormContainer.add(Utils.Z(1)).add(this._bg);
         }
 
         this._form = FormContainer;
         this._formScrollView = contentScrollView;
 
-        FormContainer.add(contentScrollView);
+        FormContainer.add(Utils.Z(2)).add(contentScrollView);
 
         this.add(FormContainer);
 
