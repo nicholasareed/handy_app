@@ -295,7 +295,7 @@ define(function(require, exports, module) {
             }
 
             pushOpt.ToggleView.add(pushOpt.Toggle);
-            pushOpt.ToggleView.add(Utils.Z(1)).add(pushOpt.ToggleButton);
+            pushOpt.ToggleView.add(Utils.Z(1)).add(toggleModifier).add(pushOpt.ToggleButton);
 
             // Handle toggle button click
             pushOpt.Toggle.on('select', function(m){
