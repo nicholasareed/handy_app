@@ -41,9 +41,6 @@ define(function(require, exports, module) {
     // Models
     var UserModel = require('models/user');
 
-    // Custom Surface
-    var TextAreaSurface = require('views/common/TextAreaSurface');
-
 
     function PageView(options) {
         var that = this;

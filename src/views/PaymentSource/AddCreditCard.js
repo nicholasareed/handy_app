@@ -30,16 +30,15 @@ define(function(require, exports, module) {
     var Easing = require('famous/transitions/Easing');
 
     // Views
+    var StandardPageView = require('views/common/StandardPageView');
     var StandardHeader = require('views/common/StandardHeader');
-    // var TextAreaSurface = require('views/common/TextAreaSurface');
-    var TextAreaSurface = require('famous/surfaces/TextareaSurface');
+    var FormHelper = require('views/common/FormHelper');
+    var BoxLayout = require('famous-boxlayout');
     
     var EventHandler = require('famous/core/EventHandler');
 
     // Models
     var UserModel = require('models/user');
-    var UserModel = require('models/user');
-
 
     function PageView(options) {
         var that = this;
@@ -63,19 +62,19 @@ define(function(require, exports, module) {
         // Model
         this.model = App.Data.User;
 
-        // // Fetch
-        // this.model.fetch({prefill: true});
+        // // // Fetch
+        // // this.model.fetch({prefill: true});
 
-        // Wait for model to get populated, then add the input surfaces
-        // - model should be ready immediately!
-        this.model.populated().then(function(){
-            that.addSurfaces();
-            Timer.setInterval(function(){
-                if(that._showing){
-                    that.model.fetch();
-                }
-            },10000);
-        });
+        // // Wait for model to get populated, then add the input surfaces
+        // // - model should be ready immediately!
+        // this.model.populated().then(function(){
+        //     that.addSurfaces();
+        //     Timer.setInterval(function(){
+        //         if(that._showing){
+        //             that.model.fetch();
+        //         }
+        //     },10000);
+        // });
 
 
     }
@@ -112,20 +111,20 @@ define(function(require, exports, module) {
     PageView.prototype.createContent = function(){
         var that = this;
         
-        // create the scrollView of content
-        this.contentScrollView = new ScrollView(App.Defaults.ScrollView);
-        this.contentScrollView.Views = [];
+        this.form = new FormHelper({
+            type: 'form',
+            scroll: true,
+            bg: true
+        });
 
-        // link endpoints of layout to widgets
-
-        // Sequence
-        this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
+        // Add surfaces to content (buttons)
+        this.addSurfaces();
 
         // Content Modifiers
         this.layout.content.StateModifier = new StateModifier();
 
         // Now add content
-        this.layout.content.add(this.layout.content.StateModifier).add(this.contentScrollView);
+        this.layout.content.add(this.layout.content.StateModifier).add(Utils.usePlane('content')).add(this.form);
 
 
     };
@@ -133,105 +132,184 @@ define(function(require, exports, module) {
     PageView.prototype.addSurfaces = function() {
         var that = this;
 
-        // Card Name
-        this.inputNameSurface = new InputSurface({
-            name: 'cardname',
+        this.inputSaveName = new FormHelper({
+
+            margins: [10,10],
+
+            form: this.form,
+            name: 'name',
             placeholder: 'Save Card As',
             type: 'text',
-            size: [undefined, 50],
             value: ''
         });
-        this.inputNameSurface.pipe(this.contentScrollView);
-        this.inputNameSurface.View = new View();
-        this.inputNameSurface.View.StateModifier = new StateModifier();
-        this.inputNameSurface.View.add(this.inputNameSurface.View.StateModifier).add(this.inputNameSurface);
-        this.contentScrollView.Views.push(this.inputNameSurface.View);
 
-        // Number
-        this.inputNumberSurface = new InputSurface({
-            name: 'number',
+        this.inputNumber = new FormHelper({
+
+            margins: [10,10],
+
+            form: this.form,
             placeholder: 'Credit Card Number',
-            type: 'text',
-            size: [undefined, 50],
+            type: 'number',
             value: ''
         });
-        this.inputNumberSurface.pipe(this.contentScrollView);
-        this.inputNumberSurface.View = new View();
-        this.inputNumberSurface.View.StateModifier = new StateModifier();
-        this.inputNumberSurface.View.add(this.inputNumberSurface.View.StateModifier).add(this.inputNumberSurface);
-        this.contentScrollView.Views.push(this.inputNumberSurface.View);
 
+        this.inputExpMonth = new FormHelper({
 
-        // Month
-        this.inputMonthSurface = new InputSurface({
-            name: 'month',
-            placeholder: 'Expiration Month',
-            type: 'text',
-            size: [undefined, 50],
+            margins: [10,10],
+
+            form: this.form,
+            placeholder: '2-Digit Expiration Month',
+            type: 'number',
             value: ''
         });
-        this.inputMonthSurface.pipe(this.contentScrollView);
-        this.inputMonthSurface.View = new View();
-        this.inputMonthSurface.View.StateModifier = new StateModifier();
-        this.inputMonthSurface.View.add(this.inputMonthSurface.View.StateModifier).add(this.inputMonthSurface);
-        this.contentScrollView.Views.push(this.inputMonthSurface.View);
 
-        // Year
-        this.inputYearSurface = new InputSurface({
-            name: 'year',
-            placeholder: 'Expiration Year',
-            type: 'text',
-            size: [undefined, 50],
+        this.inputExpYear = new FormHelper({
+
+            margins: [10,10],
+
+            form: this.form,
+            placeholder: '2-Digit Expiration Year',
+            type: 'number',
             value: ''
         });
-        this.inputYearSurface.pipe(this.contentScrollView);
-        this.inputYearSurface.View = new View();
-        this.inputYearSurface.View.StateModifier = new StateModifier();
-        this.inputYearSurface.View.add(this.inputYearSurface.View.StateModifier).add(this.inputYearSurface);
-        this.contentScrollView.Views.push(this.inputYearSurface.View);
 
-        // CVC
-        this.inputCvcSurface = new InputSurface({
-            name: 'cvc',
-            placeholder: 'CVC Code',
-            type: 'text',
-            size: [undefined, 50],
+        this.inputCvc = new FormHelper({
+
+            margins: [10,10],
+
+            form: this.form,
+            placeholder: 'CVC Code (on back)',
+            type: 'number',
             value: ''
         });
-        this.inputCvcSurface.pipe(this.contentScrollView);
-        this.inputCvcSurface.View = new View();
-        this.inputCvcSurface.View.StateModifier = new StateModifier();
-        this.inputCvcSurface.View.add(this.inputCvcSurface.View.StateModifier).add(this.inputCvcSurface);
-        this.contentScrollView.Views.push(this.inputCvcSurface.View);
 
-        // Zipcode
-        this.inputZipcodeSurface = new InputSurface({
-            name: 'zipcode',
-            placeholder: 'Zipcode',
-            type: 'text',
-            size: [undefined, 50],
+        this.inputZipcode = new FormHelper({
+
+            margins: [10,10],
+
+            form: this.form,
+            placeholder: 'Billing Zipcode',
+            type: 'number',
             value: ''
         });
-        this.inputZipcodeSurface.pipe(this.contentScrollView);
-        this.inputZipcodeSurface.View = new View();
-        this.inputZipcodeSurface.View.StateModifier = new StateModifier();
-        this.inputZipcodeSurface.View.add(this.inputZipcodeSurface.View.StateModifier).add(this.inputZipcodeSurface);
-        this.contentScrollView.Views.push(this.inputZipcodeSurface.View);
 
-
-        this.submitButtonSurface = new Surface({
-            content: 'Save Card',
-            size: [undefined, 60],
-            classes: ['form-button-submit-default']
+        this.submitButton = new FormHelper({
+            form: this.form,
+            type: 'submit',
+            value: 'Save Card',
+            margins: [10,10],
+            click: this.save_card.bind(this)
         });
-        this.submitButtonSurface.View = new View();
-        this.submitButtonSurface.View.StateModifier = new StateModifier();
-        this.submitButtonSurface.View.add(this.submitButtonSurface.View.StateModifier).add(this.submitButtonSurface);
-        this.contentScrollView.Views.push(this.submitButtonSurface.View);
 
-        // Events for surfaces
-        this.submitButtonSurface.on('click', this.save_card.bind(this));
+        this.form.addInputsToForm([
+            this.inputSaveName,
+            this.inputNumber,
+            this.inputExpMonth,
+            this.inputExpYear,
+            this.inputCvc,
+            this.inputZipcode,
+            this.submitButton
+        ]);
 
+
+        // // Card Name
+        // this.inputNameSurface = new InputSurface({
+        //     name: 'cardname',
+        //     placeholder: 'Save Card As',
+        //     type: 'text',
+        //     size: [undefined, 50],
+        //     value: ''
+        // });
+        // this.inputNameSurface.pipe(this.contentScrollView);
+        // this.inputNameSurface.View = new View();
+        // this.inputNameSurface.View.StateModifier = new StateModifier();
+        // this.inputNameSurface.View.add(this.inputNameSurface.View.StateModifier).add(this.inputNameSurface);
+        // this.contentScrollView.Views.push(this.inputNameSurface.View);
+
+        // // Number
+        // this.inputNumberSurface = new InputSurface({
+        //     name: 'number',
+        //     placeholder: 'Credit Card Number',
+        //     type: 'text',
+        //     size: [undefined, 50],
+        //     value: ''
+        // });
+        // this.inputNumberSurface.pipe(this.contentScrollView);
+        // this.inputNumberSurface.View = new View();
+        // this.inputNumberSurface.View.StateModifier = new StateModifier();
+        // this.inputNumberSurface.View.add(this.inputNumberSurface.View.StateModifier).add(this.inputNumberSurface);
+        // this.contentScrollView.Views.push(this.inputNumberSurface.View);
+
+
+        // // Month
+        // this.inputMonthSurface = new InputSurface({
+        //     name: 'month',
+        //     placeholder: 'Expiration Month',
+        //     type: 'text',
+        //     size: [undefined, 50],
+        //     value: ''
+        // });
+        // this.inputMonthSurface.pipe(this.contentScrollView);
+        // this.inputMonthSurface.View = new View();
+        // this.inputMonthSurface.View.StateModifier = new StateModifier();
+        // this.inputMonthSurface.View.add(this.inputMonthSurface.View.StateModifier).add(this.inputMonthSurface);
+        // this.contentScrollView.Views.push(this.inputMonthSurface.View);
+
+        // // Year
+        // this.inputYearSurface = new InputSurface({
+        //     name: 'year',
+        //     placeholder: 'Expiration Year',
+        //     type: 'text',
+        //     size: [undefined, 50],
+        //     value: ''
+        // });
+        // this.inputYearSurface.pipe(this.contentScrollView);
+        // this.inputYearSurface.View = new View();
+        // this.inputYearSurface.View.StateModifier = new StateModifier();
+        // this.inputYearSurface.View.add(this.inputYearSurface.View.StateModifier).add(this.inputYearSurface);
+        // this.contentScrollView.Views.push(this.inputYearSurface.View);
+
+        // // CVC
+        // this.inputCvcSurface = new InputSurface({
+        //     name: 'cvc',
+        //     placeholder: 'CVC Code',
+        //     type: 'text',
+        //     size: [undefined, 50],
+        //     value: ''
+        // });
+        // this.inputCvcSurface.pipe(this.contentScrollView);
+        // this.inputCvcSurface.View = new View();
+        // this.inputCvcSurface.View.StateModifier = new StateModifier();
+        // this.inputCvcSurface.View.add(this.inputCvcSurface.View.StateModifier).add(this.inputCvcSurface);
+        // this.contentScrollView.Views.push(this.inputCvcSurface.View);
+
+        // // Zipcode
+        // this.inputZipcodeSurface = new InputSurface({
+        //     name: 'zipcode',
+        //     placeholder: 'Zipcode',
+        //     type: 'text',
+        //     size: [undefined, 50],
+        //     value: ''
+        // });
+        // this.inputZipcodeSurface.pipe(this.contentScrollView);
+        // this.inputZipcodeSurface.View = new View();
+        // this.inputZipcodeSurface.View.StateModifier = new StateModifier();
+        // this.inputZipcodeSurface.View.add(this.inputZipcodeSurface.View.StateModifier).add(this.inputZipcodeSurface);
+        // this.contentScrollView.Views.push(this.inputZipcodeSurface.View);
+
+
+        // this.submitButtonSurface = new Surface({
+        //     content: 'Save Card',
+        //     size: [undefined, 60],
+        //     classes: ['form-button-submit-default']
+        // });
+        // this.submitButtonSurface.View = new View();
+        // this.submitButtonSurface.View.StateModifier = new StateModifier();
+        // this.submitButtonSurface.View.add(this.submitButtonSurface.View.StateModifier).add(this.submitButtonSurface);
+        // this.contentScrollView.Views.push(this.submitButtonSurface.View);
+
+        // // Events for surfaces
+        // this.submitButtonSurface.on('click', this.save_card.bind(this));
 
     };
 
@@ -243,21 +321,21 @@ define(function(require, exports, module) {
         }
         this.checking = true;
 
-        this.submitButtonSurface.setContent('Please Wait');
+        this.submitButton.setContent('Please Wait');
 
         // var $form = this.$('#credit-card-form');
         var creditCardData = {
             // name: $form.find('#name').val(),
-            number: $.trim(this.inputNumberSurface.getValue().toString()),
-            exp_month: $.trim(this.inputMonthSurface.getValue().toString()),
-            exp_year: $.trim(this.inputYearSurface.getValue().toString()),
-            cvc: $.trim(this.inputCvcSurface.getValue().toString()),
-            address_zip: $.trim(this.inputZipcodeSurface.getValue().toString())
+            number: $.trim(this.inputNumber.getValue().toString()),
+            exp_month: $.trim(this.inputExpMonth.getValue().toString()),
+            exp_year: $.trim(this.inputExpYear.getValue().toString()),
+            cvc: $.trim(this.inputCvc.getValue().toString()),
+            address_zip: $.trim(this.inputZipcode.getValue().toString())
          };
 
         console.log(creditCardData);
 
-         var card_save_name = $.trim(this.inputNameSurface.getValue().toString());
+         var card_save_name = $.trim(this.inputName.getValue().toString());
          var card_last4 = creditCardData.number.substr(-4,4);
          card_save_name = card_save_name.length > 0 ? card_save_name : creditCardData.card_number.substr(-4,4); // saved name or last 4
 
@@ -265,11 +343,11 @@ define(function(require, exports, module) {
 
         Stripe.card.createToken(creditCardData, function(status, response){
             if(response.error){
-                alert(response.error.message);
+                Utils.Popover.Alert(S(response.error.message));
                 // Re-enable the button
                 // that.$('.add-button').attr('disabled','disabled');
                 that.checking = false;
-                that.submitButtonSurface.setContent('Save Card');
+                that.submitButton.setContent('Save Card');
                 return;
             }
 
@@ -295,10 +373,10 @@ define(function(require, exports, module) {
                     App.history.back();
                 },
                 error: function(err){
-                    alert('Error attaching Credit Card');
+                    Utils.Popover.Alert('Error attaching Credit Card');
 
                     that.checking = false;
-                    that.submitButtonSurface.setContent('Save Card');
+                    that.submitButton.setContent('Save Card');
                 }
             });
 
@@ -329,8 +407,7 @@ define(function(require, exports, module) {
                         // Hide/move elements
                         Timer.setTimeout(function(){
 
-                            // Slide content left
-                            that.layout.content.StateModifier.setTransform(Transform.translate(0,window.innerHeight,0), transitionOptions.outTransition);
+                            that.layout.content.StateModifier.setTransform(Transform.translate((window.innerWidth * (goingBack ? 1.5 : -1.5)),0,0), transitionOptions.outTransition);
 
                         }, delayShowing);
 
@@ -357,7 +434,10 @@ define(function(require, exports, module) {
                         // } else {
                         //     that.layout.content.StateModifier.setTransform(Transform.translate(window.innerWidth + 100,0,0));
                         // }
-                        that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0));
+
+                        that.layout.content.StateModifier.setTransform(Transform.translate((window.innerWidth * (goingBack ? -1.5 : 1.5)),0,0));
+
+
                         // that.contentScrollView.Views.forEach(function(surf, index){
                         //     surf.StateModifier.setTransform(Transform.translate(0,window.innerHeight,0));
                         // });
@@ -369,15 +449,17 @@ define(function(require, exports, module) {
                             // // Bring content back
                             // that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
 
+                            that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
+
                             // Bring in button surfaces individually
-                            that.contentScrollView.Views.forEach(function(surf, index){
-                                // Timer.setTimeout(function(){
-                                //     surf.StateModifier.setTransform(Transform.translate(0,0,0), {
-                                //         duration: 750,
-                                //         curve: Easing.inOutElastic
-                                //     });
-                                // }, index * 50);
-                            });
+                            // that.contentScrollView.Views.forEach(function(surf, index){
+                            //     // Timer.setTimeout(function(){
+                            //     //     surf.StateModifier.setTransform(Transform.translate(0,0,0), {
+                            //     //         duration: 750,
+                            //     //         curve: Easing.inOutElastic
+                            //     //     });
+                            //     // }, index * 50);
+                            // });
 
                         }, delayShowing); // + transitionOptions.outTransition.duration);
 

@@ -111,6 +111,7 @@ define(function(require, exports, module) {
                 size: [undefined, undefined],
                 classes: ['form-bg-default']
             });
+            this._bg.Surface.pipe(contentScrollView);
             this._bg.SizeMod = new Modifier({
                 size: function(){
                     // console.log(FormContainer.getSize());
@@ -123,7 +124,7 @@ define(function(require, exports, module) {
                 }
             });
             this._bg.add(this._bg.SizeMod).add(this._bg.Surface);
-            FormContainer.add(Transform.translate(0,0,0.0000001)).add(this._bg);
+            FormContainer.add(Transform.translate(0,0,-0.0000001)).add(this._bg);
         }
 
         this._form = FormContainer;
