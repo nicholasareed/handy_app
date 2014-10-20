@@ -168,6 +168,10 @@ define(function(require, exports, module) {
         var listOptions = [
         
             {
+                type: 'spacer',
+            },
+            
+            {
                 type: 'header',
                 text: 'Connections'
             },
@@ -179,6 +183,10 @@ define(function(require, exports, module) {
             },
 
             {
+                type: 'spacer',
+            },
+
+            {
                 type: 'header',
                 text: 'Todos',
             },
@@ -187,6 +195,10 @@ define(function(require, exports, module) {
                 title: 'New Content',
                 desc: 'When new messages or other content is included',
                 scheme_key: 'todo_new_content'
+            },
+
+            {
+                type: 'spacer',
             },
 
             {
@@ -207,10 +219,22 @@ define(function(require, exports, module) {
 
         listOptions.forEach(function(Info){
 
-            // Just a spacer/header/separator?
+            // Header separator
             if(Info.type && Info.type == 'header'){
                 var separator = new Surface({
                     content: Info.text,
+                    size: [undefined, 32],
+                    classes: ['push-list-separator-default']
+                });
+                separator.pipe(that.contentScrollView);
+                that.contentScrollView.Views.push(separator);
+                return;
+            }
+
+            // Spacer separator
+            if(Info.type && Info.type == 'spacer'){
+                var separator = new Surface({
+                    content: '',
                     size: [undefined, 32],
                     classes: ['push-list-separator-default']
                 });
