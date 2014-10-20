@@ -1031,12 +1031,12 @@ define(function(require, exports, module) {
                         // this.sideView.OpacityModifier.setOpacity(0);
 
                         // Content
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
                             // // Fade header
                             // that.header.StateModifier.setOpacity(0, transitionOptions.outTransition);
 
                             // Slide left
-                            that.ContentStateModifier.setTransform(Transform.translate((window.innerWidth * -1) - 100,0,0), transitionOptions.outTransition);
+                            that.ContentStateModifier.setTransform(Transform.translate((window.innerWidth * (goingBack ? 1.5 : -1.5)),0,0), transitionOptions.outTransition);
 
                         }, delayShowing);
 
@@ -1046,7 +1046,7 @@ define(function(require, exports, module) {
                 break;
             case 'showing':
                 if(this._refreshData){
-                    window.setTimeout(this.refreshData.bind(this), 1000);
+                    Timer.setTimeout(this.refreshData.bind(this), 1000);
                 }
                 this._refreshData = true;
                 switch(otherViewName){
@@ -1068,12 +1068,12 @@ define(function(require, exports, module) {
                         // } else {
                         //     that.ContentStateModifier.setTransform(Transform.translate(window.innerWidth + 100,0,0));
                         // }
-                        that.ContentStateModifier.setOpacity(0);
-                        that.ContentStateModifier.setTransform(Transform.translate(0,0,0));
+
+                        that.ContentStateModifier.setTransform(Transform.translate((window.innerWidth * (goingBack ? -1.5 : 1.5)),0,0));
 
                         // // Header
                         // // - no extra delay
-                        // window.setTimeout(function(){
+                        // Timer.setTimeout(function(){
 
                         //     // Change header opacity
                         //     that.header.StateModifier.setOpacity(1, transitionOptions.outTransition);
@@ -1082,10 +1082,9 @@ define(function(require, exports, module) {
 
                         // Content
                         // - extra delay for content to be gone
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
 
-                            // Bring map content back
-                            that.ContentStateModifier.setOpacity(1, transitionOptions.inTransition);
+                            that.ContentStateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.outTransition);
 
                         }, delayShowing + transitionOptions.outTransition.duration);
 

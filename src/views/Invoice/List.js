@@ -196,8 +196,8 @@ define(function(require, exports, module) {
             content: "Invoices",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
+            backContent: false,
             // moreContent: false
-            // backContent: false,
             // moreClasses: ["normal-header"],
             moreSurfaces: [
                 // this.headerContent.Invoices,
@@ -207,10 +207,10 @@ define(function(require, exports, module) {
             // moreContent: "New", //'<span class="icon ion-navicon-round"></span>'
         });
         this.header._eventOutput.on('back',function(){
-            App.history.back();
+            // App.history.back();
         });
         this.header.navBar.title.on('click',function(){
-            App.history.back();
+            // App.history.back();
         });
 
         this._eventOutput.on('inOutTransition', function(args){
@@ -778,13 +778,9 @@ define(function(require, exports, module) {
                         // Overwriting and using default identity
                         transitionOptions.outTransform = Transform.identity;
 
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
 
-                            // // Fade header
-                            // that.header.StateModifier.setOpacity(0, transitionOptions.outTransition);
-
-                            // Slide down
-                            // that.ContentStateModifier.setTransform(Transform.translate(0, window.innerHeight,0), transitionOptions.outTransition);
+                            that.ContentStateModifier.setTransform(Transform.translate((window.innerWidth * (goingBack ? 1.5 : -1.5)),0,0), transitionOptions.outTransition);
 
                         }, delayShowing);
 
@@ -795,7 +791,7 @@ define(function(require, exports, module) {
 
             case 'showing':
                 if(this._refreshData){
-                    window.setTimeout(this.refreshData.bind(this), 1000);
+                    Timer.setTimeout(this.refreshData.bind(this), 1000);
                 }
                 this._refreshData = true;
                 switch(otherViewName){
@@ -805,32 +801,15 @@ define(function(require, exports, module) {
                         // No animation by default
                         transitionOptions.inTransform = Transform.identity;
 
-                        // // Default header opacity
-                        // that.header.StateModifier.setOpacity(0);
 
-                        // // Default position
-                        // if(goingBack){
-                        //     that.ContentStateModifier.setTransform(Transform.translate(window.innerWidth * -1,0,0));
-                        // } else {
-                        //     that.ContentStateModifier.setTransform(Transform.translate(window.innerWidth + 100,0,0));
-                        // }
-                        // that.ContentStateModifier.setTransform(Transform.translate(0, window.innerHeight, 0));
-
-                        // Header
-                        window.setTimeout(function(){
-
-                            // // Change header opacity
-                            // that.header.StateModifier.setOpacity(1, transitionOptions.outTransition);
-
-
-                        }, delayShowing);
+                        that.ContentStateModifier.setTransform(Transform.translate((window.innerWidth * (goingBack ? -1.5 : 1.5)),0,0));
 
                         // Content
                         // - extra delay
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
 
-                            // // Bring content back
-                            // that.ContentStateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
+                            // Bring content back
+                            that.ContentStateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
 
                         }, delayShowing + transitionOptions.outTransition.duration);
 
@@ -842,7 +821,7 @@ define(function(require, exports, module) {
                         // // - not the footer
                         // // console.log(transitionOptions.outTransform);
                         // // debugger;
-                        // window.setTimeout(function(){
+                        // Timer.setTimeout(function(){
 
                         //     // Bring map content back
                         //     that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);

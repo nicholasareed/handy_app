@@ -247,7 +247,7 @@ define(function(require, exports, module) {
             backContent: false,
             // moreClasses: ["normal-header"],
             moreSurfaces: [
-                this.headerContent.Invoices,
+                // this.headerContent.Invoices,
                 this.headerContent.Create,
                 // this.headerContent.FilterSwitcher,
             ]
@@ -868,7 +868,7 @@ define(function(require, exports, module) {
                         Timer.setTimeout(function(){
 
                             // Slide down
-                            that.ContentStateModifier.setTransform(Transform.translate(window.innerWidth, 0,0), transitionOptions.outTransition);
+                            that.ContentStateModifier.setTransform(Transform.translate((window.innerWidth * (goingBack ? 1.5 : -1.5)),0,0), transitionOptions.outTransition);
 
                         }, delayShowing);
 
@@ -893,13 +893,7 @@ define(function(require, exports, module) {
                         // that.header.StateModifier.setOpacity(0);
 
                         // Default position
-                        if(goingBack){
-                            that.ContentStateModifier.setTransform(Transform.translate(window.innerWidth * -1,0,0));
-                        } else {
-                            that.ContentStateModifier.setTransform(Transform.translate(window.innerWidth + 100,0,0));
-                        }
-                        that.ContentStateModifier.setTransform(Transform.translate(0, window.innerHeight, 0));
-
+                        that.ContentStateModifier.setTransform(Transform.translate((window.innerWidth * (goingBack ? -1.5 : 1.5)),0,0));
 
                         // Content
                         // - extra delay

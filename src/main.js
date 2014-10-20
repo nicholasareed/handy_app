@@ -388,16 +388,21 @@ define(function(require, exports, module) {
                 App.Views.MainFooter.Tabs = new StandardTabBar();  
                 var tmpTabs = App.Views.MainFooter.Tabs;
 
-                tmpTabs.defineSection('todos', { // updates
+                tmpTabs.defineSection('todos', {
                     content: '<i class="icon ion-android-lightbulb"></i><div><span class="ellipsis-all">Todo</span></div>',
                     onClasses: ['footer-tabbar-default', 'on'],
                     offClasses: ['footer-tabbar-default', 'off']
                 });
-                tmpTabs.defineSection('updates', {
-                    content: '<i class="icon ion-android-sort"></i><div><span class="ellipsis-all">Updates</span></div>',
+                tmpTabs.defineSection('invoices', {
+                    content: '<i class="icon ion-social-usd"></i><div><span class="ellipsis-all">Invoices</span></div>',
                     onClasses: ['footer-tabbar-default', 'on'],
                     offClasses: ['footer-tabbar-default', 'off']
                 });
+                // tmpTabs.defineSection('updates', {
+                //     content: '<i class="icon ion-android-sort"></i><div><span class="ellipsis-all">Updates</span></div>',
+                //     onClasses: ['footer-tabbar-default', 'on'],
+                //     offClasses: ['footer-tabbar-default', 'off']
+                // });
                 tmpTabs.defineSection('messages', {
                     content: '<i class="icon ion-android-inbox"></i><div><span class="ellipsis-all">Msgs</span></div>',
                     onClasses: ['footer-tabbar-default', 'on'],
@@ -416,6 +421,10 @@ define(function(require, exports, module) {
                         
                         case 'todos':
                             App.history.navigate('todo/list');
+                            break;
+
+                        case 'invoices':
+                            App.history.navigate('invoice/list');
                             break;
 
                         case 'profiles':

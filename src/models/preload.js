@@ -8,6 +8,7 @@ define(function(require, exports, module) {
     var User                = require('models/user');
     var FriendModel                = require('models/friend');
     var TodoModel                = require('models/todo');
+    var InvoiceModel                = require('models/invoice');
     var MessageModel                = require('models/message');
     var ActionModel                = require('models/action');
 
@@ -45,17 +46,33 @@ define(function(require, exports, module) {
             });
             App.Data.TodoCollection.fetch();
 
-            // Updates
-            App.Data.ActionCollection = new ActionModel.ActionCollection([],{
-                // type: 'friend'
+            // Invoices
+            App.Data.InvoiceCollection = new InvoiceModel.InvoiceCollection([],{
+                '$filter' : {
+                    tags: {
+                        '$ne' : 'complete'
+                    }
+                }
             });
-            App.Data.ActionCollection.on('sync', function(){
+            App.Data.InvoiceCollection.on('sync', function(){
                 App.Views.MainFooter.Tabs.buttons[1].setOptions({
-                    content: '<i class="icon ion-android-sort"></i><div><span class="ellipsis-all">'+App.Data.ActionCollection.totalResults+' Updates</span></div>'
+                    content: '<i class="icon ion-social-usd"></i><div><span class="ellipsis-all">'+App.Data.InvoiceCollection.totalResults+' Invoices</span></div>'
                 });
-                App.Data.ActionCollection.totalResults;
+                App.Data.InvoiceCollection.totalResults;
             });
-            App.Data.ActionCollection.fetch();
+            App.Data.InvoiceCollection.fetch();
+
+            // // Updates
+            // App.Data.ActionCollection = new ActionModel.ActionCollection([],{
+            //     // type: 'friend'
+            // });
+            // App.Data.ActionCollection.on('sync', function(){
+            //     App.Views.MainFooter.Tabs.buttons[1].setOptions({
+            //         content: '<i class="icon ion-android-sort"></i><div><span class="ellipsis-all">'+App.Data.ActionCollection.totalResults+' Updates</span></div>'
+            //     });
+            //     App.Data.ActionCollection.totalResults;
+            // });
+            // App.Data.ActionCollection.fetch();
 
             // Unread Messages
             App.Data.MessageCollection = new MessageModel.MessageCollection([],{

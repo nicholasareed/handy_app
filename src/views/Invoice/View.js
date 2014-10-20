@@ -919,12 +919,11 @@ define(function(require, exports, module) {
                         // this.sideView.OpacityModifier.setOpacity(0);
 
                         // Content
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
                             // // Fade header
                             // that.header.StateModifier.setOpacity(0, transitionOptions.outTransition);
 
-                            // // Slide left
-                            // that.ContentStateModifier.setTransform(Transform.translate((window.innerWidth * -1) - 100,0,0), transitionOptions.outTransition);
+                            that.ContentStateModifier.setTransform(Transform.translate((window.innerWidth * (goingBack ? 1.5 : -1.5)),0,0), transitionOptions.outTransition);
 
                         }, delayShowing);
 
@@ -934,7 +933,7 @@ define(function(require, exports, module) {
                 break;
             case 'showing':
                 if(this._refreshData){
-                    window.setTimeout(this.refreshData.bind(this), 1000);
+                    Timer.setTimeout(this.refreshData.bind(this), 1000);
                 }
                 this._refreshData = true;
                 switch(otherViewName){
@@ -944,38 +943,21 @@ define(function(require, exports, module) {
                         // No animation by default
                         transitionOptions.inTransform = Transform.identity;
 
-                        // // Default header opacity
-                        // that.header.StateModifier.setOpacity(0);
-
-                        // SideView must be visible
-                        // this.sideView.OpacityModifier.setOpacity(1);
-
-                        // // Default position
-                        // if(goingBack){
-                        //     that.ContentStateModifier.setTransform(Transform.translate(window.innerWidth * -1,0,0));
-                        // } else {
-                        //     that.ContentStateModifier.setTransform(Transform.translate(window.innerWidth + 100,0,0));
-                        // }
-                        // that.ContentStateModifier.setOpacity(0);
-                        // that.ContentStateModifier.setTransform(Transform.translate(0,0,0));
-
-                        // // Header
-                        // // - no extra delay
-                        // window.setTimeout(function(){
+                        that.ContentStateModifier.setTransform(Transform.translate((window.innerWidth * (goingBack ? -1.5 : 1.5)),0,0));
 
                         //     // Change header opacity
                         //     that.header.StateModifier.setOpacity(1, transitionOptions.outTransition);
 
                         // }, delayShowing);
 
-                        // // Content
-                        // // - extra delay for content to be gone
-                        // window.setTimeout(function(){
+                        // Content
+                        // - extra delay for content to be gone
+                        Timer.setTimeout(function(){
 
-                        //     // Bring map content back
-                        //     that.ContentStateModifier.setOpacity(1, transitionOptions.inTransition);
+                            // Bring map content back
+                            that.ContentStateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.outTransition);
 
-                        // }, delayShowing + transitionOptions.outTransition.duration);
+                        }, delayShowing + transitionOptions.outTransition.duration);
 
 
                         break;

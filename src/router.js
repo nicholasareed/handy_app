@@ -158,7 +158,7 @@ define(function(require, exports, module) {
                     Timer.setTimeout(function(){
                         App.Views.SplashLoading.hide();
                     },3000);
-                    
+
                     defaultRoute('PushDefault', 'Misc/PushDefault', arguments);
                 },
 
@@ -270,6 +270,8 @@ define(function(require, exports, module) {
                 },
 
                 'invoice/list' : function(){
+                    App.Views.MainFooter.route_show = true;
+                    App.Views.MainFooter.Tabs.select('invoices', false);
                     defaultRoute('InvoiceList', 'Invoice/List', arguments);
                 },
                 'invoice/to/:id' : function(){
