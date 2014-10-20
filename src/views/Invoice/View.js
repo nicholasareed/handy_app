@@ -778,7 +778,7 @@ define(function(require, exports, module) {
             // from
             if(that.model.get('from_user_id')){
                 // assigned to someone
-                this.invoiceDetails.FromSurface.setContent('recipient: ' + that.model.get('from_user_id.profile.name') || '');
+                this.invoiceDetails.FromSurface.setContent('pay to: ' + that.model.get('from_user_id.profile.name') || '');
                 this.invoiceDetails.FromSurface.setClasses(['invoice-view-from-default','has_owner']);
             } else {
                 // No owner at the moment (what the fuck)

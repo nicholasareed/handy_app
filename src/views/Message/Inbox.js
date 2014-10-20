@@ -17,6 +17,7 @@ define(function(require, exports, module) {
     var RenderNode         = require('famous/core/RenderNode')
 
     var Utility = require('famous/utilities/Utility');
+    var Timer = require('famous/utilities/Timer');
 
     // Helpers
     var Utils = require('utils');
@@ -382,28 +383,6 @@ define(function(require, exports, module) {
             case 'hiding':
 
                 switch(otherViewName){
-                    case 'Fleet':
-
-                        // No animation by default
-                        transitionOptions.outTransform = Transform.identity;
-
-                        // Wait for timeout of delay to hide
-                        Timer.setTimeout(function(){
-
-                            // // Fade header
-                            // that.header.StateModifier.setOpacity(0, transitionOptions.outTransition);
-
-                            // Hide content from a direction
-                            // if(goingBack){
-
-                            // that.ContentStateModifier.setTransform(Transform.translate(0,window.innerHeight,0), transitionOptions.outTransition);
-                            // } else {
-                            //     that.ContentStateModifier.setTransform(Transform.translate(window.innerWidth * -1,0,0), transitionOptions.outTransition);
-                            // }
-
-                        }, delayShowing);
-
-                        break;
 
                     default:
                         // Overwriting and using default identity
@@ -411,12 +390,8 @@ define(function(require, exports, module) {
 
                         Timer.setTimeout(function(){
 
-                            // // Fade header
-                            // that.header.StateModifier.setOpacity(0, transitionOptions.outTransition);
-
-                            // Slide down
-                            // that.ContentStateModifier.setTransform(Transform.translate(0, window.innerHeight,0), transitionOptions.outTransition);
-
+                            that.ContentStateModifier.setTransform(Transform.translate((window.innerWidth * (goingBack ? 1.5 : -1.5)),0,0), transitionOptions.outTransition);
+                            
                         }, delayShowing);
 
                         break;
@@ -436,25 +411,8 @@ define(function(require, exports, module) {
                         // No animation by default
                         transitionOptions.inTransform = Transform.identity;
 
-                        // // Default header opacity
-                        // that.header.StateModifier.setOpacity(0);
 
-                        // // Default position
-                        // if(goingBack){
-                        //     that.ContentStateModifier.setTransform(Transform.translate(window.innerWidth * -1,0,0));
-                        // } else {
-                        //     that.ContentStateModifier.setTransform(Transform.translate(window.innerWidth + 100,0,0));
-                        // }
-                        // that.ContentStateModifier.setTransform(Transform.translate(0, window.innerHeight, 0));
-
-                        // Header
-                        Timer.setTimeout(function(){
-
-                            // // Change header opacity
-                            // that.header.StateModifier.setOpacity(1, transitionOptions.outTransition);
-
-
-                        }, delayShowing);
+                        that.ContentStateModifier.setTransform(Transform.translate((window.innerWidth * (goingBack ? -1.5 : 1.5)),0,0));
 
                         // Content
                         // - extra delay
@@ -462,6 +420,8 @@ define(function(require, exports, module) {
 
                             // // Bring content back
                             // that.ContentStateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
+
+                            that.ContentStateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
 
                         }, delayShowing + transitionOptions.outTransition.duration);
 

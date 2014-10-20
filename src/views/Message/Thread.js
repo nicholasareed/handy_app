@@ -609,10 +609,10 @@ define(function(require, exports, module) {
         // this.contentScrollView.Views = _.without(this.contentScrollView.Views, this.SelectAllButton);
 
         // // Resort the contentScrollView.Views
-        // this.contentScrollView.Views = _.sortBy(this.contentScrollView.Views, function(v){
-        //     // console.log(v.Model.get('created'));
-        //     return moment(v.Model.get('created')).format('X');
-        // });
+        this.contentScrollView.Views = _.sortBy(this.contentScrollView.Views, function(v){
+            // console.log(v.Model.toJSON());
+            return moment(v.Model.get('created')).format('X');
+        });
         this.contentScrollView.Views.reverse();
 
         // re-add buttons
@@ -718,28 +718,6 @@ define(function(require, exports, module) {
             case 'hiding':
 
                 switch(otherViewName){
-                    case 'Fleet':
-
-                        // No animation by default
-                        transitionOptions.outTransform = Transform.identity;
-
-                        // Wait for timeout of delay to hide
-                        Timer.setTimeout(function(){
-
-                            // // Fade header
-                            // that.header.StateModifier.setOpacity(0, transitionOptions.outTransition);
-
-                            // Hide content from a direction
-                            // if(goingBack){
-
-                            // that.ContentStateModifier.setTransform(Transform.translate(0,window.innerHeight,0), transitionOptions.outTransition);
-                            // } else {
-                            //     that.ContentStateModifier.setTransform(Transform.translate(window.innerWidth * -1,0,0), transitionOptions.outTransition);
-                            // }
-
-                        }, delayShowing);
-
-                        break;
 
                     default:
                         // Overwriting and using default identity
@@ -750,8 +728,7 @@ define(function(require, exports, module) {
                             // // Fade header
                             // that.header.StateModifier.setOpacity(0, transitionOptions.outTransition);
 
-                            // Slide down
-                            // that.ContentStateModifier.setTransform(Transform.translate(0, window.innerHeight,0), transitionOptions.outTransition);
+                            that.ContentStateModifier.setTransform(Transform.translate((window.innerWidth * (goingBack ? 1.5 : -1.5)),0,0), transitionOptions.outTransition);
 
                         }, delayShowing);
 
@@ -772,52 +749,16 @@ define(function(require, exports, module) {
                         // No animation by default
                         transitionOptions.inTransform = Transform.identity;
 
-                        // // Default header opacity
-                        // that.header.StateModifier.setOpacity(0);
-
-                        // // Default position
-                        // if(goingBack){
-                        //     that.ContentStateModifier.setTransform(Transform.translate(window.innerWidth * -1,0,0));
-                        // } else {
-                        //     that.ContentStateModifier.setTransform(Transform.translate(window.innerWidth + 100,0,0));
-                        // }
-                        // that.ContentStateModifier.setTransform(Transform.translate(0, window.innerHeight, 0));
-
-                        // Header
-                        Timer.setTimeout(function(){
-
-                            // // Change header opacity
-                            // that.header.StateModifier.setOpacity(1, transitionOptions.outTransition);
-
-
-                        }, delayShowing);
+                        that.ContentStateModifier.setTransform(Transform.translate((window.innerWidth * (goingBack ? -1.5 : 1.5)),0,0));
 
                         // Content
                         // - extra delay
                         Timer.setTimeout(function(){
 
-                            // // Bring content back
-                            // that.ContentStateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
+                            that.ContentStateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
 
                         }, delayShowing + transitionOptions.outTransition.duration);
 
-                        // //Fade out the header
-                        // // var previousTransform = transitionOptions.outTransform;
-                        // transitionOptions.outTransform = Transform.identity;
-
-                        // // Move the content to the left
-                        // // - not the footer
-                        // // console.log(transitionOptions.outTransform);
-                        // // debugger;
-                        // Timer.setTimeout(function(){
-
-                        //     // Bring map content back
-                        //     that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
-
-                        //     // Bring Footer Up
-                        //     that.layout.footer.StateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.outTransition);
-
-                        // }, delayShowing);
 
                         break;
                 }
