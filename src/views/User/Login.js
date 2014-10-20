@@ -276,7 +276,7 @@ define(function(require, exports, module) {
                 break;
             case 'showing':
                 if(this._refreshData){
-                    // window.setTimeout(that.refreshData.bind(that), 1000);
+                    // Timer.setTimeout(that.refreshData.bind(that), 1000);
                 }
                 this._refreshData = true;
                 switch(otherViewName){

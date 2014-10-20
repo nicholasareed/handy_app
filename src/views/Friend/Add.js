@@ -631,7 +631,7 @@ define(function(require, exports, module) {
                         transitionOptions.outTransform = Transform.identity;
 
                         // Hide/move elements
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
                             // Fade header
                             // that.header.StateModifier.setOpacity(0, transitionOptions.outTransition);
 
@@ -646,7 +646,7 @@ define(function(require, exports, module) {
                 break;
             case 'showing':
                 if(this._refreshData){
-                    window.setTimeout(that.refreshData.bind(that), 1000);
+                    Timer.setTimeout(that.refreshData.bind(that), 1000);
                 }
                 this._refreshData = true;
                 switch(otherViewName){
@@ -672,7 +672,7 @@ define(function(require, exports, module) {
 
                         // // Header
                         // // - no extra delay
-                        // window.setTimeout(function(){
+                        // Timer.setTimeout(function(){
 
                         //     // Change header opacity
                         //     that.header.StateModifier.setOpacity(1, transitionOptions.outTransition);
@@ -681,14 +681,14 @@ define(function(require, exports, module) {
 
                         // Content
                         // - extra delay for other content to be gone
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
 
                             // // Bring content back
                             // that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
 
                             // // Bring in button surfaces individually
                             // that.scrollSurfaces.forEach(function(surf, index){
-                            //     window.setTimeout(function(){
+                            //     Timer.setTimeout(function(){
                             //         surf.StateModifier.setTransform(Transform.translate(0,0,0), {
                             //             duration: 1500,
                             //             curve: Easing.inOutElastic

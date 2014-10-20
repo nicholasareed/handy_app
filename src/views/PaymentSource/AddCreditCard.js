@@ -327,7 +327,7 @@ define(function(require, exports, module) {
                         transitionOptions.outTransform = Transform.identity;
 
                         // Hide/move elements
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
 
                             // Slide content left
                             that.layout.content.StateModifier.setTransform(Transform.translate(0,window.innerHeight,0), transitionOptions.outTransition);
@@ -341,7 +341,7 @@ define(function(require, exports, module) {
             case 'showing':
                 this._showing = true;
                 if(this._refreshData){
-                    // window.setTimeout(that.refreshData.bind(that), 1000);
+                    // Timer.setTimeout(that.refreshData.bind(that), 1000);
                 }
                 this._refreshData = true;
                 switch(otherViewName){
@@ -364,14 +364,14 @@ define(function(require, exports, module) {
 
                         // Content
                         // - extra delay for other content to be gone
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
 
                             // // Bring content back
                             // that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
 
                             // Bring in button surfaces individually
                             that.contentScrollView.Views.forEach(function(surf, index){
-                                // window.setTimeout(function(){
+                                // Timer.setTimeout(function(){
                                 //     surf.StateModifier.setTransform(Transform.translate(0,0,0), {
                                 //         duration: 750,
                                 //         curve: Easing.inOutElastic

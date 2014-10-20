@@ -199,7 +199,7 @@ define(function(require, exports, module) {
 
                         // // Header
                         // // - no extra delay
-                        // window.setTimeout(function(){
+                        // Timer.setTimeout(function(){
 
                         //     // Change header opacity
                         //     that.header.StateModifier.setOpacity(1, transitionOptions.outTransition);

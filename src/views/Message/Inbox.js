@@ -388,7 +388,7 @@ define(function(require, exports, module) {
                         transitionOptions.outTransform = Transform.identity;
 
                         // Wait for timeout of delay to hide
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
 
                             // // Fade header
                             // that.header.StateModifier.setOpacity(0, transitionOptions.outTransition);
@@ -409,7 +409,7 @@ define(function(require, exports, module) {
                         // Overwriting and using default identity
                         transitionOptions.outTransform = Transform.identity;
 
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
 
                             // // Fade header
                             // that.header.StateModifier.setOpacity(0, transitionOptions.outTransition);
@@ -426,7 +426,7 @@ define(function(require, exports, module) {
 
             case 'showing':
                 if(this._refreshData){
-                    window.setTimeout(this.refreshData.bind(this), 1000);
+                    Timer.setTimeout(this.refreshData.bind(this), 1000);
                 }
                 this._refreshData = true;
                 switch(otherViewName){
@@ -448,7 +448,7 @@ define(function(require, exports, module) {
                         // that.ContentStateModifier.setTransform(Transform.translate(0, window.innerHeight, 0));
 
                         // Header
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
 
                             // // Change header opacity
                             // that.header.StateModifier.setOpacity(1, transitionOptions.outTransition);
@@ -458,7 +458,7 @@ define(function(require, exports, module) {
 
                         // Content
                         // - extra delay
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
 
                             // // Bring content back
                             // that.ContentStateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
@@ -473,7 +473,7 @@ define(function(require, exports, module) {
                         // // - not the footer
                         // // console.log(transitionOptions.outTransform);
                         // // debugger;
-                        // window.setTimeout(function(){
+                        // Timer.setTimeout(function(){
 
                         //     // Bring map content back
                         //     that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);

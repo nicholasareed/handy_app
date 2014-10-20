@@ -178,6 +178,29 @@ define(function(require, exports, module) {
                 scheme_key: 'new_friend'
             },
 
+            {
+                type: 'header',
+                text: 'Todos',
+            },
+
+            {
+                title: 'New Content',
+                desc: 'When new messages or other content is included',
+                scheme_key: 'todo_new_content'
+            },
+
+            {
+                type: 'header',
+                text: 'Invoices',
+            },
+
+            {
+                title: 'New Content',
+                desc: 'When new messages or other content is included',
+                scheme_key: 'invoice_new_content'
+            },
+
+
         ];
 
         this.model_views = [];

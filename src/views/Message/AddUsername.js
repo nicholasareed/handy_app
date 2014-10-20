@@ -188,7 +188,7 @@ define(function(require, exports, module) {
                         transitionOptions.outTransform = Transform.identity;
 
                         // Content
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
 
                             // Opacity 0
                             that.layout.content.StateModifier.setOpacity(0, transitionOptions.inTransition);
@@ -201,7 +201,7 @@ define(function(require, exports, module) {
                 break;
             case 'showing':
                 if(this._refreshData){
-                    // window.setTimeout(this.refreshData.bind(this), 1000);
+                    // Timer.setTimeout(this.refreshData.bind(this), 1000);
                 }
                 this._refreshData = true;
                 switch(otherViewName){
@@ -215,7 +215,7 @@ define(function(require, exports, module) {
                         that.layout.content.StateModifier.setOpacity(0);
 
                         // Content
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
 
                             // Bring content back
                             that.layout.content.StateModifier.setOpacity(1, transitionOptions.inTransition);

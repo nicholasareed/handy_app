@@ -56,7 +56,7 @@ define(function(require, exports, module) {
         // create the layout
         this.layout = new HeaderFooterLayout({
             headerSize: App.Defaults.Header.size,
-            footerSize: 60
+            footerSize: 0
         });
 
         this.createHeader();
@@ -109,9 +109,9 @@ define(function(require, exports, module) {
 
         // Use Myself
         this.headerContent.UseMe = new Surface({
-            content: '<i class="icon ion-person"></i>',
+            content: '<i class="icon ion-person"></i><div>Use Me</div>',
             size: [App.Defaults.Header.Icon.w, undefined],
-            classes: ['header-tab-icon-text-big']
+            classes: ['header-tab-icon-text']
         });
         this.headerContent.UseMe.on('longtap', function(){
             Utils.Help('Todo/AssignList/UseMe');
@@ -204,7 +204,7 @@ define(function(require, exports, module) {
         this.TopTabs.add(Utils.usePlane('contentTabs')).add(this.TopTabs.BarSizeMod).add(this.TopTabs.Bar);
 
         this.TopTabs.Bar.defineSection('connected', {
-            content: '<i class="icon ion-arrow-swap"></i><div>Connected</div>',
+            content: '<i class="icon ion-arrow-swap"></i><div>My Connections</div>',
             onClasses: ['friend-list-tabbar-default', 'on'],
             offClasses: ['friend-list-tabbar-default', 'off']
         });
@@ -356,7 +356,7 @@ define(function(require, exports, module) {
                         // Overwriting and using default identity
                         transitionOptions.outTransform = Transform.identity;
 
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
 
                             // // Fade header
                             // that.header.StateModifier.setOpacity(0, transitionOptions.outTransition);
@@ -373,7 +373,7 @@ define(function(require, exports, module) {
 
             case 'showing':
                 if(this._refreshData){
-                    window.setTimeout(this.refreshData.bind(this), 1000);
+                    Timer.setTimeout(this.refreshData.bind(this), 1000);
                 }
                 this._refreshData = true;
                 switch(otherViewName){
@@ -395,7 +395,7 @@ define(function(require, exports, module) {
                         // that.ContentStateModifier.setTransform(Transform.translate(0, window.innerHeight, 0));
 
                         // Header
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
 
                             // // Change header opacity
                             // that.header.StateModifier.setOpacity(1, transitionOptions.outTransition);
@@ -405,7 +405,7 @@ define(function(require, exports, module) {
 
                         // Content
                         // - extra delay
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
 
                             // // Bring content back
                             // that.ContentStateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
@@ -420,7 +420,7 @@ define(function(require, exports, module) {
                         // // - not the footer
                         // // console.log(transitionOptions.outTransform);
                         // // debugger;
-                        // window.setTimeout(function(){
+                        // Timer.setTimeout(function(){
 
                         //     // Bring map content back
                         //     that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);

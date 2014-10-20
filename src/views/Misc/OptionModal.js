@@ -172,7 +172,7 @@ define(function(require, exports, module) {
                         transitionOptions.outTransform = Transform.identity;
 
                         // Content
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
 
                             // Bring content back
                             that.layout.content.StateModifier.setTransform(Transform.translate(window.innerWidth,0,0), transitionOptions.inTransition);
@@ -185,7 +185,7 @@ define(function(require, exports, module) {
                 break;
             case 'showing':
                 if(this._refreshData){
-                    window.setTimeout(this.refreshData.bind(this), 1000);
+                    Timer.setTimeout(this.refreshData.bind(this), 1000);
                 }
                 this._refreshData = true;
                 switch(otherViewName){
@@ -207,7 +207,7 @@ define(function(require, exports, module) {
 
                         // Content
                         // - extra delay for content to be gone
-                        window.setTimeout(function(){
+                        Timer.setTimeout(function(){
 
                             // Bring content back
                             // that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
