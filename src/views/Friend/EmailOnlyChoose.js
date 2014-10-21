@@ -339,13 +339,16 @@ define(function(require, exports, module) {
             // App.history.navigate('user/' + Model.get('_id'));
             // Utils.Notification.Toast('Not tap-able');
 
-            var type_id = that.options.args[1];
-            switch(that.options.args[0]){
+            var type_name = that.options.args[0],
+                type_id = that.options.args[1];
+            switch(type_name){
                 case 'todo':
+                case 'invoice':
+
                     Utils.Notification.Toast('Saving...');
                     App.history.back();
                     $.ajax({
-                        url: App.Credentials.server_root + 'todo/emailonlyuser/' + type_id,
+                        url: App.Credentials.server_root + type_name + '/emailonlyuser/' + type_id,
                         method: 'post',
                         data: {
                             user_friend_id: Model.get('_id')
@@ -357,8 +360,6 @@ define(function(require, exports, module) {
                             Utils.Notification.Toast('Email Added!');
                         }
                     });
-                    break;
-                case 'invoice':
                     break;
                 default:
                     console.error('invalid type');
