@@ -339,7 +339,18 @@ define(function(require, exports, module) {
                     }
                 });
             });
+            console.log(that.model.get('included'));
+            console.log(that.model.get('included_email_only'));
+            that.model.get('included_email_only').forEach(function(EmailOnlyFriend){
+                listData.push({
+                    text: EmailOnlyFriend.email,
+                    success: function(){
+                        Utils.Notification.Toast('Cannot remove yet!');
+                    }
+                });
+            });
 
+            // Add a new email address
             listData.push({
                 text: '<i class="icon ion-plus-round"></i> Add new Email',
                 success: function(){
@@ -367,6 +378,17 @@ define(function(require, exports, module) {
 
                     });
 
+
+                }
+            });
+
+            // Choose from list of existing friends
+            listData.push({
+                text: '<i class="icon ion-plus-round"></i> Add Friend (email)',
+                success: function(){
+
+                    // Go to the Picker
+                    App.history.navigate('friend/emailonly/choose/todo/' + that.model.get('_id'));
 
                 }
             });

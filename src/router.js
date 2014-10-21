@@ -331,6 +331,11 @@ define(function(require, exports, module) {
                 'friend/add' : function(){
                     defaultRoute('FriendInvite', 'Friend/LocalInvite', arguments, {cache: true});
                 },
+
+                'friend/emailonly/choose/:type/:todo_or_invoice_id' : function(){
+                    defaultRoute('FriendEmailOnlyChoose', 'Friend/EmailOnlyChoose', arguments, {cache: true});
+                },
+
                 // 'friend/add' : function(){
                 //     defaultRoute('FriendAdd', 'Friend/Add', arguments, {cache: false});
                 // },
