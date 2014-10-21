@@ -237,7 +237,7 @@ define(function(require, exports, module) {
     
         // Email
         this.headerContent.Email = new Surface({
-            content: '<i class="icon ion-android-mail"></i>',
+            content: '<i class="icon ion-email"></i>',
             size: [60, undefined],
             classes: ['header-tab-icon-text-big']
         });
