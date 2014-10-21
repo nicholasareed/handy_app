@@ -1,4 +1,3 @@
-/*globals define*/
 define(function(require, exports, module) {
 
     var Engine = require('famous/core/Engine');
@@ -813,23 +812,6 @@ define(function(require, exports, module) {
 
                         }, delayShowing + transitionOptions.outTransition.duration);
 
-                        // //Fade out the header
-                        // // var previousTransform = transitionOptions.outTransform;
-                        // transitionOptions.outTransform = Transform.identity;
-
-                        // // Move the content to the left
-                        // // - not the footer
-                        // // console.log(transitionOptions.outTransform);
-                        // // debugger;
-                        // Timer.setTimeout(function(){
-
-                        //     // Bring map content back
-                        //     that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
-
-                        //     // Bring Footer Up
-                        //     that.layout.footer.StateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.outTransition);
-
-                        // }, delayShowing);
 
                         break;
                 }

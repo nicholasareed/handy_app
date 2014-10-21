@@ -22,7 +22,10 @@ define(function (require) {
                 if(model.id){
                   this.url = this.urlRoot + '/' + model.id;
                 }
-                // console.log(this.url);
+                if(opts.emailonly){
+                  this.url = this.urlRoot + '/emailonly';
+                }
+
             }
 
         });
@@ -37,11 +40,16 @@ define(function (require) {
 
             initialize: function(models, options) {
                 options = options || {};
+                this.options = options;
 
                 this.url = this.urlRoot + '';
 
                 if(options.type == 'friend'){
                     this.url = this.urlRoot + '/friend';
+                }
+
+                if(options.type == 'emailonly'){
+                    this.url = this.urlRoot + '/emailonly';
                 }
 
                 if(options.type == 'recommended'){
@@ -50,6 +58,9 @@ define(function (require) {
             },
 
             comparator: function(model){
+                if(this.options.type == 'emailonly'){
+                    return model.get('email').toString().toLowerCase();
+                }
                 console.log(model);
                 return model.get('profile.name').toString().toLowerCase();
             },

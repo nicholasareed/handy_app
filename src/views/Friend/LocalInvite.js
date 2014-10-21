@@ -34,6 +34,7 @@ define(function(require, exports, module) {
     var StandardHeader = require('views/common/StandardHeader');
 
     // Models
+    var FriendModel = require('models/friend');
     var ContactModel = require('models/contact');
     var RelationshipCodeModel = require('models/relationship_code');
 
@@ -68,9 +69,43 @@ define(function(require, exports, module) {
         var that = this;
 
         // Icons
-
-        // Get a code
         this.headerContent = new View();
+
+        // Email-only person
+        this.headerContent.EmailOnly = new Surface({
+            content: '<i class="icon ion-email">',
+            size: [60, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.EmailOnly.on('longtap', function(){
+            Utils.Help('Friend/LocalInvite/EmailOnly');
+        });
+        this.headerContent.EmailOnly.on('click', function(){
+
+            Utils.Popover.Prompt('Friend\s Email Address', '', 'Post','Cancel','email')
+            .then(function(p){
+                if(p && p.trim() !== ''){
+
+                    Utils.Notification.Toast('Saving...');
+
+                    var Friend = new FriendModel.Friend({
+                        name: '',
+                        email: p
+                    },{
+                        emailonly: true
+                    });
+                    Friend.save()
+                    .then(function(){
+                        console.log('Friend saved');
+                        Utils.Notification.Toast('Friend Added');
+                    });
+
+                }
+            });
+
+        });
+
+        // get a code
         this.headerContent.CopyCode = new Surface({
             content: '<i class="icon ion-ios7-copy-outline">',
             size: [60, undefined],
@@ -162,11 +197,12 @@ define(function(require, exports, module) {
 
         // create the header
         this.header = new StandardHeader({
-            content: 'Connect to People',
+            content: 'New Connect',
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             // moreContent: false
             moreSurfaces: [
+                this.headerContent.EmailOnly,
                 this.headerContent.CopyCode,
                 this.headerContent.EnterCode
             ]

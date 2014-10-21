@@ -44,6 +44,7 @@ define(function(require, exports, module) {
     // Notifications SubView
     var ConnectedView      = require('./Subviews/Connected');
     var RecommendedView      = require('./Subviews/Recommended');
+    var EmailOnlyListView      = require('./Subviews/EmailOnlyList');
     var NewFriendView      = require('./Subviews/NewFriend');
     // var PotentialView      = require('./Subviews/Potential');
     // var IncomingView      = require('./Subviews/Incoming');
@@ -200,7 +201,7 @@ define(function(require, exports, module) {
         },{
             name: 'recommended'
         },{
-            name: 'new'
+            name: 'email-only'
         }];
 
         this._tabSurfaces = [];
@@ -320,13 +321,13 @@ define(function(require, exports, module) {
         this._subviews.push(this.TopTabs.Content.Recommended.View);
         this.TopTabs.Content.Views.push(this.TopTabs.Content.Recommended.View);
 
-        // New 
-        this.TopTabs.Content.New = new View();
-        this.TopTabs.Content.New.View = new NewFriendView();
-        this.TopTabs.Content.New.View._eventOutput.pipe(this.TopTabs.Content.ScrollView);
-        this.TopTabs.Content.New.add(this.TopTabs.Content.New.View);
-        this._subviews.push(this.TopTabs.Content.New.View);
-        this.TopTabs.Content.Views.push(this.TopTabs.Content.New.View);
+        // Email-only (only connected to "me") 
+        this.TopTabs.Content.EmailOnly = new View();
+        this.TopTabs.Content.EmailOnly.View = new EmailOnlyListView();
+        this.TopTabs.Content.EmailOnly.View._eventOutput.pipe(this.TopTabs.Content.ScrollView);
+        this.TopTabs.Content.EmailOnly.add(this.TopTabs.Content.EmailOnly.View);
+        this._subviews.push(this.TopTabs.Content.EmailOnly.View);
+        this.TopTabs.Content.Views.push(this.TopTabs.Content.EmailOnly.View);
 
         // // All 
         // this.TopTabs.Content.AllFriends = new View();
