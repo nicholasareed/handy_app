@@ -49,6 +49,10 @@ define(function(require, exports, module) {
         if (options) this.setOptions(options);
 
         this._currentTarget = null;
+
+        this.on('click', function(){
+            console.log(this);
+        });
     }
     Surface.prototype = Object.create(ElementOutput.prototype);
     Surface.prototype.constructor = Surface;
