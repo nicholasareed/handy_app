@@ -781,9 +781,9 @@ define(function(require, exports, module) {
             // origin: [0, 0]
         });
         this.recommendView.Recommended.Surface = new Surface({
-            content: '<div><span class="ellipsis-all"><i class="icon ion-thumbsup"></i> Recommended By You!</span></div>',
+            content: '<div class="outward-button with-icon ellipsis-all"><i class="icon ion-thumbsup"></i> Recommended By You!</div>',
             size: [undefined, 60],
-            classes: ['is-recommended-button-default']
+            classes: ['is-recommended-button-default','button-outwards-default']
         });
         this.recommendView.Recommended.getSize = function(){
             return [undefined, that.recommendView.Recommended.Surface._trueSize ? that.recommendView.Recommended.Surface._trueSize[1] : 60];

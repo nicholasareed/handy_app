@@ -409,13 +409,13 @@ define(function(require, exports, module) {
         });
         this.invoiceDetails.ToSurface.on('click', function(){
 
-            // Redo assignment
-            if(that.model.get('to_user_id')){
-                // already assigned!
-                // - visit that person
-                App.history.navigate('user/' + that.model.get('to_user_id._id'));
-                return;
-            }
+            // // Redo assignment
+            // if(that.model.get('to_user_id')){
+            //     // already assigned!
+            //     // - visit that person
+            //     App.history.navigate('user/' + that.model.get('to_user_id._id'));
+            //     return;
+            // }
 
             App.history.modifyLast({
                 tag: 'StartTo'
@@ -434,13 +434,13 @@ define(function(require, exports, module) {
             }
         });
         this.invoiceDetails.FromSurface.on('click', function(){
-            // Redo assignment
-            if(that.model.get('from_user_id')){
-                // already changed owner!
-                // - visit that person
-                App.history.navigate('user/' + that.model.get('from_user_id._id'));
-                return;
-            }
+            // // Redo assignment
+            // if(that.model.get('from_user_id')){
+            //     // already changed owner!
+            //     // - visit that person
+            //     App.history.navigate('user/' + that.model.get('from_user_id._id'));
+            //     return;
+            // }
 
             App.history.modifyLast({
                 tag: 'StartOwner'
@@ -762,7 +762,7 @@ define(function(require, exports, module) {
             this.invoiceDetails.DetailMarkdown.setContent(S(that.model.get('title')));
 
             // amount
-            this.invoiceDetails.Cost.setContent('<div>' + S(numeral(that.model.get('amount')).format('$0,0.00')) + '</div>');
+            this.invoiceDetails.Cost.setContent('<div>' + S(numeral(that.model.get('amount')).format('$0,0.00')) + ' <span>&nbsp;+/-&nbsp;</span></div>');
 
             // to
             if(that.model.get('to_user_id')){

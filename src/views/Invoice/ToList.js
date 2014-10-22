@@ -17,6 +17,7 @@ define(function(require, exports, module) {
     var RenderNode         = require('famous/core/RenderNode')
 
     var Utility = require('famous/utilities/Utility');
+    var Timer = require('famous/utilities/Timer');
 
     // Helpers
     var Utils = require('utils');
