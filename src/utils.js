@@ -354,7 +354,8 @@ define(function (require) {
 
         Z: function(amount){
             // "nudge" the z-plane a bit
-            return new StateModifier({transform: Transform.translate(0,0,amount / 1000000)})
+            console.log(amount / 1000000.0);
+            return new StateModifier({transform: Transform.translate(0,0,amount / 1000000.0)})
         },
 
         usePlane: function(plane_name, add, returnValue){

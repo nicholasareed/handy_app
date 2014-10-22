@@ -111,7 +111,7 @@ define(function(require, exports, module) {
         });
 
         this.form = new FormHelper({
-            bg: 'white',
+            bg: true,
             type: 'form',
             scroll: false
         });

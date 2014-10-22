@@ -98,6 +98,7 @@ define(function(require, exports, module) {
         } else {
             contentScrollView = new SequentialLayout();
         }
+        contentScrollView.scroll = opts.scroll;
 
         contentScrollView.Views = [];
 
@@ -106,10 +107,14 @@ define(function(require, exports, module) {
 
         // background if necessary
         if(opts.bg){
+            var bgClasses = ['form-bg-default'];
+            if(opts.bg !== true){
+                bgClasses = opts.bg
+            }
             this._bg = new View();
             this._bg.Surface = new Surface({
                 size: [undefined, undefined],
-                classes: ['form-bg-default']
+                classes: bgClasses
             });
             this._bg.Surface.pipe(contentScrollView);
             this._bg.SizeMod = new Modifier({
@@ -130,7 +135,7 @@ define(function(require, exports, module) {
         this._form = FormContainer;
         this._formScrollView = contentScrollView;
 
-        FormContainer.add(Utils.Z(2)).add(contentScrollView);
+        FormContainer.add(Utils.Z(10)).add(contentScrollView);
 
         this.add(FormContainer);
 
@@ -191,7 +196,8 @@ define(function(require, exports, module) {
                 // console.log(inputSurface.View);
                 // console.log(myIndex);
                 // console.log(opts.form._formScrollView);
-                if(App.KeyboardShowing != true && opts.form._formScrollView.goToIndex){
+                // if(App.KeyboardShowing != true && opts.form._formScrollView.goToIndex){
+                if(opts.form._formScrollView.goToIndex){
                     opts.form._formScrollView.goToIndex(myIndex,0,60);
                 }
             });
