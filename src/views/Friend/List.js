@@ -64,6 +64,8 @@ define(function(require, exports, module) {
             footerSize: 60
         });
 
+        this._showing = true;
+
         this.createHeader();
 
         this._subviews = [];
@@ -293,6 +295,9 @@ define(function(require, exports, module) {
         Timer.setInterval(function(){
             // highlight the correct TopTab
             // console.log();
+            if(!that._showing){
+                return;
+            }
             try {
                 var x = that.TopTabs.Content.ScrollView.getIndex();
             }catch(err){
@@ -442,7 +447,7 @@ define(function(require, exports, module) {
 
         switch(direction){
             case 'hiding':
-
+                this._showing = false;
                 switch(otherViewName){
 
                     default:
@@ -461,6 +466,7 @@ define(function(require, exports, module) {
                 break;
 
             case 'showing':
+                this._showing = true;
                 if(this._refreshData){
                     Timer.setTimeout(this.refreshData.bind(this), 1000);
                 }

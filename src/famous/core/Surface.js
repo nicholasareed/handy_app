@@ -50,9 +50,9 @@ define(function(require, exports, module) {
 
         this._currentTarget = null;
 
-        this.on('click', function(){
-            console.log(this);
-        });
+        // this.on('click', function(){
+        //     console.log(this);
+        // });
     }
     Surface.prototype = Object.create(ElementOutput.prototype);
     Surface.prototype.constructor = Surface;
