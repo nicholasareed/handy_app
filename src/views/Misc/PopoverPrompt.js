@@ -101,6 +101,7 @@ define(function(require, exports, module) {
         this.popoverContent.PositionMod = new StateModifier({
         });
         this.popoverContent.OriginMod = new StateModifier({
+            align: [0.5, 0.5],
             origin: [0.5, 0.5]
         });
         this.popoverContent.OuterSizeMod = new StateModifier({

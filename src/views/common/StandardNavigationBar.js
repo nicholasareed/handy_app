@@ -46,7 +46,8 @@ define(function(require, exports, module) {
 
         this.title = new Surface({
             classes: this.options.classes.concat('title'),
-            content: this.options.content
+            content: this.options.content,
+            wrap: '<div class="ellipsis-all"></div>'
         });
         this.title.View = new View();
         // this.title.View.
