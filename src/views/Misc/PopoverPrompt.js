@@ -94,7 +94,7 @@ define(function(require, exports, module) {
         //     // inTransition: false
         // });
 
-        this.contentView.add(Utils.usePlane('popover')).add(this.contentView.BgOpacityMod).add(this.contentView.BgSurface);
+        this.contentView.add(this.contentView.BgOpacityMod).add(Utils.usePlane('popover')).add(this.contentView.BgSurface);
 
 
         this.popoverContent = new View();
@@ -111,6 +111,7 @@ define(function(require, exports, module) {
         });
 
         this.form = new FormHelper({
+            planeMod: Utils.usePlane('popover'),
             bg: true,
             type: 'form',
             scroll: false

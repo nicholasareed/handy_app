@@ -79,8 +79,14 @@ define(function(require, exports, module) {
 
     FormHelper.prototype.createFormContainer = function(opts){
 
+        var planeMod = new StateModifier();
+        if(opts.planeMod){
+            planeMod = opts.planeMod;
+        }
+
         // Form Container
         var FormContainer = new FormContainerSurface();
+        var FormNode = FormContainer.add(planeMod);
 
         // prevent submit from actually submitting the form
         FormContainer.on('submit', function(ev){
@@ -119,8 +125,8 @@ define(function(require, exports, module) {
             this._bg.Surface.pipe(contentScrollView);
             this._bg.SizeMod = new Modifier({
                 size: function(){
-                    // console.log(FormContainer.getSize());
-                    // console.log(FormContainer.getSize(true));
+                    // console.log(FormNode.getSize());
+                    // console.log(FormNode.getSize(true));
                     // console.log(contentScrollView);
                     // console.log(contentScrollView.getSize());
                     // debugger;
@@ -129,15 +135,15 @@ define(function(require, exports, module) {
                 }
             });
             this._bg.add(this._bg.SizeMod).add(this._bg.Surface);
-            FormContainer.add(Utils.Z(1)).add(this._bg);
+            FormNode.add(Utils.Z(1)).add(this._bg);
         }
 
-        this._form = FormContainer;
+        this._form = FormNode;
         this._formScrollView = contentScrollView;
 
-        FormContainer.add(Utils.Z(10)).add(contentScrollView);
+        FormNode.add(Utils.Z(10)).add(contentScrollView);
 
-        this.add(FormContainer);
+        this.add(FormNode);
 
     };
 
