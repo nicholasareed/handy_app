@@ -45,7 +45,7 @@
     <preference name="splashscreen" value="splash.png" /> <!-- Android -->
 
     <preference name="URL_SCHEME" value="http" />
-    <preference name="URL_HOST" value="thehandyapp.com" />
+    <preference name="URL_HOST" value="theoddjobapp.com" />
 
 
     <gap:plugin name="org.apache.cordova.device" />
@@ -83,7 +83,7 @@
 
     
     <gap:plugin name="nl.x-services.plugins.launchmyapp">
-        <param name="URL_SCHEME" value="handy" />
+        <param name="URL_SCHEME" value="oddjob" />
     </gap:plugin>
 
 
