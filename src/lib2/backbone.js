@@ -573,7 +573,12 @@
         model.trigger('sync', model, resp, options);
       };
       wrapError(this, options);
-      return this.sync('read', this, options);
+      // return this.sync('read', this, options);
+      window.setTimeout((function(){
+        this.sync('read', this, options);
+        // debugger;
+      }).bind(this),3000);
+      return;
     },
 
     // Set a hash of model attributes, and sync the model to the server.
@@ -1053,7 +1058,12 @@
         collection.trigger('sync', collection, resp, options);
       };
       wrapError(this, options);
-      return this.sync('read', this, options);
+      // return this.sync('read', this, options);
+
+      window.setTimeout((function(){
+        this.sync('read', this, options);
+      }).bind(this),3000);
+      return;
     },
 
     // Create a new instance of a model in this collection. Add the model to the
