@@ -258,24 +258,36 @@ define(function(require, exports, module) {
             
             // Save the Todo
 
-            var a = prompt('Cost of this Todo');
-            a = parseFloat(a);
-            if(!a){
-                // canceled
-                console.error(a);
-                return;
-            }
+            Utils.Popover.Prompt('Cost of this Job', '', 'Add to Invoice', 'Cancel').then(function(a){
 
-            Model.save({
-                cost: a,
-                invoice_id: that.model.get('_id')
-            },{
-                patch: true
-            })
-            .then(function(newModel){
+                if(!a || a.trim() == ''){
+                    Utils.Notification.Toast('Not created');
+                    return;
+                }
 
-                // that.collection.fetch();
-                that._eventOutput.emit('selected');
+                a = parseFloat(a);
+                if(!a){
+                    // canceled
+                    console.error(a);
+                    return;
+                }
+
+                Utils.Notification.Toast('Updating Invoice');
+
+                Model.save({
+                    cost: a,
+                    invoice_id: that.model.get('_id')
+                },{
+                    patch: true
+                })
+                .then(function(newModel){
+
+                    // that.collection.fetch();
+                    that._eventOutput.emit('selected');
+
+                    Utils.Notification.Toast('Updated');
+
+                });
 
             });
 

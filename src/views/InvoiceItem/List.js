@@ -98,7 +98,7 @@ define(function(require, exports, module) {
 
         // create the header
         this.header = new StandardHeader({
-            content: "Invoiced Todos",
+            content: "Invoices and Jobs",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             // moreContent: false
@@ -245,7 +245,7 @@ define(function(require, exports, module) {
 
         // Line Items
         this.filterTabs.LineItems = new Surface({
-            content: 'Included',
+            content: 'Jobs in Invoice',
             size: [100, undefined],
             classes: ['invoice-filter-tabs-item-default']
         });
@@ -266,7 +266,7 @@ define(function(require, exports, module) {
 
         // Available Todos
         this.filterTabs.AvailableTodos = new Surface({
-            content: 'Available',
+            content: 'un-Invoiced',
             size: [undefined, undefined],
             classes: ['invoice-filter-tabs-item-default']
         });
