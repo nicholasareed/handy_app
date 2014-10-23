@@ -332,7 +332,7 @@ define(function(require, exports, module) {
         // Available Todos 
         this.ListContent.AvailableTodos = new TodoSelectView({
             model: that.model, // Invoice model
-            empty_string: "No available todos",
+            empty_string: "No un-invoice jobs",
             filter: {
                 invoice_id: null,
                 tags: {
