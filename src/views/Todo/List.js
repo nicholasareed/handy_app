@@ -105,14 +105,14 @@ define(function(require, exports, module) {
         });
         this.headerContent.Create.on('click', function(){
 
-            Utils.Popover.Prompt('Title of new Todo', '', 'Create', 'Cancel').then(function(p){
+            Utils.Popover.Prompt('Title of new Job', '', 'Create', 'Cancel').then(function(p){
 
                 if(!p || p.trim() == ''){
-                    Utils.Notification.Toast('Todo NOT created');
+                    Utils.Notification.Toast('Job NOT created');
                     return;
                 }
 
-                Utils.Notification.Toast('Created a new Todo!');
+                Utils.Notification.Toast('Created a new Job!');
 
                 var newModel = new TodoModel.Todo({
                     title: p.trim()
