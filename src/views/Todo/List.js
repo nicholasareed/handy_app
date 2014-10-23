@@ -286,7 +286,7 @@ define(function(require, exports, module) {
         switch(this.tabs.todos){
             case 'my':
                 // todos I am responsible for completing
-                empty_string = 'No Todos for you to complete';
+                empty_string = 'No Jobs for you to complete';
                 filter = {
                     tags: {
                         '$ne' : 'complete'
@@ -314,7 +314,7 @@ define(function(require, exports, module) {
             case 'assigned':
                 
                 // todos that are assigned that you know about
-                empty_string = 'No Todos assigned to someone else';
+                empty_string = 'No Jobs assigned to someone else';
                 filter = {
                     tags: {
                         '$ne' : 'complete'
@@ -330,7 +330,7 @@ define(function(require, exports, module) {
                 break;
 
             case 'complete':
-                empty_string = 'No Todos have been completed';
+                empty_string = 'No Jobs have been completed';
                 filter = {
                     tags: 'complete'
                 };

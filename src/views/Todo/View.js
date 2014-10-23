@@ -403,7 +403,7 @@ define(function(require, exports, module) {
 
         // create the header
         this.header = new StandardHeader({
-            content: "Todo",
+            content: "Job",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             moreClasses: ["normal-header"],
