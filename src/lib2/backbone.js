@@ -577,7 +577,7 @@
       window.setTimeout((function(){
         this.sync('read', this, options);
         // debugger;
-      }).bind(this),3000);
+      }).bind(this),1000);
       return;
     },
 
@@ -1062,7 +1062,7 @@
 
       window.setTimeout((function(){
         this.sync('read', this, options);
-      }).bind(this),3000);
+      }).bind(this),1000);
       return;
     },
 
