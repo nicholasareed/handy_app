@@ -75,6 +75,7 @@ define(function(require, exports, module) {
     PageView.prototype.constructor = PageView;
 
     PageView.prototype.createContent = function(){
+        var that = this;
 
         this.contentView = new View();
         this.contentView.BgSurface = new Surface({
@@ -96,6 +97,13 @@ define(function(require, exports, module) {
 
         this.contentView.add(this.contentView.BgOpacityMod).add(Utils.usePlane('popover')).add(this.contentView.BgSurface);
 
+        // create the form
+        this.form = new FormHelper({
+            planeMod: Utils.usePlane('popover'),
+            bg: true,
+            type: 'form',
+            scroll: false
+        });
 
         this.popoverContent = new View();
         this.popoverContent.PositionMod = new StateModifier({
@@ -107,20 +115,25 @@ define(function(require, exports, module) {
         this.popoverContent.OuterSizeMod = new StateModifier({
             size: [window.innerWidth - 40, window.innerHeight]
         });
-        this.popoverContent.SizeMod = new StateModifier({
-            size: [undefined, true]
-        });
-
-        this.form = new FormHelper({
-            planeMod: Utils.usePlane('popover'),
-            bg: true,
-            type: 'form',
-            scroll: false
+        this.popoverContent.SizeMod = new Modifier({
+            size: function(){
+                if(that.form.trueSize){
+                    console.log('-----------');
+                    // console.log(that.form.trueSize());
+                    console.log(that.form.getSize());
+                    console.log(that.form._size);
+                }
+                var defaultSize = 200;
+                var newSize = that.form.getSize ? (that.form.getSize() ? that.form.getSize()[1] : defaultSize) : defaultSize;
+                // console.log(newSize);
+                return [undefined, newSize] // default 200 sizing
+            }
         });
 
         // Add surfaces to content (buttons)
         this.addSurfaces();
 
+        // add the form to the popover
         this.popoverContent.add(this.popoverContent.OuterSizeMod).add(this.popoverContent.OriginMod).add(this.popoverContent.SizeMod).add(this.popoverContent.PositionMod).add(this.form);
 
         // // Content Modifiers

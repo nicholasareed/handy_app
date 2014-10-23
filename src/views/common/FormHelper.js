@@ -145,6 +145,12 @@ define(function(require, exports, module) {
 
         this.add(FormNode);
 
+        this.getSize = function(){
+            // console.log('contentScrollView getSize', contentScrollView.getSize());
+            // console.log(contentScrollView);
+            return contentScrollView.getSize();
+        };
+
     };
 
     FormHelper.prototype.addInputsToForm = function(inputsArray){
@@ -354,6 +360,11 @@ define(function(require, exports, module) {
     FormHelper.prototype.setContent = function(data){
         return this._setContent(data);
     };
+
+    // FormHelper.prototype.getSize = function(){
+    //     console.log('formhelper getsize');
+    //     return this._size ? this._size : [undefined, undefined];
+    // };
 
     module.exports = FormHelper;
 });
