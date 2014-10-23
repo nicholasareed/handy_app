@@ -57,6 +57,13 @@ define(function(require, exports, module) {
             if (options.align) this.setAlign(options.align);
             if (options.size) this.setSize(options.size);
         }
+
+        if(options.size){
+            App.Events.on('resize', (function(){
+                console.log('resize StateModifier');
+                this.setSize(this._size);
+            }).bind(this));
+        }
     }
 
     /**
@@ -167,6 +174,7 @@ define(function(require, exports, module) {
      * @return {StateModifier} this
      */
     StateModifier.prototype.setSize = function setSize(size, transition, callback) {
+        this._size = size;
         if (size === null) {
             if (this._hasSize) {
                 this._modifier.sizeFrom(null);

@@ -243,8 +243,11 @@ define(function(require, exports, module) {
 
                 App.mainSize = [App.defaultSize[0],App.defaultSize[1] - keyboardHeight];
                 App.MainContext.emit('resize');
+
                 App.KeyboardShowing = true;
                 App.Events.emit('KeyboardShowHide', true);
+
+                App.Events.emit('resize');
 
                 // App.mainSize = App.MainContext.getSize();
                 // if (App.MainController)
@@ -261,6 +264,8 @@ define(function(require, exports, module) {
                 App.KeyboardShowing = false;
                 App.Events.emit('KeyboardShowHide', false);
 
+                App.Events.emit('resize');
+                
                 // App.mainSize = App.MainContext.getSize();
                 // if (App.MainController)
                 //     App.MainController.setOptions({size: [App.mainSize[0], App.mainSize[1]]});

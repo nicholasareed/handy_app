@@ -242,7 +242,7 @@ define(function(require, exports, module) {
         this.infinityLoadedAllSurface.setContent(this.collection.totalResults + ' total');
 
         var nextRenderable;
-        if(this.collection.length == 0 && this.collection.infiniteResults == 0){
+        if(this.collection.length == 0){ // && this.collection.infiniteResults == 0){
             nextRenderable = this.emptyListSurface;
         } else {
             nextRenderable = this.contentLayout;
