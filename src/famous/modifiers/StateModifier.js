@@ -58,7 +58,7 @@ define(function(require, exports, module) {
             if (options.size) this.setSize(options.size);
         }
 
-        if(options.size){
+        if(options && options.size){
             App.Events.on('resize', (function(){
                 console.log('resize StateModifier');
                 this.setSize(this._size);

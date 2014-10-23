@@ -40,7 +40,7 @@ define(function(require, exports, module) {
             });
             App.Data.TodoCollection.on('sync', function(){
                 App.Views.MainFooter.Tabs.buttons[0].setOptions({
-                    content: '<i class="icon ion-android-lightbulb"></i><div><span class="ellipsis-all">'+App.Data.TodoCollection.totalResults+' Todo</span></div>'
+                    content: '<i class="icon ion-android-lightbulb"></i><div><span class="ellipsis-all">'+App.Data.TodoCollection.totalResults+' Jobs</span></div>'
                 });
                 App.Data.TodoCollection.totalResults;
             });

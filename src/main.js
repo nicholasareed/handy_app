@@ -389,7 +389,7 @@ define(function(require, exports, module) {
                 var tmpTabs = App.Views.MainFooter.Tabs;
 
                 tmpTabs.defineSection('todos', {
-                    content: '<i class="icon ion-android-lightbulb"></i><div><span class="ellipsis-all">Todo</span></div>',
+                    content: '<i class="icon ion-android-lightbulb"></i><div><span class="ellipsis-all">Job</span></div>',
                     onClasses: ['footer-tabbar-default', 'on'],
                     offClasses: ['footer-tabbar-default', 'off']
                 });

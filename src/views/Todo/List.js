@@ -240,7 +240,7 @@ define(function(require, exports, module) {
 
         // create the header
         this.header = new StandardHeader({
-            content: "Todos",
+            content: "Jobs",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             // moreContent: false
@@ -424,7 +424,7 @@ define(function(require, exports, module) {
 
         // My
         this.filterTabs.MyTodos = new Surface({
-            content: 'My Todos',
+            content: 'My Jobs',
             size: [100, undefined],
             classes: ['todo-filter-tabs-item-default']
         });
@@ -443,7 +443,7 @@ define(function(require, exports, module) {
 
         // Assigned
         this.filterTabs.AssignedTodos = new Surface({
-            content: 'Assigned',
+            content: 'Not Mine',
             size: [100, undefined],
             classes: ['todo-filter-tabs-item-default']
         });

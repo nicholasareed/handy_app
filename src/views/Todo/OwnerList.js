@@ -141,7 +141,7 @@ define(function(require, exports, module) {
 
         // create the header
         this.header = new StandardHeader({
-            content: "Todo Owner",
+            content: "Job Employer",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             // moreContent: false

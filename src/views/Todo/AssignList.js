@@ -121,7 +121,7 @@ define(function(require, exports, module) {
             // App.history.navigate('friend/potential');
 
             Utils.Notification.Toast('Saving, one moment');
-            
+
             // Not assigned to anyone, lets go assign/delegate to someone!
             // App.history.navigate('todo/assign/' + Model.get('_id'));
             that.model.save({
@@ -141,7 +141,7 @@ define(function(require, exports, module) {
 
         // create the header
         this.header = new StandardHeader({
-            content: "Assign Todo",
+            content: "Assign Job",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             // moreContent: false
@@ -363,7 +363,7 @@ define(function(require, exports, module) {
 
                             // // Fade header
                             // that.header.StateModifier.setOpacity(0, transitionOptions.outTransition);
-                            
+
                             that.ContentStateModifier.setTransform(Transform.translate((window.innerWidth * (goingBack ? 1.5 : -1.5)),0,0), transitionOptions.outTransition);
 
                         }, delayShowing);
