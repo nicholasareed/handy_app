@@ -208,13 +208,16 @@
   display: inline-block;
   width: 100%;
 
-  background: #111;
+  background: #1D7BB4;
   text-align: center;
 
   line-height: 40px;
   font-size: 14px;
 
   color: white;
+
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
 
 }
 
@@ -451,7 +454,7 @@
   display: inline-block;
   width: 100%;
 
-  background: #111;
+  background: #1D7BB4;
   text-align: center;
 
   line-height: 40px;
@@ -459,6 +462,9 @@
 
   color: white;
 
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  
 }
 
 

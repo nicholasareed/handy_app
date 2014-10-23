@@ -897,7 +897,8 @@ input[type="submit"] {
 input[type="submit"].form-button-submit-default {
   /*background: #3D5C99;*/
   /*background: #2980b9;*/
-  background: #307A87;
+  /*background: #307A87;*/
+  background: #1D7BB4;
 
   border: 1px solid rgba(255,255,255,0.5);
   color: white;
