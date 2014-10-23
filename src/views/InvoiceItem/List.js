@@ -246,7 +246,7 @@ define(function(require, exports, module) {
         // Line Items
         this.filterTabs.LineItems = new Surface({
             content: 'Jobs in Invoice',
-            size: [100, undefined],
+            size: [140, undefined],
             classes: ['invoice-filter-tabs-item-default']
         });
         // this.filterTabs.LineItems.group = 'Invoices';

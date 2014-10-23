@@ -258,7 +258,7 @@ define(function(require, exports, module) {
             
             // Save the Todo
 
-            Utils.Popover.Prompt('Cost of this Job', '', 'Add to Invoice', 'Cancel').then(function(a){
+            Utils.Popover.Prompt('Cost of this Job', '', 'Add to Invoice', 'Cancel', 'number').then(function(a){
 
                 if(!a || a.trim() == ''){
                     Utils.Notification.Toast('Not created');
