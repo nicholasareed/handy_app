@@ -333,7 +333,7 @@ define(function(require, exports, module) {
                 },
 
                 'friend/emailonly/choose/:type/:todo_or_invoice_id' : function(){
-                    defaultRoute('FriendEmailOnlyChoose', 'Friend/EmailOnlyChoose', arguments, {cache: true});
+                    defaultRoute('FriendEmailOnlyChoose', 'Friend/EmailOnlyChoose', arguments, {cache: false});
                 },
 
                 // 'friend/add' : function(){
