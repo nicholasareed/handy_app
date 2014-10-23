@@ -756,7 +756,7 @@ input[type="text"],
 input[type="text"]:focus,
 input[type="text"]:active {
   border: 1px solid #ddd;
-  border-bottom: 2px solid #999;
+  /*border-bottom: 2px solid #999;*/
   border-shadow: none;
   padding: 0 8px;
   font-size: 16px;
@@ -769,7 +769,7 @@ input[type="email"],
 input[type="email"]:focus,
 input[type="email"]:active {
   border: 1px solid #ddd;
-  border-bottom: 2px solid #999;
+  /*border-bottom: 2px solid #999;*/
   border-shadow: none;
   padding: 0 8px;
   font-size: 16px;
@@ -782,7 +782,7 @@ input[type="number"],
 input[type="number"]:focus,
 input[type="number"]:active {
   border: 1px solid #ddd;
-  border-bottom: 2px solid #999;
+  /*border-bottom: 2px solid #999;*/
   border-shadow: none;
   padding: 0 8px;
   font-size: 16px;
@@ -795,7 +795,7 @@ input[type="tel"],
 input[type="tel"]:focus,
 input[type="tel"]:active {
   border: 1px solid #ddd;
-  border-bottom: 2px solid #999;
+  /*border-bottom: 2px solid #999;*/
   border-shadow: none;
   padding: 0 8px;
   font-size: 16px;
@@ -810,7 +810,7 @@ textarea:active {
   font-family: 'Circular Light';
 
   border: 1px solid #ddd;
-  border-bottom: 2px solid #999;
+  /*border-bottom: 2px solid #999;*/
   border-shadow: none;
   padding: 4px 8px;
   font-size: 16px;
@@ -823,7 +823,7 @@ input[type="password"],
 input[type="password"]:focus,
 input[type="password"]:active {
   border: 1px solid #ddd;
-  border-bottom: 2px solid #999;
+  /*border-bottom: 2px solid #999;*/
   border-shadow: none;
   padding: 0 8px;
   font-size: 16px;
