@@ -107,6 +107,7 @@ define(function(require, exports, module) {
 
         this.popoverContent = new View();
         this.popoverContent.PositionMod = new StateModifier({
+            transform: Transform.translate(0, window.innerHeight, 0)
         });
         this.popoverContent.OriginMod = new StateModifier({
             align: [0.5, 0.5],
