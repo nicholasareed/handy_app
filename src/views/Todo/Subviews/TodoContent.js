@@ -18,6 +18,7 @@ define(function(require, exports, module) {
     var RenderController = require('famous/views/RenderController');
 
     var Utility = require('famous/utilities/Utility');
+    var Timer = require('famous/utilities/Timer');
 
     var HeaderFooterLayout = require('famous/views/HeaderFooterLayout');
     var NavigationBar = require('famous/widgets/NavigationBar');
@@ -48,11 +49,6 @@ define(function(require, exports, module) {
     _.each(tpls, function(val, key){
         templates[key] = Handlebars.compile(tpls[key]);
     });
-
-    // {
-    //     text: Handlebars.compile(tpls.text),
-    //     text: Handlebars.compile(tpls.text)
-    // }
 
     function SubView(options) {
         var that = this;
@@ -273,7 +269,12 @@ define(function(require, exports, module) {
         // console.log(surfaceVars);
 
         // Surface
+        var isLate = false;
+        if(Model.get('type') == 'image'){
+            isLate = true;
+        }
         contentView.Surface = new Surface({
+            late: isLate,
             content: surfaceVars.content,
             size: [undefined, true],
             classes: surfaceVars.classes
@@ -281,6 +282,12 @@ define(function(require, exports, module) {
         contentView.getSize = function(){
             return [undefined, contentView.Surface._size ? contentView.Surface._size[1] : undefined];
         };
+        // contentView.Surface.on('deploy', function() {
+        //     Timer.setTimeout(function(){
+        //         console.log('SIZE SET', contentView.Surface.getSize(true));
+        //         contentView.Surface.setSize(contentView.Surface.getSize(true))
+        //     }, 50)
+        // })
         contentView.Surface.pipe(that.contentLayout);
         contentView.Surface.on('click', function(){
             // Utils.Notification.Toast('View Todo');

@@ -11,6 +11,7 @@ define(function(require, exports, module) {
     var ElementOutput = require('./ElementOutput');
 
     var LongTapSync = require("views/common/LongTapSync");
+    var Timer = require("famous/utilities/Timer");
 
     var $ = require('jquery');
 
@@ -214,6 +215,7 @@ define(function(require, exports, module) {
         if (options.properties) this.setProperties(options.properties);
         if (options.content) this.setContent(options.content);
         if (options.wrap) this.setWrap(options.wrap);
+        if (options.late) this.isLate = true;
         return this;
     };
 
@@ -404,12 +406,40 @@ define(function(require, exports, module) {
         var size = this.size ? this.size : [undefined, undefined]; //this.getSize() return _size, which we don't want
         if(size.indexOf(true) === -1){
             return;
-        }
-        var width = size[0] === true ? target.offsetWidth : size[0];
-        var height = size[1] === true ? target.offsetHeight : size[1];
+        } else {
+            var width = size[0] === true ? target.offsetWidth : size[0];
+            var height = size[1] === true ? target.offsetHeight : size[1];
 
-        this._trueSize = [width, height];
-        this.setSize([width, height]);
+            this._trueSize = [width, height];
+            // this._size = [width, height];
+        }
+
+        return;
+
+        // this.setSize([width, height]);
+
+        // // If there is an <img> tag, add an onload method?
+        // var domElement = $(target.innerHtml);
+        // if(domElement.find('img').length > 0){
+        //     console.log(domElement);
+        //     debugger;
+        // }
+
+        // if(this.isLate && !this.hasListener){
+        //     this.hasListener = true;
+        //     Timer.every((function(){
+        //         // console.log(this.size);
+        //         this.setSize(this._originalSize);
+        //         // debugger;
+        //         // console.log('every', target.offsetHeight, this._size[1]);
+        //         // console.log(target);
+        //         if(target.offsetHeight != this._size[1]){
+        //             // this.setSize();
+        //             console.error('resetting');
+        //             debugger;
+        //         }
+        //     }).bind(this),16);
+        // }
 
     };
 
@@ -450,6 +480,7 @@ define(function(require, exports, module) {
      * @param {Array.Number} size as [width, height]
      */
     Surface.prototype.setSize = function setSize(size) {
+        this._originalSize = size;
         this.size = size ? [size[0], size[1]] : null;
         this._sizeDirty = true;
         return this;

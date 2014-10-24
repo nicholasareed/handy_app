@@ -704,6 +704,11 @@ define(function(require, exports, module) {
             Timer.setTimeout(function(){
                 try {
                     App.Functions.action();
+
+                    Timer.setTimeout(function(){
+                        App.Views.SplashLoading.hide();
+                    },3000);
+                    
                     if(App.Data.usePg){
                         navigator.splashscreen.hide();
                     }
