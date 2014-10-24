@@ -320,7 +320,7 @@ define(function(require, exports, module) {
         var submitButtonSurface = new SubmitInputSurface({
             value: opts.value,
             size: [undefined, true],
-            classes: ['form-button-submit-default']
+            classes: opts.classes || ['form-button-submit-default']
         });
         submitButtonSurface.View = new View();
         submitButtonSurface.View.StateModifier = new StateModifier();

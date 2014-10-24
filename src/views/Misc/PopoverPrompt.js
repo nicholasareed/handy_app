@@ -246,8 +246,9 @@ define(function(require, exports, module) {
             }
         });
         this.cancelButton = new FormHelper({
-            form: this.form,
             type: 'submit',
+            form: this.form,
+            classes: ['form-button-submit-default','cancel-button'],
             value: this.params.passed.buttonCancel,
             margins: [10,10],
             click: function(){

@@ -909,7 +909,10 @@ input[type="submit"].form-button-submit-default {
 
   border-radius: 4px;
   -webkit-border-radius: 4px;
-
+}
+.form-button-submit-default.cancel-button,
+input[type="submit"].form-button-submit-default.cancel-button {
+  background: rgba(29, 123, 180, 0.75);
 }
 
 .button-outwards-default {
