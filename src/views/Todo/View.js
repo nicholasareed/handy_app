@@ -822,9 +822,9 @@ define(function(require, exports, module) {
             if(that.model.get('owner_id')){
                 // assigned to someone
                 if(that.model.get('owner_id.profile')){
-                    this.todoDetails.Owner.Surface.setContent('owner: ' + that.model.get('owner_id.profile.name'));
+                    this.todoDetails.Owner.Surface.setContent('employer: ' + that.model.get('owner_id.profile.name'));
                 } else {
-                    this.todoDetails.Owner.Surface.setContent('owner: <span data-replace-id="' + that.model.get('owner_id') + '" data-replace-model="Profile" data-replace-target="profile.name"/>&nbsp;</span>');
+                    this.todoDetails.Owner.Surface.setContent('employer: <span data-replace-id="' + that.model.get('owner_id') + '" data-replace-model="Profile" data-replace-target="profile.name"/>&nbsp;</span>');
                     Utils.dataModelReplaceOnSurface(this.todoDetails.Owner.Surface);
                 }
                 this.todoDetails.Owner.Surface.setClasses(['todo-view-owner-default','has_owner']);

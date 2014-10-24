@@ -206,8 +206,10 @@ define(function(require, exports, module) {
             //  console.log(err);
             // }
 
-            // // Push notifications
-            // this.initPush();
+            // Push notifications
+            if(App.Credentials.push_notifications === true){
+                this.initPush();
+            }
 
 
             // Keyboard
@@ -412,9 +414,6 @@ define(function(require, exports, module) {
         initPush: function(){
             console.info('Registering for PushNotification');
 
-            // disabled!
-            return;
-
             // Disable Push in debug mode
             if(App.Prod != true){
                 console.error('Development mode');
@@ -426,6 +425,8 @@ define(function(require, exports, module) {
                     // alert('android push');
 
                     App.Data.pushNotification.register(function(result){
+
+                        Utils.Notification.Toast('REGISERED');
                         console.log('Push Setup OK');
                         // alert('Push Setup OK');
                         // alert('success w/ Push Notifications');
@@ -439,7 +440,7 @@ define(function(require, exports, module) {
                         // alert(err);
                     }, 
                     {
-                        "senderID": "303243217649", //"312360250527",
+                        "senderID": App.Credentials.push_notification_sender_id, //"312360250527",
                         "ecb": "onNotificationGCM"
                     });
                 } else if (device.platform.toLowerCase() == 'ios') {
