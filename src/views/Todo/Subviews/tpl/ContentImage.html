@@ -1,0 +1,17 @@
+
+<div class="todocontent-image">
+
+	<!-- image -->
+
+	{{#each media}}
+		<div>
+	    	<img src="{{urls.thumb300x300}}" />
+		</div>
+	{{/each}}
+
+	<!-- time -->
+	<div>
+		{{format_date created "MMM Do, h:mma"}}
+	</div>
+
+</div>

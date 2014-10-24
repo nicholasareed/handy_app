@@ -38,6 +38,7 @@ define(function(require, exports, module) {
     var Handlebars          = require('lib2/handlebars-adapter');
     var tpls                = {
         text: require('text!./tpl/ContentText.html'),
+        image: require('text!./tpl/ContentImage.html'),
         email: require('text!./tpl/ContentEmail.html'),
         mark_complete: require('text!./tpl/ContentMarkComplete.html'),
         mark_incomplete: require('text!./tpl/ContentMarkIncomplete.html'),
@@ -265,6 +266,7 @@ define(function(require, exports, module) {
                 }
 
                 console.error('Invalid content view type');
+                console.log(Model.get('type'));
                 return;
         }
 

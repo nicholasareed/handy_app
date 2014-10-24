@@ -501,6 +501,16 @@
 }
 
 
+
+/* TodoContent */
+
+.todocontent-image {
+}
+
+.todocontent-image img {
+  width: 100%;
+}
+
 /* List (todo/invoice) Content - TodoContent InvoiceContent */
 
 .list-content-item-default {
