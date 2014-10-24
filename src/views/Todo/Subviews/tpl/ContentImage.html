@@ -5,7 +5,13 @@
 
 	{{#each media}}
 		<div>
-	    	<img src="{{urls.thumb300x300}}" />
+			{{#if assembled}}
+	    		<img src="{{urls.thumb300x300}}" />
+	    	{{else}}
+	    		<div class="text-center">
+	    			<i class="icon ion-loading-d"></i>
+	    		</div>
+	    	{{/if}}
 		</div>
 	{{/each}}
 

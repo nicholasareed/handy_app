@@ -268,13 +268,13 @@ define(function(require, exports, module) {
 
         // console.log(surfaceVars);
 
-        // Surface
-        var isLate = false;
+        // Surface updates
         if(Model.get('type') == 'image'){
-            isLate = true;
+            Model.on('change', function(){
+                contentView.Surface.setContent( templates[Model.get('type')](Model.toJSON()) );
+            });
         }
         contentView.Surface = new Surface({
-            late: isLate,
             content: surfaceVars.content,
             size: [undefined, true],
             classes: surfaceVars.classes
