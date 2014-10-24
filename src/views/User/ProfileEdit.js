@@ -424,9 +424,8 @@ define(function(require, exports, module) {
 
             },
             function (e) {
-                alert("Upload failed");
+                console.error(e);
                 Utils.Notification.Toast('Upload failed');
-                // Utils.Notification.Toast(e);
             }, options);
     };
 
