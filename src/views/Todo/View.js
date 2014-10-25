@@ -172,17 +172,32 @@ define(function(require, exports, module) {
         });
         this.headerContent.MarkComplete.on('click', function(){
             
-            var data = {};
+            var data = {},
+                tags = that.model.get('tags');
             if(that.model.get('tags').indexOf('complete') === -1){
                 data = {
                     add_tags: ['complete']
                 }
+                tags.push('complete');
+                that.headerContent.MarkComplete.setContent('<i class="icon ion-ios7-checkmark"></i>');
+                that.headerContent.MarkComplete.setClasses(['header-tab-icon-text-big']);
+
             } else {
                 data = {
                     remove_tags: ['complete']
                 };
+                tags = _.without(tags, 'complete');
+
+                // that.headerContent.MarkComplete.setContent('<i class="icon ion-ios7-checkmark"></i>');
+                // that.headerContent.MarkComplete.setClasses(['header-tab-icon-text-big','marked-complete']);
             }
 
+            // that.headerContent.MarkComplete.setContent('<i class="icon ion-ios7-checkmark"></i>');
+            // that.headerContent.MarkComplete.setClasses(['header-tab-icon-text-big','marked-complete']);
+
+            that.model.set({
+                tags: tags
+            });
             that.model.save(data,{
                 patch: true,
                 // success: function(){
@@ -768,7 +783,7 @@ define(function(require, exports, module) {
 
             console.info('update_content');
             console.log(that.model.get('tags'));
-
+            
             // "complete" tag
             this.headerContent.Complete.Lightbox.show(this.headerContent.MarkComplete);
             if(that.model.get('tags') && that.model.get('tags').indexOf('complete') !== -1){
