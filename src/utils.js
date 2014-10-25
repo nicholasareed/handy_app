@@ -1383,6 +1383,8 @@ define(function (require) {
                     if(App.Cache.currentPageViewPath == viewUrl ){
                         return;
                     }
+                    alert(App.Cache.currentPageViewPath);
+                    alert(viewUrl);
                     Utils.Popover.Buttons({
                         title: 'New Message',
                         text: payload.text,
