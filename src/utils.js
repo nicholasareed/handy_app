@@ -1368,6 +1368,28 @@ define(function (require) {
                     
                     break;
 
+                case 'new_message_connected':
+                case 'new_message_unconnected':
+                    // Already on the page?
+                    if(App.currentPageViewPath == ('inbox/' + payload.from_user_id) ){
+                        return;
+                    }
+                    Utils.Popover.Buttons({
+                        title: 'New Message',
+                        text: payload.text,
+                        buttons: [
+                            {
+                                text: 'View',
+                                success: function(){
+                                    App.history.navigate(payload.id);
+                                }
+                            }
+                        ]
+                    });
+                    
+                    break;
+
+
                 default:
                     Utils.Notification.Toast('Updates Available');
                     // alert('Unknown type');

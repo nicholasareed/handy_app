@@ -238,6 +238,24 @@ define(function(require, exports, module) {
             },
 
 
+            {
+                type: 'header',
+                text: 'Messages',
+            },
+
+            {
+                title: 'From Connection',
+                desc: 'Already connected',
+                scheme_key: 'new_message_connected'
+            },
+
+            {
+                title: 'From non-Connection',
+                desc: 'You were recommended by someone',
+                scheme_key: 'new_message_unconnected'
+            },
+
+
         ];
 
         this.model_views = [];
