@@ -518,7 +518,7 @@ define(function(require, exports, module) {
                 
                 // Cache pageview
                 App.Views.currentPageView = PageView;
-                App.Cache.currentPageViewPath = cachePath;
+                App.Cache.currentPageViewPath = cachePath.substr(1);;
 
                 // Switch to it
                 // - if going backwards, do something interesting?

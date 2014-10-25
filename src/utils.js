@@ -1382,9 +1382,7 @@ define(function (require) {
                     var viewUrl = 'inbox/' + payload.from_user_id;
                     if(App.Cache.currentPageViewPath == viewUrl ){
                         return;
-                    }
-                    alert(App.Cache.currentPageViewPath);
-                    alert(viewUrl);
+                    });
                     Utils.Popover.Buttons({
                         title: 'New Message',
                         text: payload.text,
