@@ -1217,7 +1217,8 @@ define(function (require) {
 
                 case 'new_connection':
                     // Already on page?
-                    if(App.Cache.currentPageViewPath == ('user/' + payload.id).toString() ){
+                    var viewUrl = 'user/' + payload.id;
+                    if(App.Cache.currentPageViewPath == viewUrl ){
                         return;
                     }
                     Utils.Popover.Buttons({
@@ -1226,7 +1227,7 @@ define(function (require) {
                             {
                                 text: 'View',
                                 success: function(){
-                                    App.history.navigate(payload.id);
+                                    App.history.navigate(viewUrl);
                                 }
                             }
                         ]
@@ -1237,7 +1238,8 @@ define(function (require) {
 
                 case 'todo_updated':
                     // Already on the page?
-                    if(App.Cache.currentPageViewPath == ('todo/' + payload.id).toString() ){
+                    var viewUrl = 'todo/' + payload.id;
+                    if(App.Cache.currentPageViewPath == viewUrl ){
                         return;
                     }
                     Utils.Popover.Buttons({
@@ -1246,7 +1248,7 @@ define(function (require) {
                             {
                                 text: 'View',
                                 success: function(){
-                                    App.history.navigate(payload.id);
+                                    App.history.navigate(viewUrl);
                                 }
                             }
                         ]
@@ -1256,7 +1258,8 @@ define(function (require) {
 
                 case 'todo_assigned':
                     // Already on the page?
-                    if(App.Cache.currentPageViewPath == ('todo/' + payload.id).toString() ){
+                    var viewUrl = 'todo/' + payload.id;
+                    if(App.Cache.currentPageViewPath == viewUrl ){
                         return;
                     }
                     Utils.Popover.Buttons({
@@ -1265,7 +1268,7 @@ define(function (require) {
                             {
                                 text: 'View',
                                 success: function(){
-                                    App.history.navigate(payload.id);
+                                    App.history.navigate(viewUrl);
                                 }
                             }
                         ]
@@ -1275,7 +1278,8 @@ define(function (require) {
 
                 case 'todo_content_added':
                     // Already on the page?
-                    if(App.Cache.currentPageViewPath == ('todo/' + payload.id).toString() ){
+                    var viewUrl = 'todo/' + payload.id;
+                    if(App.Cache.currentPageViewPath == viewUrl ){
                         return;
                     }
                     Utils.Popover.Buttons({
@@ -1284,7 +1288,7 @@ define(function (require) {
                             {
                                 text: 'View',
                                 success: function(){
-                                    App.history.navigate(payload.id);
+                                    App.history.navigate(viewUrl);
                                 }
                             }
                         ]
@@ -1294,7 +1298,8 @@ define(function (require) {
 
                 case 'invoice_updated':
                     // Already on the page?
-                    if(App.Cache.currentPageViewPath == ('todo/' + payload.id).toString() ){
+                    var viewUrl = 'invoice/' + payload.id;
+                    if(App.Cache.currentPageViewPath == viewUrl ){
                         return;
                     }
                     Utils.Popover.Buttons({
@@ -1303,7 +1308,7 @@ define(function (require) {
                             {
                                 text: 'View',
                                 success: function(){
-                                    App.history.navigate(payload.id);
+                                    App.history.navigate(viewUrl);
                                 }
                             }
                         ]
@@ -1313,7 +1318,8 @@ define(function (require) {
 
                 case 'invoice_assigned':
                     // Already on the page?
-                    if(App.Cache.currentPageViewPath == ('invoice/' + payload.id).toString() ){
+                    var viewUrl = 'invoice/' + payload.id;
+                    if(App.Cache.currentPageViewPath == viewUrl ){
                         return;
                     }
                     Utils.Popover.Buttons({
@@ -1322,7 +1328,7 @@ define(function (require) {
                             {
                                 text: 'View',
                                 success: function(){
-                                    App.history.navigate(payload.id);
+                                    App.history.navigate(viewUrl);
                                 }
                             }
                         ]
@@ -1332,7 +1338,8 @@ define(function (require) {
 
                 case 'invoice_item_added':
                     // Already on the page?
-                    if(App.Cache.currentPageViewPath == ('invoice/' + payload.id).toString() ){
+                    var viewUrl = 'invoice/' + payload.id;
+                    if(App.Cache.currentPageViewPath == viewUrl ){
                         return;
                     }
                     Utils.Popover.Buttons({
@@ -1341,7 +1348,7 @@ define(function (require) {
                             {
                                 text: 'View',
                                 success: function(){
-                                    App.history.navigate(payload.id);
+                                    App.history.navigate(viewUrl);
                                 }
                             }
                         ]
@@ -1351,7 +1358,8 @@ define(function (require) {
 
                 case 'invoice_content_added':
                     // Already on the page?
-                    if(App.Cache.currentPageViewPath == ('invoice/' + payload.id).toString() ){
+                    var viewUrl = 'invoice/' + payload.id;
+                    if(App.Cache.currentPageViewPath == viewUrl ){
                         return;
                     }
                     Utils.Popover.Buttons({
@@ -1360,7 +1368,7 @@ define(function (require) {
                             {
                                 text: 'View',
                                 success: function(){
-                                    App.history.navigate(payload.id);
+                                    App.history.navigate(viewUrl);
                                 }
                             }
                         ]
@@ -1371,8 +1379,8 @@ define(function (require) {
                 case 'new_message_connected':
                 case 'new_message_unconnected':
                     // Already on the page?
-                    alert(('inbox/' + payload.from_user_id).toString());
-                    if(App.Cache.currentPageViewPath == ('inbox/' + payload.from_user_id).toString() ){
+                    var viewUrl = 'inbox/' + payload.from_user_id;
+                    if(App.Cache.currentPageViewPath == viewUrl ){
                         return;
                     }
                     Utils.Popover.Buttons({
@@ -1382,7 +1390,7 @@ define(function (require) {
                             {
                                 text: 'View',
                                 success: function(){
-                                    App.history.navigate(payload.id);
+                                    App.history.navigate(viewUrl);
                                 }
                             }
                         ]
