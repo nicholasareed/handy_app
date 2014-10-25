@@ -204,7 +204,7 @@ define(function(require, exports, module) {
             {
                 title: 'New Content',
                 desc: 'When new messages or other content is included',
-                scheme_key: 'todo_new_content'
+                scheme_key: 'todo_content_added'
             },
 
             {
@@ -234,7 +234,7 @@ define(function(require, exports, module) {
             {
                 title: 'New Content',
                 desc: 'When new messages or other content is included',
-                scheme_key: 'invoice_new_content'
+                scheme_key: 'invoice_content_added'
             },
 
 
