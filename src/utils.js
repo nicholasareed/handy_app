@@ -1214,17 +1214,160 @@ define(function (require) {
             console.log(payload);
 
             switch(payload.type){
-                case 'new_friend':
+
+                case 'new_connection':
+                    // Already on page?
+                    if(App.currentPageViewPath == ('user/' + payload.id) ){
+                        return;
+                    }
                     Utils.Popover.Buttons({
-                        title: 'New Friend!',
+                        title: 'New Connection',
                         buttons: [
                             {
-                                text: 'OK'
+                                text: 'View',
+                                success: function(){
+                                    App.history.navigate(payload.id);
+                                }
                             }
                         ]
                     });
                     
                     break;
+
+
+                case 'todo_updated':
+                    // Already on the page?
+                    if(App.currentPageViewPath == ('todo/' + payload.id) ){
+                        return;
+                    }
+                    Utils.Popover.Buttons({
+                        title: 'Job Details Updated',
+                        buttons: [
+                            {
+                                text: 'View',
+                                success: function(){
+                                    App.history.navigate(payload.id);
+                                }
+                            }
+                        ]
+                    });
+                    
+                    break;
+
+                case 'todo_assigned':
+                    // Already on the page?
+                    if(App.currentPageViewPath == ('todo/' + payload.id) ){
+                        return;
+                    }
+                    Utils.Popover.Buttons({
+                        title: 'Job people updated',
+                        buttons: [
+                            {
+                                text: 'View',
+                                success: function(){
+                                    App.history.navigate(payload.id);
+                                }
+                            }
+                        ]
+                    });
+                    
+                    break;
+
+                case 'todo_content_added':
+                    // Already on the page?
+                    if(App.currentPageViewPath == ('todo/' + payload.id) ){
+                        return;
+                    }
+                    Utils.Popover.Buttons({
+                        title: 'New Job Content',
+                        buttons: [
+                            {
+                                text: 'View',
+                                success: function(){
+                                    App.history.navigate(payload.id);
+                                }
+                            }
+                        ]
+                    });
+                    
+                    break;
+
+                case 'invoice_updated':
+                    // Already on the page?
+                    if(App.currentPageViewPath == ('todo/' + payload.id) ){
+                        return;
+                    }
+                    Utils.Popover.Buttons({
+                        title: 'Invoice Details Updated',
+                        buttons: [
+                            {
+                                text: 'View',
+                                success: function(){
+                                    App.history.navigate(payload.id);
+                                }
+                            }
+                        ]
+                    });
+                    
+                    break;
+
+                case 'invoice_assigned':
+                    // Already on the page?
+                    if(App.currentPageViewPath == ('invoice/' + payload.id) ){
+                        return;
+                    }
+                    Utils.Popover.Buttons({
+                        title: 'Invoice people updated',
+                        buttons: [
+                            {
+                                text: 'View',
+                                success: function(){
+                                    App.history.navigate(payload.id);
+                                }
+                            }
+                        ]
+                    });
+                    
+                    break;
+
+                case 'invoice_item_added':
+                    // Already on the page?
+                    if(App.currentPageViewPath == ('invoice/' + payload.id) ){
+                        return;
+                    }
+                    Utils.Popover.Buttons({
+                        title: 'Item added to Invoice',
+                        buttons: [
+                            {
+                                text: 'View',
+                                success: function(){
+                                    App.history.navigate(payload.id);
+                                }
+                            }
+                        ]
+                    });
+                    
+                    break;
+
+                case 'invoice_content_added':
+                    // Already on the page?
+                    if(App.currentPageViewPath == ('invoice/' + payload.id) ){
+                        return;
+                    }
+                    Utils.Popover.Buttons({
+                        title: 'New Invoice Content',
+                        buttons: [
+                            {
+                                text: 'View',
+                                success: function(){
+                                    App.history.navigate(payload.id);
+                                }
+                            }
+                        ]
+                    });
+                    
+                    break;
+
                 default:
                     Utils.Notification.Toast('Updates Available');
                     // alert('Unknown type');

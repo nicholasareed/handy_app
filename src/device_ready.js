@@ -426,7 +426,7 @@ define(function(require, exports, module) {
 
                     App.Data.pushNotification.register(function(result){
 
-                        Utils.Notification.Toast('REGISERED');
+                        Utils.Notification.Toast('Registered for Push Notifications');
                         console.log('Push Setup OK');
                         // alert('Push Setup OK');
                         // alert('success w/ Push Notifications');
@@ -434,7 +434,9 @@ define(function(require, exports, module) {
                         // App.Utils.Notification.debug.temporary('Push Setup OK'); // not actually ok, not registering, nothing sending to it
 
                     }, function(err){
-                        alert('failed Push Notifications');
+                        window.setTimeout(function(){
+                            Utils.Notification.Alert('failed Push Notifications');
+                        },2000);
                         // App.Utils.Notification.debug.temporary('Failed Push Notification Setup');
                         console.error(err);
                         // alert(err);

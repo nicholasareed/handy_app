@@ -179,7 +179,7 @@ define(function(require, exports, module) {
             {
                 title: 'New Connection',
                 desc: 'Every time you make a connection',
-                scheme_key: 'new_friend'
+                scheme_key: 'new_connection'
             },
 
             {
@@ -188,9 +188,19 @@ define(function(require, exports, module) {
 
             {
                 type: 'header',
-                text: 'Todos',
+                text: 'Jobs',
             },
 
+            {
+                title: 'Updated',
+                desc: 'Some setting updated',
+                scheme_key: 'todo_updated'
+            },
+            {
+                title: 'Involving Me',
+                desc: 'Assigned, marked as employer, etc.',
+                scheme_key: 'todo_assigned'
+            },
             {
                 title: 'New Content',
                 desc: 'When new messages or other content is included',
@@ -206,6 +216,21 @@ define(function(require, exports, module) {
                 text: 'Invoices',
             },
 
+            {
+                title: 'Item Added',
+                desc: 'Job or custom items',
+                scheme_key: 'invoice_item_added'
+            },
+            {
+                title: 'Updated',
+                desc: 'Some setting updated',
+                scheme_key: 'invoice_updated'
+            },
+            {
+                title: 'Involving Me',
+                desc: 'Payee, recipient, etc.',
+                scheme_key: 'invoice_assigned'
+            },
             {
                 title: 'New Content',
                 desc: 'When new messages or other content is included',
