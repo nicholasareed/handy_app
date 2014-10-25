@@ -385,14 +385,14 @@ define(function(require, exports, module) {
             }
 
         });
-        Timer.setInterval(function(){
-            if(that._showing){
-                messageView.Surface.setContent( template({
-                    UserMessage: UserMessage.toJSON(),
-                    ago: moment(UserMessage.get('created')).format('h:mma - MMM Do')
-                }) );
-            }
-        },1000 * 10);
+        // Timer.setInterval(function(){
+        //     if(that._showing){
+        //         messageView.Surface.setContent( template({
+        //             UserMessage: UserMessage.toJSON(),
+        //             ago: moment(UserMessage.get('created')).format('h:mma - MMM Do')
+        //         }) );
+        //     }
+        // },1000 * 10);
         messageView.Surface.on('click', function(){
             App.history.navigate('inbox/' + UserMessage.get('_id'));
         });
