@@ -239,6 +239,10 @@ define(function(require, exports, module) {
 
 
             {
+                type: 'spacer',
+            },
+            
+            {
                 type: 'header',
                 text: 'Messages',
             },
