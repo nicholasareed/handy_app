@@ -166,7 +166,7 @@ define(function(require, exports, module) {
         // this.HeaderNode.add(this.header.StateModifier).add(this.header);
 
         // Attach header to the layout        
-        this.layout.header.add(this.header);
+        this.layout.header.add(Utils.usePlane('header')).add(this.header);
 
     };
     
@@ -189,7 +189,7 @@ define(function(require, exports, module) {
         this.ContentStateModifier = new StateModifier();
 
         // Attach header to the layout        
-        this.layout.content.add(this.ContentStateModifier).add(this.lightboxContent);
+        this.layout.content.add(this.ContentStateModifier).add(Utils.usePlane('content')).add(this.lightboxContent);
 
     };
 
@@ -216,16 +216,6 @@ define(function(require, exports, module) {
             }
         });
         this.emptyListSurface.pipe(this._eventOutput);
-        this.emptyListSurfaceNoFriends = new Surface({
-            // content: "You should add some friends to hang out with!",
-            content: "You've invited all your friends on handy!",
-            size: [undefined, 100],
-            classes: ['empty-list-surface-default'],
-            properties: {
-                // backgroundColor: 'red'
-            }
-        });
-        this.emptyListSurfaceNoFriends.pipe(this._eventOutput);
 
 
         // Create Loading Renderable
@@ -394,6 +384,14 @@ define(function(require, exports, module) {
             }
 
         });
+        Timer.setInterval(function(){
+            if(that._showing){
+                messageView.Surface.setContent( template({
+                    UserMessage: UserMessage.toJSON(),
+                    ago: moment(UserMessage.get('created')).format('h:mma - MMM Do')
+                }) );
+            }
+        },1000 * 10);
         messageView.Surface.on('click', function(){
             App.history.navigate('inbox/' + UserMessage.get('_id'));
         });
