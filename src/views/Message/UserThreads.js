@@ -75,6 +75,7 @@ define(function(require, exports, module) {
 
         this.createContent();
 
+        this._showing = false;
 
         this.add(this.layout);
 
@@ -542,7 +543,7 @@ define(function(require, exports, module) {
 
         switch(direction){
             case 'hiding':
-
+                this._showing = false;
                 switch(otherViewName){
 
                     default:
@@ -561,6 +562,7 @@ define(function(require, exports, module) {
                 break;
 
             case 'showing':
+                this._showing = true;
                 if(this._refreshData){
                     Timer.setTimeout(this.refreshData.bind(this), 1000);
                 }
