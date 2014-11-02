@@ -56,6 +56,14 @@ define(function(require, exports, module) {
 
         this.createContent();
         this.createHeader();
+
+        var localFlag = 'localinvite/home/v/1';
+        Utils.CheckFlag(localFlag).then(function(){
+            // popover
+            Utils.Popover.Alert('Connect with people by using a 5-6 digit code. You can also add emails for people who have not yet signed up for OddJob','ok');
+            // update flag
+            Utils.PostFlag(localFlag, true);
+        });
         
         // Attach the main transform and the comboNode to the renderTree
         this.add(this.layout);
@@ -82,7 +90,7 @@ define(function(require, exports, module) {
         });
         this.headerContent.EmailOnly.on('click', function(){
 
-            Utils.Popover.Prompt('Friend\s Email Address', '', 'Post','Cancel','email')
+            Utils.Popover.Prompt('Add Email-Only Friend:', '', 'Save Email','Cancel','email')
             .then(function(p){
                 if(p && p.trim() !== ''){
 
@@ -149,47 +157,51 @@ define(function(require, exports, module) {
         });
         this.headerContent.EnterCode.on('click', function(){
             Timer.setTimeout(function(){
-                var code = prompt('Enter code');
-                if(code){
+                
+                Utils.Popover.Prompt('Enter code a person has given to you', '', 'Use Code','Cancel')
+                .then(function(code){
+                    if(code && code.trim() !== ''){
 
-                    // Check the invite code against the server
-                    // - creates the necessary relationship also
-                    $.ajax({
-                        url: Credentials.server_root + 'relationships/invited',
-                        method: 'post',
-                        data: {
-                            from: 'add', // if on the Player Edit / LinkUp page, we'd be using 'linkup'
-                            code: code
-                        },
-                        success: function(response){
-                            if(response.code != 200){
-                                if(response.msg){
-                                    alert(response.msg);
+                        // Check the invite code against the server
+                        // - creates the necessary relationship also
+                        $.ajax({
+                            url: Credentials.server_root + 'relationships/invited',
+                            method: 'post',
+                            data: {
+                                from: 'add', // if on the Player Edit / LinkUp page, we'd be using 'linkup'
+                                code: code
+                            },
+                            success: function(response){
+                                if(response.code != 200){
+                                    if(response.msg){
+                                        Utils.Popover.Alert(response.msg,'Close Popup');
+                                        return;
+                                    }
+                                    Utils.Popover.Alert('Invalid code, please try again','Ok');
+                                    return false;
+                                }
+
+                                // Relationship has been created
+                                // - either just added to a player
+                                //      - simply go look at it
+                                // - or am the Owner of a player now
+                                //      - go edit the player
+
+                                if(response.type == 'friend'){
+                                    Utils.Notification.Toast('You have successfully added a friend!');
                                     return;
                                 }
-                                alert('Invalid code, please try again');
-                                return false;
-                            }
 
-                            // Relationship has been created
-                            // - either just added to a player
-                            //      - simply go look at it
-                            // - or am the Owner of a player now
-                            //      - go edit the player
-
-                            if(response.type == 'friend'){
-                                Utils.Notification.Toast('You have successfully added a friend!');
-
+                            },
+                            error: function(err){
+                                Utils.Popover.Alert('Failed with that code, please try again','Ok');
                                 return;
                             }
+                        });
 
-                        },
-                        error: function(err){
-                            alert('Failed with that code, please try again');
-                            return;
-                        }
-                    });
-                }
+                    }
+                });
+
             },350)
         });
 
@@ -197,7 +209,7 @@ define(function(require, exports, module) {
 
         // create the header
         this.header = new StandardHeader({
-            content: 'New Connect',
+            content: 'Add Person',
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             // moreContent: false
@@ -262,7 +274,7 @@ define(function(require, exports, module) {
 
         // Create default surfaces we'll re-use
         this.InstructionsSurface = new Surface({
-            content: '<i class="icon ion-arrow-up-a"></i> Search contacts to send SMS',
+            content: '<i class="icon ion-arrow-up-a"></i> Search people to invite via SMS',
             size: [undefined, 200],
             properties: {
                 color: '#444',

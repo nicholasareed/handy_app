@@ -54,7 +54,8 @@ define(function (require) {
                 data: tmpData,
                 error: function(){
                     Utils.Notification.Toast('Failed Flag');
-                    debugger;
+                    console.error('Failed Flag:',flag);
+                    // debugger;
                 },
                 success: function(){
                     // awesome

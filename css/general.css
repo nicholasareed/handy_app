@@ -331,10 +331,10 @@ body {
 
 .modal-option-buttons-text-default {
   color: #111;
-  /*background: white;*/
+  background: white;
   line-height: 30px;
   font-size: 16px;
-  /*padding: 10px 8px;*/
+  padding: 10px 8px;
   /*border-bottom: 1px solid #eee;*/
 }
 
