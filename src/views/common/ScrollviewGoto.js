@@ -18,7 +18,10 @@ define(function(require,module,exports){
      ************************************/
     Scrollview.prototype.goToIndex = function (i,velocity,position) {
         // if we're already there, don't move!
-        if(i == this.getIndex()) return;
+        if(i == this.getIndex()){
+            console.log('at this index');
+            return;
+        }
         // create ViewSequence node at proper location
         var _ = this._node._;
         var node = new ViewSequence({

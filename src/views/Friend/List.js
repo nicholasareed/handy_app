@@ -190,7 +190,7 @@ define(function(require, exports, module) {
         this.TopTabs.SizeMod = new StateModifier({
             size: [undefined, 60]
         });
-        this.TopTabs.SeqLayout = new ScrollView({
+        this.TopTabs.SeqLayout = new SequentialLayout({
             direction: 0
         });
         this.TopTabs.add(this.TopTabs.SizeMod).add(Utils.usePlane('content',5)).add(this.TopTabs.SeqLayout);
@@ -224,13 +224,29 @@ define(function(require, exports, module) {
             // tabView.Model = Model;
             that._tabSurfaces.push(tabView);
             tabView.on('click', function(e){
+                // console.log('clicked');
                 that._tabSurfaces.forEach(function(tmp){
                     tmp.setClasses(['top-tabs-scroller-item-default']);
                 });
                 this.setClasses(['top-tabs-scroller-item-default','selected']);
                 if(e !== undefined){
                     console.log(index);
-                    that.TopTabs.Content.ScrollView.goToIndex(index, 0.9, 0);
+                    var indexStr = '';
+                    switch(index){
+                        case 0:
+                            indexStr = 'Connected';
+                            break;
+                        case 1:
+                            indexStr = 'Recommended';
+                            break;
+                        case 2:
+                            indexStr = 'EmailOnly';
+                            break;
+                        default:
+                            return;
+                    }
+                    that.TopTabs.Content.Controller.show(that.TopTabs.Content[indexStr]);
+                    // that.TopTabs.Content.ScrollView.goToIndex(index, 0.1, 1.5);
                 }
             });
             tabView.pipe(that.TopTabs.SeqLayout);
@@ -287,52 +303,56 @@ define(function(require, exports, module) {
         this.TopTabs.Content.Bg = new Surface({
             size: [undefined, undefined]
         });
-        this.TopTabs.Content.ScrollView = new ScrollView({
+        this.TopTabs.Content.Controller = new RenderController({
+        // this.TopTabs.Content.ScrollView = new ScrollView({
             direction: 0, // horizontal
-            paginated: true
+            // paginated: true
         });
-        this.TopTabs.Content.Bg.pipe(this.TopTabs.Content.ScrollView);
-        Timer.setInterval(function(){
-            // highlight the correct TopTab
-            // console.log();
-            if(!that._showing){
-                return;
-            }
-            try {
-                var x = that.TopTabs.Content.ScrollView.getIndex();
-            }catch(err){
-                console.log(err);
-            }
-            that._tabSurfaces[that.TopTabs.Content.ScrollView.getIndex()].emit('click');
-        },500);
-        this.TopTabs.Content.Views = [];
+        // this.TopTabs.Content.Bg.pipe(this.TopTabs.Content.ScrollView);
+        // Timer.setInterval(function(){
+        //     // highlight the correct TopTab
+        //     // console.log();
+        //     if(!that._showing){
+        //         return;
+        //     }
+        //     try {
+        //         var x = that.TopTabs.Content.ScrollView.getIndex();
+        //         // console.log('x',x);
+        //     }catch(err){
+        //         console.log(err);
+        //     }
+        //     // that._tabSurfaces[that.TopTabs.Content.ScrollView.getIndex()].emit('click');
+        // },9500);
+        // this.TopTabs.Content.Views = [];
 
         this.TopTabs.Content.add(Utils.usePlane('content')).add(this.TopTabs.Content.Bg);
-        this.TopTabs.Content.add(Utils.usePlane('content',1)).add(this.TopTabs.Content.ScrollView);
+        this.TopTabs.Content.add(Utils.usePlane('content',1)).add(this.TopTabs.Content.Controller);
 
         // Connected 
         this.TopTabs.Content.Connected = new View();
         this.TopTabs.Content.Connected.View = new ConnectedView();
-        this.TopTabs.Content.Connected.View._eventOutput.pipe(this.TopTabs.Content.ScrollView);
+        // this.TopTabs.Content.Connected.View._eventOutput.pipe(this.TopTabs.Content.ScrollView);
         this.TopTabs.Content.Connected.add(this.TopTabs.Content.Connected.View);
         this._subviews.push(this.TopTabs.Content.Connected.View);
-        this.TopTabs.Content.Views.push(this.TopTabs.Content.Connected.View);
+        // this.TopTabs.Content.Views.push(this.TopTabs.Content.Connected.View);
 
         // Recommended 
         this.TopTabs.Content.Recommended = new View();
         this.TopTabs.Content.Recommended.View = new RecommendedView();
-        this.TopTabs.Content.Recommended.View._eventOutput.pipe(this.TopTabs.Content.ScrollView);
+        // this.TopTabs.Content.Recommended.View._eventOutput.pipe(this.TopTabs.Content.ScrollView);
         this.TopTabs.Content.Recommended.add(this.TopTabs.Content.Recommended.View);
         this._subviews.push(this.TopTabs.Content.Recommended.View);
-        this.TopTabs.Content.Views.push(this.TopTabs.Content.Recommended.View);
+        // this.TopTabs.Content.Views.push(this.TopTabs.Content.Recommended.View);
 
         // Email-only (only connected to "me") 
         this.TopTabs.Content.EmailOnly = new View();
         this.TopTabs.Content.EmailOnly.View = new EmailOnlyListView();
-        this.TopTabs.Content.EmailOnly.View._eventOutput.pipe(this.TopTabs.Content.ScrollView);
+        // this.TopTabs.Content.EmailOnly.View._eventOutput.pipe(this.TopTabs.Content.ScrollView);
         this.TopTabs.Content.EmailOnly.add(this.TopTabs.Content.EmailOnly.View);
         this._subviews.push(this.TopTabs.Content.EmailOnly.View);
-        this.TopTabs.Content.Views.push(this.TopTabs.Content.EmailOnly.View);
+        // this.TopTabs.Content.Views.push(this.TopTabs.Content.EmailOnly.View);
+
+        this.TopTabs.Content.Controller.show(this.TopTabs.Content.Connected);
 
         // // All 
         // this.TopTabs.Content.AllFriends = new View();
@@ -358,7 +378,7 @@ define(function(require, exports, module) {
         // this.TopTabs.Content.OutgoingInvites.add(this.TopTabs.Content.OutgoingInvites.View);
         // this._subviews.push(this.TopTabs.Content.OutgoingInvites.View);
 
-        this.TopTabs.Content.ScrollView.sequenceFrom(this.TopTabs.Content.Views);
+        // this.TopTabs.Content.ScrollView.sequenceFrom(this.TopTabs.Content.Views);
 
         // Add Scrollview to sequence
         this.contentScrollView.Views.push(this.TopTabs.Content);
