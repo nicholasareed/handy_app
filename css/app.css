@@ -599,6 +599,28 @@
 }
 
 
+/* Tabs Items */
+
+.tabs-bg-default {
+  font-family: Helvetica, sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+
+  background: rgba(255,255,255,0.5);
+  border-top: 1px solid #1f2d2d;
+  border-bottom: 1px solid #1f2d2d;
+}
+
+.tabs-item-default {
+  line-height: 40px;
+  text-align: left;
+  padding-left: 8px;
+}
+
+.tabs-item-default.selected {
+  background: #1f2d2d;
+  color: white;
+}
 
 
 

@@ -182,102 +182,84 @@ define(function(require, exports, module) {
 
         // this.layout.content.add(this.ContentStateModifier).add(this.AllView);
 
-        // Tabs
-        this.TopTabs = this.createTabs();
-        this.TopTabs.on('change', function(key){
-            
-            var indexStr = '';
-            switch(key){
-                case 'connected':
-                    indexStr = 'Connected';
-                    break;
-                case 'recommended':
-                    indexStr = 'Recommended';
-                    break;
-                case 'emailonly':
-                    indexStr = 'EmailOnly';
-                    break;
-                default:
-                    return;
-            }
-            that.TopTabs.Content.Controller.show(that.TopTabs.Content[indexStr]);
+
+        // return;
+
+
+        this.TopTabs = new View();
+        this.TopTabs.SizeMod = new StateModifier({
+            size: [undefined, 60]
         });
-        this.contentScrollView.Views.push(this.TopTabs);
+        this.TopTabs.SeqLayout = new SequentialLayout({
+            direction: 0
+        });
+        this.TopTabs.add(this.TopTabs.SizeMod).add(Utils.usePlane('content',5)).add(this.TopTabs.SeqLayout);
+        this.TopTabs.SeqLayout.Views = [];
 
-        // this.TopTabs = new View();
-        // this.TopTabs.SizeMod = new StateModifier({
-        //     size: [undefined, 60]
-        // });
-        // this.TopTabs.SeqLayout = new SequentialLayout({
-        //     direction: 0
-        // });
-        // this.TopTabs.add(this.TopTabs.SizeMod).add(Utils.usePlane('content',5)).add(this.TopTabs.SeqLayout);
-        // this.TopTabs.SeqLayout.Views = [];
+        // this._plantSelected = null;
 
-        // // this._plantSelected = null;
+        var items = [{
+            name: 'connected'
+        },{
+            name: 'recommended'
+        },{
+            name: 'email-only'
+        }];
 
-        // var items = [{
-        //     name: 'connected'
-        // },{
-        //     name: 'recommended'
-        // },{
-        //     name: 'email-only'
-        // }];
+        this._tabSurfaces = [];
+        items.forEach(function(item, index){
 
-        // this._tabSurfaces = [];
-        // items.forEach(function(item, index){
-
-        //     var tmpClasses = ['top-tabs-scroller-item-default'];
-        //     // Select default one
-        //     // if(that.model.get('plant_type.id') == Model.get('id')){
-        //     //     tmpClasses.push('selected');
-        //     //     that._plantSelected = Model.get('id');
-        //     // }
+            var tmpClasses = ['top-tabs-scroller-item-default'];
+            // Select default one
+            // if(that.model.get('plant_type.id') == Model.get('id')){
+            //     tmpClasses.push('selected');
+            //     that._plantSelected = Model.get('id');
+            // }
             
-        //     var tabView = new Surface({
-        //         content: '<div>'+item.name+'</div>',
-        //         size: [true, undefined],
-        //         classes: tmpClasses
-        //     });
-        //     // tabView.Model = Model;
-        //     that._tabSurfaces.push(tabView);
-        //     tabView.on('click', function(e){
-        //         // console.log('clicked');
-        //         that._tabSurfaces.forEach(function(tmp){
-        //             tmp.setClasses(['top-tabs-scroller-item-default']);
-        //         });
-        //         this.setClasses(['top-tabs-scroller-item-default','selected']);
-        //         if(e !== undefined){
-                    // console.log(index);
-                    // var indexStr = '';
-                    // switch(index){
-                    //     case 0:
-                    //         indexStr = 'Connected';
-                    //         break;
-                    //     case 1:
-                    //         indexStr = 'Recommended';
-                    //         break;
-                    //     case 2:
-                    //         indexStr = 'EmailOnly';
-                    //         break;
-                    //     default:
-                    //         return;
-                    // }
-        //             that.TopTabs.Content.Controller.show(that.TopTabs.Content[indexStr]);
-        //             // that.TopTabs.Content.ScrollView.goToIndex(index, 0.1, 1.5);
-        //         }
-        //     });
-        //     tabView.pipe(that.TopTabs.SeqLayout);
-        //     tabView.pipe(that.contentScrollView);
+            var tabView = new Surface({
+                content: '<div>'+item.name+'</div>',
+                size: [true, undefined],
+                classes: tmpClasses
+            });
+            // tabView.Model = Model;
+            that._tabSurfaces.push(tabView);
+            tabView.on('click', function(e){
+                // console.log('clicked');
+                that._tabSurfaces.forEach(function(tmp){
+                    tmp.setClasses(['top-tabs-scroller-item-default']);
+                });
+                this.setClasses(['top-tabs-scroller-item-default','selected']);
+                if(e !== undefined){
+                    console.log(index);
+                    var indexStr = '';
+                    switch(index){
+                        case 0:
+                            indexStr = 'Connected';
+                            break;
+                        case 1:
+                            indexStr = 'Recommended';
+                            break;
+                        case 2:
+                            indexStr = 'EmailOnly';
+                            break;
+                        default:
+                            return;
+                    }
+                    that.TopTabs.Content.Controller.show(that.TopTabs.Content[indexStr]);
+                    // that.TopTabs.Content.ScrollView.goToIndex(index, 0.1, 1.5);
+                }
+            });
+            tabView.pipe(that.TopTabs.SeqLayout);
+            tabView.pipe(that.contentScrollView);
 
-        //     that.TopTabs.SeqLayout.Views.push(tabView);
+            that.TopTabs.SeqLayout.Views.push(tabView);
 
-        // });
-        // that._tabSurfaces[0].emit('click');
+        });
+        that._tabSurfaces[0].emit('click');
 
-        // this.TopTabs.SeqLayout.sequenceFrom(this.TopTabs.SeqLayout.Views);
+        this.TopTabs.SeqLayout.sequenceFrom(this.TopTabs.SeqLayout.Views);
 
-        // this.contentScrollView.Views.push(this.TopTabs);
+        this.contentScrollView.Views.push(this.TopTabs);
 
 
 
@@ -452,90 +434,6 @@ define(function(require, exports, module) {
 
         // Flexible Layout sequencing
         this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
-
-    };
-
-    PageView.prototype.createTabs = function(){
-        var that = this;
-
-        var tabList = {
-            connected: 'Connected',
-            recommended: 'Recommended',
-            emailonly: 'EmailOnly'
-        }
-        console.log(tabList);
-        var tabKeys = Object.keys(tabList);
-        this._cachedViews = {};
-
-        var Tabs = new View();
-        Tabs.getSize = function(){
-            return [undefined, 40];
-        };
-        Tabs.BgSurface = new Surface({
-            size: [undefined, undefined],
-            classes: ['tabs-bg-default']
-        });
-        // console.log( _.map(tabKeys, function(o,i){ 
-        //         return i == (tabKeys.length - 1) ? 1:true;
-        //     })
-        // );
-        Tabs.Layout = new FlexibleLayout({
-            direction: 0, //x
-            // ratios: [true,true,true, 1, true,true,true]
-            ratios: _.map(tabKeys, function(o,i){ 
-                return i == (tabKeys.length - 1) ? 1:true; // [true, true, 1]
-            })
-        });
-        Tabs.Views = [];
-        Tabs.SizeMod = new StateModifier({
-            size: [undefined, 40]
-        });
-
-        // All the tab options that could be clicked
-        // - and a spacer
-        tabKeys.forEach(function(key, index){
-
-            var tabInfo = tabList[key];
-
-            // My
-            // console.log([(index == (tabKeys.length - 1)) ? undefined : true, undefined]);
-            Tabs[key] = new Surface({
-                content: tabInfo,
-                size: [(index == (tabKeys.length - 1)) ? undefined : (11 * tabInfo.length), undefined], // true size, or undefined (if last)
-                wrap: '<div class="ellipsis-all"></div>',
-                classes: ['tabs-item-default']
-            });
-            // Tabs[key].group = ;
-            Tabs[key].on('click', function(){
-                // that.tabChosen = 'my';
-                // that.tab_change();
-                Tabs.Views.forEach(function(tmpView){
-                    // if(tmpView.group == 'Todos'){
-                    tmpView.setClasses(['tabs-item-default']);
-                    // }
-                });
-                this.setClasses(['tabs-item-default','selected']);
-                Tabs._eventOutput.emit('change', key); //_eventOutput.trigger('click');
-            });
-            Tabs.Views.push(Tabs[key]);
-
-            Tabs[key].pipe(Tabs._eventInput);
-        });
-
-        Tabs.Layout.sequenceFrom(Tabs.Views);
-        
-        var node = Tabs.add(Tabs.SizeMod);
-        node.add(Utils.usePlane('contentTabs',-1)).add(Tabs.BgSurface);
-        node.add(Utils.usePlane('contentTabs')).add(Tabs.Layout);
-
-        // Select Defaults
-        console.log(Tabs);
-        Tabs['connected'].emit('click'); //_eventOutput.trigger('click');
-
-        return Tabs;
-
-        // this.filtertabChosenAssignedAll._eventOutput.trigger('click');
-
 
     };
 
