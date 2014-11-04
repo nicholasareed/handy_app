@@ -299,8 +299,8 @@ define(function(require, exports, module) {
                 },
 
                 'todo/search' : function(){
-                    App.Views.MainFooter.route_show = true;
-                    App.Views.MainFooter.Tabs.select('todos', false);
+                    // App.Views.MainFooter.route_show = true;
+                    // App.Views.MainFooter.Tabs.select('todos', false);
                     defaultRoute('TodoSearch', 'Todo/Search', arguments);
                 },
 
