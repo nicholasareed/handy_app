@@ -727,7 +727,7 @@ define(function(require, exports, module) {
         });
         this.profileInvoice.SendInvoice.add(this.profileInvoice.SendInvoice.StateModifier).add(this.profileInvoice.SendInvoice.Surface);
 
-        this.contentScrollView.Views.push(this.profileInvoice.Layout);
+        // this.contentScrollView.Views.push(this.profileInvoice.Layout);
 
 
         // Recommend this person
