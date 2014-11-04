@@ -235,9 +235,24 @@ define(function(require, exports, module) {
         // create correct filter
 
         switch(this.tabs.invoices){
-            case 'unpaid':
+            case 'draft':
                 
                 filter = {
+                    to_user_id: {
+                        '$exists' : false
+                    },
+                    tags: {
+                        '$ne' : 'paid'
+                    }
+                };
+                break;
+
+            case 'sent':
+                
+                filter = {
+                    to_user_id: {
+                        '$exists' : true
+                    },
                     tags: {
                         '$ne' : 'paid'
                     }
@@ -330,7 +345,7 @@ define(function(require, exports, module) {
         this.filterTabs.Layout = new FlexibleLayout({
             direction: 0, //FlexibleLayout.DIRECTION_X,
             // ratios: [true,true,true, 1, true,true,true]
-            ratios: [true, 1]
+            ratios: [true, true, 1]
         });
         this.filterTabs.Views = [];
         this.filterTabs.SizeMod = new StateModifier({
@@ -341,7 +356,7 @@ define(function(require, exports, module) {
         // All the tab options that could be clicked
         // - and a spacer
 
-        // Unpaid
+        // Sent
         this.filterTabs.UnpaidInvoices = new Surface({
             content: 'Unpaid',
             size: [100, undefined],
@@ -349,7 +364,7 @@ define(function(require, exports, module) {
         });
         this.filterTabs.UnpaidInvoices.group = 'Invoices';
         this.filterTabs.UnpaidInvoices.on('click', function(){
-            that.tabs.invoices = 'unpaid';
+            that.tabs.invoices = 'sent';
             that.tab_change();
             that.filterTabs.Views.forEach(function(tmpView){
                 if(tmpView.group == 'Invoices'){
@@ -359,6 +374,25 @@ define(function(require, exports, module) {
             this.setClasses(['invoice-filter-tabs-item-default','selected']);
         });
         this.filterTabs.Views.push(this.filterTabs.UnpaidInvoices);
+
+        // Draft
+        this.filterTabs.DraftInvoices = new Surface({
+            content: 'Draft',
+            size: [100, undefined],
+            classes: ['invoice-filter-tabs-item-default']
+        });
+        this.filterTabs.DraftInvoices.group = 'Invoices';
+        this.filterTabs.DraftInvoices.on('click', function(){
+            that.tabs.invoices = 'draft';
+            that.tab_change();
+            that.filterTabs.Views.forEach(function(tmpView){
+                if(tmpView.group == 'Invoices'){
+                    tmpView.setClasses(['invoice-filter-tabs-item-default']);
+                }
+            });
+            this.setClasses(['invoice-filter-tabs-item-default','selected']);
+        });
+        this.filterTabs.Views.push(this.filterTabs.DraftInvoices);
 
         // Paid
         this.filterTabs.PaidInvoices = new Surface({
@@ -569,174 +603,6 @@ define(function(require, exports, module) {
         this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
 
         this.layout.content.add(this.ContentStateModifier).add(this.contentScrollView);
-
-
-        return;
-
-
-        // this.contentScrollView = new ScrollView(App.Defaults.ScrollView);
-        this.contentScrollView = new FlexibleLayout({
-            direction: FlexibleLayout.DIRECTION_Y,
-            ratios: [true, 1]
-        });
-        this.contentScrollView.Views = [];
-
-        // Content
-        this.ContentStateModifier = new StateModifier();
-
-
-        // Lists
-        this.ListContent = new RenderController();
-
-        // Invoice 
-        this.ListContent.Invoices = new AllView({
-            // empty_string: 'Add Invoices by tapping the <i class="icon ion-ios7-plus-outline"></i>',
-            empty_string: 'Add Invoices from the People (<i class="icon ion-android-friends"></i>) page',
-            filter: {
-                tags: {
-                    '$ne' : 'paid'
-                }
-            }
-        });
-        // this.ListContent.Invoices.View = new View();
-        // this.ListContent.Invoices.add(this.ListContent.Invoices.View);
-        this._subviews.push(this.ListContent.Invoices);
-
-        // Paid 
-        this.ListContent.PaidInvoices = new AllView({
-            empty_string: "None Paid",
-            filter: {
-                tags: 'paid'
-            }
-        });
-        // this.ListContent.PaidInvoices.View = new View();
-        // this.ListContent.PaidInvoices.add(this.ListContent.PaidInvoices.View);
-        this._subviews.push(this.ListContent.PaidInvoices);
-
-        // All 
-        this.ListContent.AllInvoices = new AllView({
-            empty_string: "You have not created any Invoices, ever!",
-            filter: {}
-        });
-        // this.ListContent.AllInvoices.View = new View();
-        // this.ListContent.AllInvoices.add(this.ListContent.AllInvoices.View);
-        this._subviews.push(this.ListContent.AllInvoices);
-
-        // Show "Invoices" by default
-        this.ListContent.show(this.ListContent.Invoices);
-
-        this.layout.content.add(this.ContentStateModifier).add(this.ListContent);
-
-
-        return;
-
-
-        // Create the Tabs
-        this.TopTabs = new View();
-        this.TopTabs.Bar = new TabBar();
-        this.TopTabs.BarSizeMod = new StateModifier({
-            size: [undefined, 80]
-        });
-        this.TopTabs.getSize = function(){
-            return [undefined, 80];
-        };
-        this.TopTabs.add(Utils.usePlane('contentTabs')).add(this.TopTabs.BarSizeMod).add(this.TopTabs.Bar);
-
-        this.TopTabs.Bar.defineSection('all', {
-            content: '<i class="icon ion-android-friends"></i><div>All</div>',
-            onClasses: ['friend-list-tabbar-default', 'on'],
-            offClasses: ['friend-list-tabbar-default', 'off']
-        });
-        this.TopTabs.Bar.defineSection('potential', {
-            content: '<i class="icon ion-android-social"></i><div>Potential</div>',
-            onClasses: ['friend-list-tabbar-default', 'on'],
-            offClasses: ['friend-list-tabbar-default', 'off']
-        });
-        // this.TopTabs.Bar.defineSection('incoming', {
-        //     content: '<i class="icon ion-arrow-down-a"></i><div>Incoming</div>',
-        //     onClasses: ['inbox-tabbar-default', 'on'],
-        //     offClasses: ['inbox-tabbar-default', 'off']
-        // });
-        // this.TopTabs.Bar.defineSection('outgoing', {
-        //     content: '<i class="icon ion-ios7-checkmark-outline"></i><div>Outgoing</div>',
-        //     onClasses: ['inbox-tabbar-default', 'on'],
-        //     offClasses: ['inbox-tabbar-default', 'off']
-        // });
-
-        // Add tabs to sequence
-        this.contentScrollView.Views.push(this.TopTabs);
-
-        // Tab content
-        this.TopTabs.Content = new RenderController();
-
-        // All 
-        this.TopTabs.Content.AllFriends = new View();
-        this.TopTabs.Content.AllFriends.View = new AllView();
-        this.TopTabs.Content.AllFriends.add(this.TopTabs.Content.AllFriends.View);
-        this._subviews.push(this.TopTabs.Content.AllFriends.View);
-
-        // Potential 
-        this.TopTabs.Content.PotentialFriends = new View();
-        this.TopTabs.Content.PotentialFriends.View = new PotentialView();
-        this.TopTabs.Content.PotentialFriends.add(this.TopTabs.Content.PotentialFriends.View);
-        this._subviews.push(this.TopTabs.Content.PotentialFriends.View);
-
-        // // Incoming
-        // this.TopTabs.Content.IncomingInvites = new View();
-        // this.TopTabs.Content.IncomingInvites.View = new IncomingView();
-        // this.TopTabs.Content.IncomingInvites.add(this.TopTabs.Content.IncomingInvites.View);
-        // this._subviews.push(this.TopTabs.Content.IncomingInvites.View);
-
-        // // Outgoing
-        // this.TopTabs.Content.OutgoingInvites = new View();
-        // this.TopTabs.Content.OutgoingInvites.View = new OutgoingView();
-        // this.TopTabs.Content.OutgoingInvites.add(this.TopTabs.Content.OutgoingInvites.View);
-        // this._subviews.push(this.TopTabs.Content.OutgoingInvites.View);
-
-        // Add Lightbox to sequence
-        this.contentScrollView.Views.push(this.TopTabs.Content);
-
-        // Listeners for Tabs
-        this.TopTabs.Bar.on('select', function(result){
-            switch(result.id){
-
-                case 'all':
-                    that.TopTabs.Content.show(that.TopTabs.Content.AllFriends);
-                    // that.TopTabs.Content.AllFriends.View.collection.fetch();
-                    break;
-
-                case 'potential':
-                    that.TopTabs.Content.show(that.TopTabs.Content.PotentialFriends);
-                    // that.TopTabs.Content.AllFriends.View.collection.fetch();
-                    break;
-
-                case 'incoming':
-                    that.TopTabs.Content.show(that.TopTabs.Content.IncomingInvites);
-                    // that.TopTabs.Content.IncomingInvites.View.collection.fetch();
-                    break;
-
-                case 'outgoing':
-                    that.TopTabs.Content.show(that.TopTabs.Content.OutgoingInvites);
-                    // that.TopTabs.Content.OutgoingInvites.View.collection.fetch();
-                    break;
-
-                default:
-                    alert('none chosen');
-                    break;
-            }
-        });
-
-        // This depends on the previously selected! 
-        var default_selected = 'all';
-        // try {
-        //     default_selected = App.Cache.FriendListOptions.default || 'all';
-        // }catch(err){console.error(err);}
-        this.TopTabs.Bar.select(default_selected);
-
-        this.layout.content.add(this.ContentStateModifier).add(this.contentScrollView);
-
-        // Flexible Layout sequencing
-        this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
 
     };
 

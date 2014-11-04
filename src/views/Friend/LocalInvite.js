@@ -81,9 +81,9 @@ define(function(require, exports, module) {
 
         // Email-only person
         this.headerContent.EmailOnly = new Surface({
-            content: '<i class="icon ion-email">',
+            content: '<i class="icon ion-email"><div>Email</div>',
             size: [60, undefined],
-            classes: ['header-tab-icon-text-big']
+            classes: ['header-tab-icon-text']
         });
         this.headerContent.EmailOnly.on('longtap', function(){
             Utils.Help('Friend/LocalInvite/EmailOnly');
@@ -115,16 +115,16 @@ define(function(require, exports, module) {
 
         // get a code
         this.headerContent.CopyCode = new Surface({
-            content: '<i class="icon ion-ios7-copy-outline">',
+            content: '<i class="icon ion-ios7-copy-outline"><div>Create</div>',
             size: [60, undefined],
-            classes: ['header-tab-icon-text-big']
+            classes: ['header-tab-icon-text']
         });
         this.headerContent.CopyCode.on('longtap', function(){
             Utils.Help('Friend/LocalInvite/CopyCode');
         });
         this.headerContent.CopyCode.on('click', function(){
 
-            Utils.Notification.Toast('Getting Code');
+            Utils.Notification.Toast('Fetching Code');
 
             // Create Model
             var newRCode = new RelationshipCodeModel.RelationshipCode({
@@ -134,7 +134,29 @@ define(function(require, exports, module) {
             // Wait for model to be populated before loading Surfaces
             newRCode.populated().then(function(){
 
-                Utils.Clipboard.copyTo('get handy at thehandyapp.com/i/' + newRCode.get('code'));
+                Utils.Popover.Buttons({
+                    title: 'Unique Code Created',
+                    text: 'Give the unique code <strong>'+S(newRCode.get('code'))+'</strong> to another OddJob user who you want to connect with.',
+                    buttons: [{
+                        text: 'Copy the Code',
+                        success: function(){
+                            Utils.Clipboard.copyTo('Try out OddJob at theoddjobapp.com/i/' + newRCode.get('code'));
+                        }
+                    },{
+                        text: 'Send via SMS',
+                        success: function(){
+                            var sentence = "Try out OddJob! I'm on it now. theoddjobapp.com/i/" + newRCode.get('code');
+                            window.plugins.socialsharing.shareViaSMS(sentence, '', function(msg) {console.log('ok: ' + msg)}, function(msg) {Utils.Notification.Toast('error: ' + msg)})
+                        }
+                    },{
+                        text: 'Send via Email',
+                        success: function(){
+                            // https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin
+                            var sentence = "Try out OddJob! I'm on it now. theoddjobapp.com/i/" + newRCode.get('code');
+                            window.plugins.socialsharing.shareViaEmail(sentence, 'Join me on OddJob!', null, null, null, null, function(msg) {console.log('ok: ' + msg)}, function(msg) {Utils.Notification.Toast('error: ' + msg)})
+                        }
+                    }]
+                });
 
                 // var nada = prompt('Code has been copied','get handy at handyapp.com/i/' + newRCode.get('code'));
 
@@ -148,9 +170,9 @@ define(function(require, exports, module) {
 
         // paste code
         this.headerContent.EnterCode = new Surface({
-            content: '<i class="icon ion-edit">',
+            content: '<i class="icon ion-edit"><div>Enter</div>',
             size: [60, undefined],
-            classes: ['header-tab-icon-text-big']
+            classes: ['header-tab-icon-text']
         });
         this.headerContent.CopyCode.on('longtap', function(){
             Utils.Help('Friend/LocalInvite/EnterCode');
@@ -274,7 +296,7 @@ define(function(require, exports, module) {
 
         // Create default surfaces we'll re-use
         this.InstructionsSurface = new Surface({
-            content: '<i class="icon ion-arrow-up-a"></i> Search people to invite via SMS',
+            content: '<i class="icon ion-arrow-up-a"></i> Search contacts to invite via SMS',
             size: [undefined, 200],
             properties: {
                 color: '#444',
@@ -541,7 +563,7 @@ define(function(require, exports, module) {
         // Wait for model to be populated before loading Surfaces
         newRCode.populated().then(function(){
 
-            var sentence = "get handy! thehandyapp.com/i/" + newRCode.get('code');
+            var sentence = "get OddJob! theoddjobapp.com/i/" + newRCode.get('code');
             console.log(sentence);
             window.plugins.socialsharing.shareViaSMS(sentence, phone_number, function(msg) {console.log('ok: ' + msg)}, function(msg) {Utils.Notification.Toast('error: ' + msg)})
 

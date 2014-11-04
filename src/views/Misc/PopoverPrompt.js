@@ -249,7 +249,7 @@ define(function(require, exports, module) {
             type: 'submit',
             form: this.form,
             classes: ['form-button-submit-default','cancel-button'],
-            value: this.params.passed.buttonCancel,
+            value: this.params.passed.buttonCancel || 'Cancel',
             margins: [10,10],
             click: function(){
                 
@@ -259,6 +259,9 @@ define(function(require, exports, module) {
                 }
             }
         });
+        if(!this.params.passed.buttonCancel || this.params.passed.buttonCancel == ''){
+            debugger;
+        }
 
         this.buttonsView = new View();
         this.buttonsView.SizeMod = new StateModifier({

@@ -678,8 +678,14 @@ iframe {
 }
 
 .header-tab-icon-text-big.marked-complete,
-.header-tab-icon-text-big.marked-paid {
+.header-tab-icon-text-big.marked-complete i,
+.header-tab-icon-text-big.marked-paid,
+.header-tab-icon-text-big.marked-paid i, {
   color: green;
+}
+
+.header-tab-icon-text-big.marked-incomplete {
+  opacity: 0.5 !important;
 }
 
 .header-tab-icon-text i {

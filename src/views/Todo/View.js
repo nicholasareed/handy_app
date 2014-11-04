@@ -175,14 +175,20 @@ define(function(require, exports, module) {
             var data = {},
                 tags = that.model.get('tags');
             if(that.model.get('tags').indexOf('complete') === -1){
-                data = {
-                    add_tags: ['complete']
-                }
-                tags.push('complete');
-                that.headerContent.MarkComplete.setContent('<i class="icon ion-ios7-checkmark"></i>');
-                that.headerContent.MarkComplete.setClasses(['header-tab-icon-text-big']);
+                that.mark_complete();
+                return;
+
+                // data = {
+                //     add_tags: ['complete']
+                // }
+                // tags.push('complete');
+                // that.headerContent.MarkComplete.setContent('<i class="icon ion-ios7-checkmark"></i>');
+                // that.headerContent.MarkComplete.setClasses(['header-tab-icon-text-big']);
 
             } else {
+                that.mark_incomplete();
+                return;
+
                 data = {
                     remove_tags: ['complete']
                 };
@@ -241,6 +247,10 @@ define(function(require, exports, module) {
 
             // Not invoiced, bring up the options
 
+            Utils.Popover.Alert('Tap the "Complete" icon to add a cost and assign to an invoice','OK');
+
+            return;
+
             Utils.Popover.Buttons({
                 title: 'Attach to Invoice',
                 buttons: [
@@ -266,40 +276,42 @@ define(function(require, exports, module) {
 
                         Utils.Notification.Toast('Creating Invoice');
 
-                        var a = prompt('Cost of this Todo');
-                        a = parseFloat(a);
-                        if(!a){
-                            // canceled
-                            console.error(a);
-                            return;
-                        }
+                        Utils.Popover.Prompt('Cost of this Job','','Save','Cancel','number')
+                        .then(function(a){
+                            a = parseFloat(a);
+                            if(!a){
+                                // canceled
+                                console.error(a);
+                                return;
+                            }
 
-                        var newModel = new InvoiceModel.Invoice({
-                            // friend_id: that.model.get('_id'),
-                            // amount: a,
-                            title: that.model.get('title')
-                            // todo_id: that.model.get('_id')
-                        });
-
-                        newModel.save()
-                        .then(function(newInvoice){
-
-                            that._subviews.forEach(function(sv){
-                                sv.collection.fetch();
+                            var newModel = new InvoiceModel.Invoice({
+                                // friend_id: that.model.get('_id'),
+                                // amount: a,
+                                title: that.model.get('title')
+                                // todo_id: that.model.get('_id')
                             });
 
-                            that.model.save({
-                                cost: a,
-                                invoice_id: newInvoice._id
-                            },{
-                                patch: true
-                            })
-                            .then(function(newModel){
+                            newModel.save()
+                            .then(function(newInvoice){
 
-                                App.history.navigate('invoice/' + newInvoice._id);
+                                that._subviews.forEach(function(sv){
+                                    sv.collection.fetch();
+                                });
 
+                                that.model.save({
+                                    cost: a,
+                                    invoice_id: newInvoice._id
+                                },{
+                                    patch: true
+                                })
+                                .then(function(newModel){
+
+                                    App.history.navigate('invoice/' + newInvoice._id);
+
+                                });
+                                
                             });
-                            
                         });
 
                     }
@@ -757,6 +769,200 @@ define(function(require, exports, module) {
 
     };
 
+    PageView.prototype.mark_complete = function(){
+        var that = this;
+
+        // Update local tags
+        // Get cost of Todo for Invoice
+
+        var tagData = {
+            add_tags: ['complete']
+        };
+        var invoiceData = {};
+        tags = that.model.get('tags');
+        tags.push('complete');
+
+        Utils.Popover.Prompt('Cost of this Job','','Save','Cancel','number')
+        .then(function(a){
+            a = parseFloat(a);
+            if(!a){
+                // canceled
+                console.error(a);
+                return;
+            }
+
+            // Add to existing invoice or something else?
+            Utils.Popover.Buttons({
+                title: 'Add Job to an Invoice',
+                text: 'Nice work, time to get paid. Create a new invoice for this job (you\'ll send it later), or add this job to an existing invoice. ',
+                buttons: [{
+                    text: 'New Invoice',
+                    success: function(){
+
+                        var newModel = new InvoiceModel.Invoice({
+                            // friend_id: that.model.get('_id'),
+                            // amount: a,
+                            title: that.model.get('title')
+                            // todo_id: that.model.get('_id')
+                        });
+
+                        newModel.save()
+                        .then(function(newInvoice){
+
+                            that._subviews.forEach(function(sv){
+                                sv.collection.fetch();
+                            });
+
+                            that.model.set({
+                                tags: tags
+                            });
+
+                            invoiceData.cost = a;
+                            invoiceData.invoice_id = newInvoice._id;
+
+                            // Save invoiceData
+                            that.model.save(invoiceData,{
+                                patch: true
+                            })
+                            .then(function(newModel){
+
+                                Utils.Notification.Toast('Tap the $ to see the invoice');
+                                // App.history.navigate('invoice/' + newInvoice._id);
+
+                            });
+                            
+
+                            // Save tag
+                            that.model.save(tagData,{
+                                patch: true
+                            })
+                            .then(function(newModel){
+
+                                that.headerContent.MarkComplete.setContent('<i class="icon ion-ios7-checkmark"></i>');
+                                that.headerContent.MarkComplete.setClasses(['header-tab-icon-text-big']);
+
+                            });
+                            
+                        });
+
+                    }
+                },{
+                    text: 'Use Existing Invoice',
+                    success: function(){
+
+                        // Find the invoice to add to
+                        // - via a popover?
+
+                        Utils.Notification.Toast('Loading Invoices, One moment...');
+
+                        // Find all Invoices that are unpaid
+                        var PossibleInvoices = new InvoiceModel.InvoiceCollection([],{
+                            '$filter' : {
+                                tags: {
+                                    '$ne' : 'paid'
+                                }
+                            }
+                        });
+                        PossibleInvoices.populated().then(function(){
+
+                            // List of Invoices
+                            var listOptions = [];
+                            PossibleInvoices.each(function(Invoice){
+                                console.log('Invoice', Invoice);
+
+                                var tmpOption = {
+                                    text: S(Invoice.get('title')),
+                                    success: function(){
+
+                                        // Add option where success saves the Jobs and Invoice and everything
+
+                                        that._subviews.forEach(function(sv){
+                                            sv.collection.fetch();
+                                        });
+
+                                        that.model.set({
+                                            tags: tags
+                                        });
+
+                                        invoiceData.cost = a;
+                                        invoiceData.invoice_id = Invoice.get('_id');
+
+                                        // Save invoiceData
+                                        that.model.save(invoiceData,{
+                                            patch: true
+                                        })
+                                        .then(function(newModel){
+
+                                            Utils.Notification.Toast('Tap the $ to see the invoice');
+                                            // App.history.navigate('invoice/' + newInvoice._id);
+
+                                        });
+                                        
+                                        // Save tag
+                                        that.model.save(tagData,{
+                                            patch: true
+                                        })
+                                        .then(function(newModel){
+
+                                            that.headerContent.MarkComplete.setContent('<i class="icon ion-ios7-checkmark"></i>');
+                                            that.headerContent.MarkComplete.setClasses(['header-tab-icon-text-big']);
+
+                                        });
+                                        
+                                    }
+                                };
+                                   
+
+                                listOptions.push(tmpOption);
+                            });
+
+                            Utils.Popover.List({
+                                list: listOptions
+                            });
+
+                        });
+                        PossibleInvoices.fetch();
+
+                    }
+                }]
+            });
+        });
+
+        // var data = {},
+        //     tags = that.model.get('tags');
+        // data = {
+        //     add_tags: ['complete']
+        // }
+        // // tags.push('complete');
+        // that.headerContent.MarkComplete.setContent('<i class="icon ion-ios7-checkmark"></i>');
+        // that.headerContent.MarkComplete.setClasses(['header-tab-icon-text-big']);
+
+        // that.model.set({
+        //     tags: tags
+        // });
+        // that.model.save(data,{
+        //     patch: true,
+        //     // success: function(){
+        //     //     that.model.fetch();    
+        //     // }
+        // }).then(function(){
+        //     // that.model.set({
+        //     //     assigned_id: App.Data.User.toJSON()
+        //     // });
+        //     that.model.fetch();
+        //     that.todoContent.collection.fetch();
+        //     // App.history.backTo('StartAssign');
+        // });
+
+    };
+
+    PageView.prototype.mark_incomplete = function(){
+        var that = this;
+
+        Utils.Notification.Toast('Incomplete (undo) not yet enabled');
+
+    };
+
     PageView.prototype.refreshData = function() {
         try {
             this.model.fetch();
@@ -783,7 +989,7 @@ define(function(require, exports, module) {
 
             console.info('update_content');
             console.log(that.model.get('tags'));
-            
+
             // "complete" tag
             this.headerContent.Complete.Lightbox.show(this.headerContent.MarkComplete);
             if(that.model.get('tags') && that.model.get('tags').indexOf('complete') !== -1){
@@ -805,7 +1011,7 @@ define(function(require, exports, module) {
             } else {
                 // Not complete
                 this.headerContent.ViewInvoice.setContent('<i class="icon ion-social-usd"></i>');
-                this.headerContent.ViewInvoice.setClasses(['header-tab-icon-text-big']);
+                this.headerContent.ViewInvoice.setClasses(['header-tab-icon-text-big','marked-incomplete']);
             }
 
             // // tags

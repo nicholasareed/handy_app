@@ -346,7 +346,22 @@ define(function(require, exports, module) {
         invoiceView.Surface.pipe(that.contentLayout);
         invoiceView.Surface.on('click', function(){
             // Utils.Notification.Toast('View Invoice');
-            App.history.navigate('todo/' + Model.get('todo_id._id'));
+            Utils.Popover.Buttons({
+                text: 'Do what with this job item?',
+                buttons: [{
+                    text: 'Change Cost',
+                    success: function(){
+                        Utils.Popover.Alert('Feature in-progress...','OK');
+                        // App.history.navigate('todo/' + Model.get('todo_id._id'));
+                    }
+                },{
+                    text: 'View Job',
+                    success: function(){
+                        App.history.navigate('todo/' + Model.get('todo_id._id'));
+                    }
+                }]
+            });
+            // App.history.navigate('todo/' + Model.get('todo_id._id'));
         });
 
         invoiceView.Layout.Views.push(invoiceView.Surface);

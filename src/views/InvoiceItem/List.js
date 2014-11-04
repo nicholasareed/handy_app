@@ -95,6 +95,20 @@ define(function(require, exports, module) {
         
         // Icons
 
+        this.headerContent = new View();
+
+        // Create new item
+        this.headerContent.Create = new Surface({
+            content: '<i class="icon ion-ios7-plus-outline"></i>',
+            size: [App.Defaults.Header.Icon.w, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.Create.on('longtap', function(){
+            Utils.Help('todo_plus');
+        });
+        this.headerContent.Create.on('click', function(){
+            Utils.Popover.Alert('Sorry, you can only add Jobs to an invoice at the moment. Soon you\'ll be able to add any item!','OK');
+        });
 
         // create the header
         this.header = new StandardHeader({
@@ -106,7 +120,7 @@ define(function(require, exports, module) {
             // moreClasses: ["normal-header"],
             moreSurfaces: [
                 // this.headerContent.Invoices,
-                // this.headerContent.Create,
+                this.headerContent.Create,
                 // this.headerContent.FilterSwitcher,
             ]
         });
@@ -232,7 +246,7 @@ define(function(require, exports, module) {
         this.filterTabs.Layout = new FlexibleLayout({
             direction: 0, //FlexibleLayout.DIRECTION_X,
             // ratios: [true,true,true, 1, true,true,true]
-            ratios: [true, 1]
+            ratios: [1] //[true, 1]
         });
         this.filterTabs.Views = [];
         this.filterTabs.SizeMod = new StateModifier({
@@ -245,8 +259,9 @@ define(function(require, exports, module) {
 
         // Line Items
         this.filterTabs.LineItems = new Surface({
-            content: 'Jobs in Invoice',
-            size: [140, undefined],
+            content: 'Invoice Items',
+            wrap: '<div class="ellipsis-all"></div>',
+            size: [undefined, undefined],
             classes: ['invoice-filter-tabs-item-default']
         });
         // this.filterTabs.LineItems.group = 'Invoices';
@@ -266,7 +281,7 @@ define(function(require, exports, module) {
 
         // Available Todos
         this.filterTabs.AvailableTodos = new Surface({
-            content: 'un-Invoiced',
+            content: 'Jobs NOT Invoiced',
             size: [undefined, undefined],
             classes: ['invoice-filter-tabs-item-default']
         });
@@ -282,7 +297,7 @@ define(function(require, exports, module) {
             });
             this.setClasses(['invoice-filter-tabs-item-default','selected']);
         });
-        this.filterTabs.Views.push(this.filterTabs.AvailableTodos);
+        // this.filterTabs.Views.push(this.filterTabs.AvailableTodos);
 
         // sequenceFrom
         this.filterTabs.Layout.sequenceFrom(this.filterTabs.Views);
@@ -319,7 +334,7 @@ define(function(require, exports, module) {
         // Line Items 
         this.ListContent.LineItems = new AllView({
             // empty_string: 'Add Invoices by tapping the <i class="icon ion-ios7-plus-outline"></i>',
-            empty_string: 'No attached invoices',
+            empty_string: 'No items in Invoice',
             invoice_id: that.model.get('_id')
             // filter: {
             //     tags: {

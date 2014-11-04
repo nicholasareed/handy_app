@@ -771,7 +771,7 @@ define(function(require, exports, module) {
                 this.invoiceDetails.ToSurface.setClasses(['invoice-view-to-default','assigned']);
             } else {
                 // Not assigned
-                this.invoiceDetails.ToSurface.setContent('not shared with anyone');
+                this.invoiceDetails.ToSurface.setContent('not sent to anyone');
                 this.invoiceDetails.ToSurface.setClasses(['invoice-view-to-default','notassigned']);
             }
 
