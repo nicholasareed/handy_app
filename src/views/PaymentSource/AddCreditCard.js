@@ -335,7 +335,7 @@ define(function(require, exports, module) {
 
         console.log(creditCardData);
 
-         var card_save_name = $.trim(this.inputName.getValue().toString());
+         var card_save_name = $.trim(this.inputSaveName.getValue().toString());
          var card_last4 = creditCardData.number.substr(-4,4);
          card_save_name = card_save_name.length > 0 ? card_save_name : creditCardData.card_number.substr(-4,4); // saved name or last 4
 
@@ -343,6 +343,7 @@ define(function(require, exports, module) {
 
         Stripe.card.createToken(creditCardData, function(status, response){
             if(response.error){
+                Utils.Notification.Toast('Failed to save card');
                 Utils.Popover.Alert(S(response.error.message));
                 // Re-enable the button
                 // that.$('.add-button').attr('disabled','disabled');
@@ -368,6 +369,8 @@ define(function(require, exports, module) {
 
                     // // Emit event that a payment source has been added
                     // App.Events.trigger('payment_sources_updated');
+
+                    Utils.Notification.Toast('Saved Card');
 
                     // Return to previous page
                     App.history.back();

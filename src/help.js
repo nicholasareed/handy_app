@@ -35,7 +35,7 @@ define(function(require) {
                         type: 'popover',
                         title: 'Accepting Payments',
                         body: "To accept payments, we'll need a few more details from you. " + 
-                              "Please email us at founders@thehandyapp.com (or use the feedback form from the Settings menu) and we'll get you set up!<br /><br />" +
+                              "Please email us at info@theoddjobapp.com (or use the feedback form from the Settings menu) and we'll get you set up!<br /><br />" +
                               "We apologize for the inconvenience!"
                     }
                     

@@ -442,6 +442,9 @@ define(function(require, exports, module) {
             //     return;
             // }
 
+            Utils.Notification.Toast('Cannot change payment recipient');
+            return;
+
             App.history.modifyLast({
                 tag: 'StartOwner'
             });

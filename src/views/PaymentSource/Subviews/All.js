@@ -111,7 +111,7 @@ define(function(require, exports, module) {
         });
         this.loadingSurface.pipe(this._eventOutput);
         this.emptyListSurface = new Surface({
-            content: "None to Show",
+            content: "No Credit Cards",
             size: [undefined, 100],
             classes: ['empty-list-surface-default']
         });

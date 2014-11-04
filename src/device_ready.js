@@ -145,6 +145,9 @@ define(function(require, exports, module) {
             // Resolve deferred
             this.readyDeferred.resolve();
 
+            // Stripe
+            Stripe.setPublishableKey(Credentials['stripe_publishable_key_' + Credentials.stripe_mode]);
+
             // Track.js
             // - only using in production
             if(App.Data.usePg && App.Prod){
