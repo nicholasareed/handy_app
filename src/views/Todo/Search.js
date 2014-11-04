@@ -108,10 +108,10 @@ define(function(require, exports, module) {
             // moreContent: "New", //'<span class="icon ion-navicon-round"></span>'
         });
         this.header._eventOutput.on('back',function(){
-            // App.history.back();
+            App.history.back();
         });
         this.header.navBar.title.on('click',function(){
-            // App.history.back();
+            App.history.back();
         });
 
         this._eventOutput.on('inOutTransition', function(args){
