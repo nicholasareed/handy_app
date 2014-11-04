@@ -298,6 +298,12 @@ define(function(require, exports, module) {
                     defaultRoute('TodoList', 'Todo/List', arguments);
                 },
 
+                'todo/search' : function(){
+                    App.Views.MainFooter.route_show = true;
+                    App.Views.MainFooter.Tabs.select('todos', false);
+                    defaultRoute('TodoSearch', 'Todo/Search', arguments);
+                },
+
                 'todo/assign/:id' : function(){
                     defaultRoute('TodoAssign', 'Todo/AssignList', arguments, {cache: false});
                 },

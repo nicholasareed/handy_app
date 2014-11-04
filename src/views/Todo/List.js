@@ -187,6 +187,22 @@ define(function(require, exports, module) {
         });
 
 
+
+        // Search
+        this.headerContent.Search = new Surface({
+            content: '<i class="icon ion-ios7-search-strong"></i>',
+            size: [App.Defaults.Header.Icon.w, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.Search.on('longtap', function(){
+            Utils.Help('todo_plus');
+        });
+        this.headerContent.Search.on('click', function(){
+            App.history.navigate('todo/search');
+        });
+
+
+
         // ListContent switcher
         this.headerContent.FilterSwitcher = new View();
         this.headerContent.FilterSwitcher.Lightbox = new RenderController();
@@ -249,6 +265,7 @@ define(function(require, exports, module) {
             moreSurfaces: [
                 // this.headerContent.Invoices,
                 this.headerContent.Create,
+                this.headerContent.Search
                 // this.headerContent.FilterSwitcher,
             ]
             // moreContent: "New", //'<span class="icon ion-navicon-round"></span>'
@@ -410,7 +427,7 @@ define(function(require, exports, module) {
         this.filterTabs.Layout = new FlexibleLayout({
             direction: 0, //x
             // ratios: [true,true,true, 1, true,true,true]
-            ratios: [true, true,1]
+            ratios: [true,1]
         });
         this.filterTabs.Views = [];
         this.filterTabs.SizeMod = new StateModifier({
@@ -443,8 +460,9 @@ define(function(require, exports, module) {
 
         // Assigned
         this.filterTabs.AssignedTodos = new Surface({
-            content: 'Not Mine',
-            size: [100, undefined],
+            content: 'Assigned to someone else',
+            wrap: '<div class="ellipsis-all"></div>',
+            size: [undefined, undefined],
             classes: ['todo-filter-tabs-item-default']
         });
         this.filterTabs.AssignedTodos.group = 'Todos';
@@ -477,7 +495,7 @@ define(function(require, exports, module) {
             });
             this.setClasses(['todo-filter-tabs-item-default','selected']);
         });
-        this.filterTabs.Views.push(this.filterTabs.CompleteTodos);
+        // this.filterTabs.Views.push(this.filterTabs.CompleteTodos);
 
         this.filterTabs.Layout.sequenceFrom(this.filterTabs.Views);
         
