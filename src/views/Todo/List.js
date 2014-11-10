@@ -178,7 +178,18 @@ define(function(require, exports, module) {
             App.history.navigate('todo/search');
         });
 
-
+        // History
+        this.headerContent.History = new Surface({
+            content: '<i class="icon ion-android-folder"></i>',
+            size: [App.Defaults.Header.Icon.w, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.History.on('longtap', function(){
+            Utils.Help('todo_plus');
+        });
+        this.headerContent.History.on('click', function(){
+            App.history.navigate('todo/history');
+        });
 
         // ListContent switcher
         this.headerContent.FilterSwitcher = new View();
@@ -241,8 +252,9 @@ define(function(require, exports, module) {
             // moreClasses: ["normal-header"],
             moreSurfaces: [
                 // this.headerContent.Invoices,
-                this.headerContent.Create,
-                this.headerContent.Search
+                this.headerContent.History,
+                this.headerContent.Search,
+                this.headerContent.Create
                 // this.headerContent.FilterSwitcher,
             ]
             // moreContent: "New", //'<span class="icon ion-navicon-round"></span>'
