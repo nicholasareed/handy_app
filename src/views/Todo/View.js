@@ -577,7 +577,7 @@ define(function(require, exports, module) {
             size: [undefined, 50],
             flexible: {
                 direction: 0, // horizontal
-                ratios: [1, true, true],
+                ratios: [1, true],
                 sequenceFrom: [{
                     surface: {
                         Title: new Surface({
@@ -594,7 +594,7 @@ define(function(require, exports, module) {
                 },{
                     surface: {
                         Employer: new Surface({
-                            content: '<i class="icon ion-person"></i>',
+                            content: '<i class="icon ion-arrow-down-b"></i>',
                             size: [50, undefined],
                             classes: ['todo-view-minimized-employer-default']
                         }),
@@ -603,19 +603,20 @@ define(function(require, exports, module) {
                             that.PageLayout.flexible.updateRatios();
                         }
                     }
-                },{
-                    surface: {
-                        Assigned: new Surface({
-                            content: '<i class="icon ion-person"></i>',
-                            size: [50, undefined],
-                            classes: ['todo-view-minimized-assigned-default']
-                        }),
-                        click: function(){
-                            that.DetailsHolder.show(that.TopBarMaximized);
-                            that.PageLayout.flexible.updateRatios();
-                        }
-                    }
                 },
+                // {
+                //     surface: {
+                //         Assigned: new Surface({
+                //             content: '<i class="icon ion-person"></i>',
+                //             size: [50, undefined],
+                //             classes: ['todo-view-minimized-assigned-default']
+                //         }),
+                //         click: function(){
+                //             that.DetailsHolder.show(that.TopBarMaximized);
+                //             that.PageLayout.flexible.updateRatios();
+                //         }
+                //     }
+                // },
                 // {
                 //     surface: {
                 //         Maximize: new Surface({
@@ -659,7 +660,8 @@ define(function(require, exports, module) {
                 },{
                     surface: {
                         Details: new Surface({
-                            content: 'details',
+                            content: '',
+                            wrap: '<div></div>',
                             size: [window.innerWidth, true],
                             classes: ['todo-view-details-default']
                         }),
@@ -671,7 +673,8 @@ define(function(require, exports, module) {
                 },{
                     surface: {
                         Owner: new Surface({
-                            content: 'assigned content',
+                            content: '',
+                            wrap: '<div></div>',
                             size: [window.innerWidth, true],
                             classes: ['todo-view-owner-default']
                         }),
@@ -685,7 +688,8 @@ define(function(require, exports, module) {
                 },{
                     surface: {
                         Assigned: new Surface({
-                            content: 'title content',
+                            content: '',
+                            wrap: '<div></div>',
                             size: [window.innerWidth, true],
                             classes: ['todo-view-assigned-default']
                         }),

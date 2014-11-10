@@ -457,7 +457,7 @@
 
   line-height: 30px;
   font-size: 16px;
-  padding: 8px 0 8px 10px;
+  padding: 8px 0 0px 10px;
 }
 
 .todo-view-details-default {
@@ -512,10 +512,22 @@
 
 
 .todo-view-assigned-default {
-  padding: 8px;
+  padding: 4px 8px 8px 8px;
   font-size: 14px;
-  line-height: 18px;
+  line-height: 24px;
 }
+
+
+.todo-view-assigned-default div {
+  display: inline-block;
+  padding: 4px;
+
+  border: 1px solid #444;
+
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+}
+
 
 .todo-view-assigned-default.notassigned {
   color: #888;
@@ -527,11 +539,21 @@
 
 
 .todo-view-owner-default {
-  padding: 8px;
+  padding: 8px 8px 4px 8px;
 
   font-size: 14px;
-  line-height: 18px;
+  line-height: 24px;
 
+}
+
+.todo-view-owner-default div {
+  display: inline-block;
+  padding: 4px;
+
+  border: 1px solid #444;
+
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
 }
 
 .todo-view-owner-default.no_owner {

@@ -957,7 +957,9 @@ input[type="submit"].form-button-submit-default.cancel-button {
   font-weight: bold;
   font-size: 18px;
   text-decoration: none;
+  
   display: inline-block;
+  display: block;
 
   width: 100%;
   box-sizing: border-box;
