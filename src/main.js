@@ -217,7 +217,8 @@ define(function(require, exports, module) {
 
     // Update body stylesheet
     // - remove loading background
-    document.body.setAttribute('style',"");
+    // document.body.setAttribute('style',"height:"+window.innerHeight+"px;");
+    document.body.setAttribute('style','');
 
     // Google Analytics Plugin
     Utils.Analytics.init();
@@ -708,7 +709,7 @@ define(function(require, exports, module) {
                     Timer.setTimeout(function(){
                         App.Views.SplashLoading.hide();
                     },3000);
-                    
+
                     if(App.Data.usePg){
                         navigator.splashscreen.hide();
                     }

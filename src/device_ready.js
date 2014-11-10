@@ -214,6 +214,11 @@ define(function(require, exports, module) {
                 this.initPush();
             }
 
+            // // window resize
+            // window.onresize = function(){
+            //     App.mainSize = [window.innerWidth, window.innerHeight];
+            //     App.Events.emit('resize');
+            // };
 
             // Keyboard
             // - requires ionic keyboard plugin
@@ -271,6 +276,11 @@ define(function(require, exports, module) {
 
                 App.Events.emit('resize');
                 
+                Timer.setTimeout(function(){
+                    window.scrollTo(0, 0);
+                    document.body.scrollTop = 0;
+                },2000);
+
                 // App.mainSize = App.MainContext.getSize();
                 // if (App.MainController)
                 //     App.MainController.setOptions({size: [App.mainSize[0], App.mainSize[1]]});
