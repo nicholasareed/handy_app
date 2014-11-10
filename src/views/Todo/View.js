@@ -705,12 +705,12 @@ define(function(require, exports, module) {
                             classes: ['button-outwards-default']
                         }),
                         click: function(){
-                            Utils.Popover.Alert('Not Yet working','OK');
-                            return;
-                            // App.history.modifyLast({
-                            //     tag: 'StartEdit'
-                            // });
-                            // App.history.navigate('todo/edit/' + that.model.get('_id'));
+                            // Utils.Popover.Alert('Not Yet working','OK');
+                            // return;
+                            App.history.modifyLast({
+                                tag: 'StartEdit'
+                            });
+                            App.history.navigate('todo/edit/' + that.model.get('_id'));
                         }
                     }
                 }]

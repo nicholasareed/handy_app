@@ -30,11 +30,9 @@ define(function(require, exports, module) {
     var StandardHeader = require('views/common/StandardHeader');
 
     // Models
-    // var CompanyModel = require('models/todo');
+    var TodoModel = require('models/todo');
     // var EventModel = require('models/event');
     // var SportModel = require('models/sport');
-    var CompanyModel = require('models/company');
-    var GroupModel = require('models/group');
 
 
     function PageView(options) {
@@ -45,7 +43,7 @@ define(function(require, exports, module) {
         this.doNotShow = true;
         
         // Create Model
-        this.model = new CompanyModel.Company();
+        this.model = new TodoModel.Todo();
         
         this.summary = {
             media_id: null
@@ -54,8 +52,8 @@ define(function(require, exports, module) {
         // Passed options?
         this.cacheOptions = {};
         this.loadDefaultsPromises = [];
-        if(App.Cache.CompanyEditOptions){
-            this.cacheOptions = App.Cache.CompanyEditOptions;
+        if(App.Cache.TodoEditOptions){
+            this.cacheOptions = App.Cache.TodoEditOptions;
 
             if(this.cacheOptions.group_id){
                 this.summary.group_id = this.cacheOptions.group_id;
@@ -100,64 +98,67 @@ define(function(require, exports, module) {
 
         // Load model to edit
         var modelDef = $.Deferred();
-        this.summary.Model = new CompanyModel.Company({
+        this.summary.Model = new TodoModel.Todo({
             _id: this.options.args[0] // passed in _id via router/:id
         });
         this.summary.Model.populated().then(function(){
-            // fetch Group model as well
-            that.summary.group = new GroupModel.Group({
-                _id: that.summary.Model.get('group_id')
-            });
-            that.summary.group.populated().then(function(){
-                modelDef.resolve();
-            });
-            that.summary.group.fetch();
+            // // fetch Group model as well
+            // that.summary.group = new GroupModel.Group({
+            //     _id: that.summary.Model.get('group_id')
+            // });
+            // that.summary.group.populated().then(function(){
+            //     modelDef.resolve();
+            // });
+            // that.summary.group.fetch();
 
             // Other fields
             that.summary.detail = {};
             that.summary.detail.name = that.summary.Model.get('name');
-            that.summary.detail.description = that.summary.Model.get('description');
-            that.summary.detail.website = that.summary.Model.get('website');
+            that.summary.detail.details = that.summary.Model.get('details');
+            // that.summary.detail.website = that.summary.Model.get('website');
+
+            modelDef.resolve();
+
         });
         this.summary.Model.fetch({prefill: true});
         this.loadDefaultsPromises.push(modelDef.promise());        
 
         this.wizard_hash = CryptoJS.SHA3(new Date().toString());
-        this.wizard_startTag = 'StartCompanyEdit';
+        this.wizard_startTag = 'StartEdit';
 
         // All the possible paths to use
         this.wizardPaths = {
 
             'detail': {
-                    cacheOptions: 'CompanyEditDetailOptions',
-                    route: 'company/edit/detail',
+                    cacheOptions: 'TodoEditDetailOptions',
+                    route: 'todo/edit/detail',
                     summaryPath: 'detail'
                 },
 
             // 'payment' : {
-            //         cacheOptions: 'CompanyEditPaymentOptions',
+            //         cacheOptions: 'TodoEditPaymentOptions',
             //         title: 'Payment',
-            //         route: 'company/edit/payment', // should pass the event_id as well?
+            //         route: 'todo/edit/payment', // should pass the event_id as well?
             //         summaryPath: 'payment'
             //     },
 
             // 'players' : {
-            //         cacheOptions: 'CompanyEditPlayersOptions',
+            //         cacheOptions: 'TodoEditPlayersOptions',
             //         title: 'Players',
-            //         route: 'company/edit/player', // should pass the event_id as well?
+            //         route: 'todo/edit/player', // should pass the event_id as well?
             //         summaryPath: 'player_results'
             //     },
             // 'result' : {
-            //         cacheOptions: 'CompanyEditResultOptions',
+            //         cacheOptions: 'TodoEditResultOptions',
             //         title: 'Result',
-            //         route: 'company/edit/result',
+            //         route: 'todo/edit/result',
             //         summaryPath: 'old_results'
             //     }
         };
 
         // Routing of the paths
         this.wizardRoute = null;
-        this.wizardSummaryPath = '/company/edit/summary';
+        this.wizardSummaryPath = '/todo/edit/summary';
         this.wizard_current_route_index = 0;
 
         // Start the Wizard
@@ -185,7 +186,7 @@ define(function(require, exports, module) {
         // Get elements to save
         this.model.set({
             title: this.summary.title,
-            description: this.summary.description
+            details: this.summary.details
         });
 
         console.log(this.model.toJSON());
@@ -197,11 +198,11 @@ define(function(require, exports, module) {
                 that.model.set(newModel);
 
                 // Created OK
-                Utils.Notification.Toast('Company Created!');
+                Utils.Notification.Toast('Job Updated!');
 
 
                 // Going back to the Dash, or back somewhere else?
-                App.history.eraseUntilTag('StartCompanyEdit');
+                App.history.eraseUntilTag('StartEdit');
                 App.history.navigate('event/' + that.model.get('_id'));
 
             });
@@ -308,7 +309,7 @@ define(function(require, exports, module) {
 
         this.currentRouteName = 'summary';
 
-        App.Cache.CompanyEditSummaryOptions = {
+        App.Cache.TodoEditSummaryOptions = {
             on_choose: function(routeKey){
                 // navigate accordingly
                 that.run_wizard(routeKey);

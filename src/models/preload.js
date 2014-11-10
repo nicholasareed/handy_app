@@ -1,16 +1,11 @@
-/*globals define*/
 define(function(require, exports, module) {
     
-    // var Player              = require('models/player'),
-        // Game                = require('models/game'),
-        // Sport               = require('models/sport'),
-        // RelationshipCode    = require('models/relationship_code'),
-    var User                = require('models/user');
-    var FriendModel                = require('models/friend');
+    var User                     = require('models/user');
+    var FriendModel              = require('models/friend');
     var TodoModel                = require('models/todo');
-    var InvoiceModel                = require('models/invoice');
-    var MessageModel                = require('models/message');
-    var ActionModel                = require('models/action');
+    var InvoiceModel             = require('models/invoice');
+    var MessageModel             = require('models/message');
+    var ActionModel              = require('models/action');
 
     module.exports = function(App){
 

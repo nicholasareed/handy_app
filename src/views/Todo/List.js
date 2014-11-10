@@ -106,7 +106,7 @@ define(function(require, exports, module) {
         this.headerContent.Create.on('click', function(){
 
             App.history.modifyLast({
-                tag: 'StartAddTodo'
+                tag: 'StartAdd'
             });
             App.history.navigate('todo/add', {history: false});
 

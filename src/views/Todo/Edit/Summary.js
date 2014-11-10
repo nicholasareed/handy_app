@@ -26,17 +26,21 @@ define(function(require, exports, module) {
     var $ = require('jquery');
     var Utils = require('utils');
 
+    // Curves
+    var Easing = require('famous/transitions/Easing');
+
     // Views
     var StandardHeader = require('views/common/StandardHeader');
 
     // Models
-    var CompanyModel = require('models/company');
-    var GroupModel = require('models/group');
+    var TodoModel = require('models/todo');
 
     // Templates
     var Handlebars          = require('lib2/handlebars-adapter');
     var tpl_detail        = require('text!./tpl/SummaryDetail.html');
     var template_detail   = Handlebars.compile(tpl_detail);
+
+    var FormHelper = require('views/common/FormHelper');
 
     // var tpl_payment        = require('text!./tpl/SummaryPayment.html');
     // var template_payment   = Handlebars.compile(tpl_payment);
@@ -52,7 +56,7 @@ define(function(require, exports, module) {
             footerSize: App.Defaults.Footer.size
         });
 
-        this.WizardOptionsKey = 'CompanyEditSummaryOptions';
+        this.WizardOptionsKey = 'TodoEditSummaryOptions';
 
         if(!this.options.App.Cache[this.WizardOptionsKey]){
             console.error('Missing this.WizardOptionsKey');
@@ -81,13 +85,7 @@ define(function(require, exports, module) {
         var that = this;
 
         // Models
-        this.model = this.options.passed.summary.Model;  //new CompanyModel.Company();
-
-        this.group_model = new GroupModel.Group({
-            _id: that.options.passed.summary.Model.get('group_id')
-        });
-        this.group_model.on('sync', this.update_content.bind(this));
-        this.group_model.fetch();
+        this.model = this.options.passed.summary.Model;  //new TodoModel.Todo();
 
     };
 
@@ -109,7 +107,7 @@ define(function(require, exports, module) {
         });
 
         this.header = new StandardHeader({
-            content: 'Edit Company',
+            content: 'Update Job',
             classes: ["normal-header"],
             backContent: false,
             backClasses: ["normal-header"],
@@ -138,14 +136,19 @@ define(function(require, exports, module) {
     PageView.prototype.createContent = function(){
         var that = this;
 
-        // create the scrollView of content
-        this.contentScrollView = new ScrollView(); //(App.Defaults.ScrollView);
-        this.contentScrollView.Views = [];
+        // // create the scrollView of content
+        // this.contentScrollView = new ScrollView(); //(App.Defaults.ScrollView);
+        // this.contentScrollView.Views = [];
+
+        this.form = new FormHelper({
+            type: 'form',
+            scroll: true
+        });
 
         // Add surfaces
         this.addSurfaces();
 
-        this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
+        // this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
         
         // Content
         this.layout.content.StateModifier = new StateModifier();
@@ -164,23 +167,31 @@ define(function(require, exports, module) {
         //     // origin: [0.5, 0.5]
         // });
         // this.contentView.add(this.contentView.OriginMod).add(this.contentView.SizeMod).add(this.contentScrollView);
-        this.layout.content.add(this.layout.content.StateModifier).add(Utils.usePlane('content')).add(this.contentScrollView); //.add(this.contentView);
+        this.layout.content.add(this.layout.content.StateModifier).add(Utils.usePlane('content')).add(this.form); //.add(this.contentView);
 
     };
 
     PageView.prototype.addSurfaces = function() {
         var that = this;
 
+        this.allInputs = []; // array for adding to the _formScrollView
+
         // Build Surfaces
         // - add to scrollView
-        var _holder = new Surface({size: [undefined,1]});
-        _holder.pipe(this.contentScrollView);
-        // need to create a 1px-height surface for the scrollview, otherwise it fucks up?
-        this.contentScrollView.Views.push(_holder);
+
+        // 1px line necessary?
+        // var _holder = new Surface({size: [undefined,1]});
+        // _holder.pipe(this.contentScrollView);
+        // // need to create a 1px-height surface for the scrollview, otherwise it fucks up?
+        // this.contentScrollView.Views.push(_holder);
         
-        this.createGroupView();
-        this.createImageView();
-        this.createDetailView();
+        // this.createGroupView();
+        // this.createImageView();
+        // this.createDetailView();
+
+        this.addFormSurfaces();
+
+        this.addTimeframeSlider();
 
         // // weight
         // this.weightView = new View();
@@ -216,22 +227,126 @@ define(function(require, exports, module) {
 
         // this.createPaymentView();
 
-        // Submit button
-        this.submitButtonSurface = new Surface({
-            content: 'Create Company',
-            wrap: '<div class="outward-button"></div>',
-            size: [undefined,60],
-            classes: ['button-outwards-default']
-        });
-        this.submitButtonSurface.pipe(this.contentScrollView);
-        this.contentScrollView.Views.push(this.submitButtonSurface);
+        this.createSubmitButton();
 
-        // Events for surfaces
-        this.submitButtonSurface.on('click', this.save_company.bind(this));
+        // // Submit button
+        // this.submitButtonSurface = new Surface({
+        //     content: 'Create Job',
+        //     wrap: '<div class="outward-button"></div>',
+        //     size: [undefined,60],
+        //     classes: ['button-outwards-default']
+        // });
+        // this.submitButtonSurface.pipe(this.contentScrollView);
+        // this.contentScrollView.Views.push(this.submitButtonSurface);
+
+        // // Events for surfaces
+        // this.submitButtonSurface.on('click', this.save_todo.bind(this));
+
+        this.form.addInputsToForm(this.allInputs);
 
         // // Default selections
         // this.singleOrTeamView.TabBar.select('singles');
         // this.winOrPlaceView.TabBar.select('wlt');
+
+    };
+
+    PageView.prototype.addFormSurfaces = function() {
+        var that = this;
+
+        this.inputs = [{
+            name: 'title',
+            placeholder: 'Title',
+            type: 'text',
+            size: [undefined, 50],
+            value: this.options.passed.summary.Model.get('title')
+        },{
+            name: 'details',
+            placeholder: 'Job Details',
+            type: 'textarea',
+            size: [undefined, 300],
+            value: this.options.passed.summary.Model.get('details')
+        }];
+
+        this._inputs = {};
+
+        this.inputs.forEach(function(inputOpts){
+            var id = inputOpts.id || inputOpts.name;
+
+            that._inputs[id] = new FormHelper({
+
+                margins: [10,10],
+
+                form: that.form,
+                name: inputOpts.name,
+                placeholder: inputOpts.placeholder,
+                type: inputOpts.type,
+                value: inputOpts.value,
+                size: inputOpts.size,
+                att: inputOpts.attr
+            });
+
+        });
+
+        Object.keys(this._inputs).forEach(function(key){
+            that.allInputs.push(that._inputs[key]);
+        });
+
+    };
+
+    PageView.prototype.addTimeframeSlider = function() {
+        var that = this;
+
+        // Timeframe button
+        //  Popover list to change the Timeframe
+
+        this.timeframeView = new View();
+        this.timeframeView.Surface = new Surface({
+            content: '<span>Timeframe:</span> No Rush',
+            wrap: '<div class="set-timeframe"></div>',
+            size: [undefined, true],
+            classes: ['todo-add-summary-timeframe-default']
+        });
+        this.timeframeView.Surface.pipe(this.form._formScrollView);
+        this.timeframeView.Surface.on('click', function(){
+            // no 'click' action
+            var timeframes = ['ASAP','Today','No Rush'];
+
+            Utils.Popover.List({
+                title: 'title',
+                text: 'text',
+                list: _.map(timeframes, function(timeframe,idx){
+                    return {
+                        text: timeframe,
+                        success: function(){
+                            that.summary.detail.timeframe = idx; // 0,1,2
+                            that.update_content();
+                        }
+                    };
+                })
+            });
+        });
+        this.timeframeView.getSize = function(val){
+            return that.timeframeView.Surface.getSize(val);
+        };
+        this.timeframeView.add(this.timeframeView.Surface);
+        // this.contentScrollView.Views.push(this.timeframeView);
+
+        this.allInputs.push(this.timeframeView);
+
+    };
+
+    PageView.prototype.createSubmitButton = function(){
+        var that = this;
+
+        this.submitButton = new FormHelper({
+            form: this.form,
+            type: 'submit',
+            value: 'Update Job',
+            margins: [10,10],
+            click: this.save_todo.bind(this)
+        });
+
+        this.allInputs.push(this.submitButton);
 
     };
 
@@ -466,26 +581,19 @@ define(function(require, exports, module) {
 
 
 
-        // Group Name
-        if(!this.options.passed.summary.group.get('name')){
-            this.groupView.Surface.setContent('');
-        } else {
-            this.groupView.Surface.setContent('<div class="no-location">'+S(this.options.passed.summary.group.get('name'))+'</div>');
-        }
+        // // Group Name
+        // if(!this.options.passed.summary.group.get('name')){
+        //     this.groupView.Surface.setContent('');
+        // } else {
+        //     this.groupView.Surface.setContent('<div class="no-location">'+S(this.options.passed.summary.group.get('name'))+'</div>');
+        // }
 
-        // Name
-        if(this.summary.name){
-            this.detailView.Surface.setContent(template_detail(this.summary));
-        } else {
-            this.detailView.Surface.setContent('<div class="no-location"><i class="icon ion-information-circled"></i></div>');
-        }
-
-        // Description
-        if(this.summary.detail){
-            this.detailView.Surface.setContent(template_detail(this.summary));
-        } else {
-            this.detailView.Surface.setContent('<div class="no-location"><i class="icon ion-information-circled"></i></div>');
-        }
+        // // Detail
+        // if(this.summary.detail){
+        //     this.detailView.Surface.setContent(template_detail(this.summary));
+        // } else {
+        //     this.detailView.Surface.setContent('<div class="no-location"><i class="icon ion-information-circled"></i></div>');
+        // }
 
         // // Payment method
         // if(this.summary.payment){
@@ -551,7 +659,7 @@ define(function(require, exports, module) {
 
     };
 
-    PageView.prototype.save_company = function(ev){
+    PageView.prototype.save_todo = function(ev){
         var that = this;
 
         if(this.checking === true){
@@ -569,19 +677,20 @@ define(function(require, exports, module) {
         //     Utils.Notification.Toast('Include a picture!');
         //     return;
         // }
-        formData.images = [this.summary.media_id];
+        // formData.images = [this.summary.media_id];
 
-        // detail
-        if(!this.summary.detail){
-            Utils.Notification.Toast('Include a name!');
+        // title
+        formData.title = this._inputs['title'].getValue().toString();
+        if(!formData.title){
+            Utils.Notification.Toast('Include a title!');
             return;
         }
-        formData.name = this.summary.detail.name;
-        formData.description = this.summary.detail.description;
-        formData.website = this.summary.detail.website;
 
-        // Group_id
-        formData.group_id = this.summary.group.get('_id');
+        // detail/description
+        formData.details = this._inputs['details'].getValue().toString();
+
+        // // Group_id
+        // formData.group_id = this.summary.group.get('_id');
 
         // // payment
         // if(!this.summary.payment){
@@ -590,7 +699,7 @@ define(function(require, exports, module) {
         // }
         // formData.payment_source_id = this.summary.payment._id;
 
-        this.submitButtonSurface.setContent('..Please Wait..');
+        this.submitButton.setContent('..Please Wait..');
 
         // Get elements to save
         this.model.set(formData);
@@ -601,28 +710,29 @@ define(function(require, exports, module) {
             .fail(function(){
     
                 that.checking = false;
-                that.submitButtonSurface.setContent('Create Company');                
+                that.submitButton.setContent('Update Job');                
 
             })
             .then(function(newModel){
 
                 // that.checking = false;
-                // that.submitButtonSurface.setContent('Create Company');
+                // that.submitButtonSurface.setContent('Create Todo');
 
+                Utils.Notification.Toast('Job Updated');
 
-                // Create the new one
-                // - causes a "populated" to be created that is valid
-                var newCompany = new CompanyModel.Company(newModel);
+                // // Create the new one
+                // // - causes a "populated" to be created that is valid
+                // var newTodo = new TodoModel.Todo(newModel);
 
 
                 // Clear player cache
                 // - todo...
 
                 // Clear history
-                App.history.backTo('StartCompanyEdit');
+                App.history.backTo('StartEdit');
 
                 // // Redirect to the new Todo
-                // App.history.navigate('todo/' + newModel._id);
+                // App.history.navigate('todo/' + that.model.get('_id'));
 
                 
 
@@ -688,14 +798,20 @@ define(function(require, exports, module) {
                         // No animation by default
                         transitionOptions.inTransform = Transform.identity;
 
-                        // // Default position
-                        that.layout.content.StateModifier.setOpacity(0);
+                        that.layout.content.StateModifier.setTransform(Transform.translate(0,window.innerHeight * -1.5,0));
+                        // that.contentScrollView.Views.forEach(function(surf, index){
+                        //     surf.StateModifier.setTransform(Transform.translate(0,window.innerHeight,0));
+                        // });
 
                         // Content
+                        // - extra delay for other content to be gone
                         Timer.setTimeout(function(){
 
-                            // Bring content back
-                            that.layout.content.StateModifier.setOpacity(1, transitionOptions.inTransition);
+                            that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0),{
+                                duration: 450,
+                                curve: Easing.outSine
+                            });
+
 
                         }, delayShowing +transitionOptions.outTransition.duration);
 

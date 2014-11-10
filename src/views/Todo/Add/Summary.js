@@ -732,7 +732,7 @@ define(function(require, exports, module) {
                 // - todo...
 
                 // Clear history
-                App.history.eraseUntilTag('StartAddTodo');
+                App.history.eraseUntilTag('StartAdd');
 
                 // Redirect to the new Todo
                 App.history.navigate('todo/' + newModel._id);

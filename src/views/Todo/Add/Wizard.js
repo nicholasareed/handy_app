@@ -98,7 +98,7 @@ define(function(require, exports, module) {
         }
 
         this.wizard_hash = CryptoJS.SHA3(new Date().toString());
-        this.wizard_startTag = 'StartAddTodo';
+        this.wizard_startTag = 'StartAdd';
 
         // All the possible paths to use
         this.wizardPaths = {
@@ -176,7 +176,7 @@ define(function(require, exports, module) {
 
 
                 // Going back to the Dash, or back somewhere else?
-                App.history.eraseUntilTag('StartAddTodo');
+                App.history.eraseUntilTag('StartAdd');
                 App.history.navigate('event/' + that.model.get('_id'));
 
             });
