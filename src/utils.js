@@ -353,7 +353,7 @@ define(function (require) {
 
         },
 
-        Z: function(amount){
+        Z: function(amount){ // nudge
             // "nudge" the z-plane a bit
             console.log(amount / 1000000.0);
             return new StateModifier({transform: Transform.translate(0,0,amount / 1000000.0)})
@@ -380,6 +380,7 @@ define(function (require) {
         },
 
         bindSize: function(emitter, tmpView, tmpSurface){
+            // not really using this function...
             var oldSize = null;
             tmpView.getSize = function(){
                 // console.log(tmpSurface._size);

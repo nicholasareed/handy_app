@@ -244,6 +244,65 @@ define(function(require, exports, module) {
             App.history.navigate('inbox/' + that.profile_id);
         });
 
+        // quick invite
+        this.headerContent.Invite = new Surface({
+            content: '<i class="icon ion-ios7-chatboxes"></i>',
+            size: [60, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.Invite.on('longtap', function(){
+            Utils.Help('User/View/Message');
+        });
+        this.headerContent.Invite.on('click', function(){
+            // Fetch an Invite Code and send it to somebody
+
+            // If looking at somebody else, then send THEM an invite code
+            // - v2...
+
+            Utils.Notification.Toast('Fetching Code');
+
+            // Create Model
+            var newRCode = new RelationshipCodeModel.RelationshipCode({
+                modelType: 'add_friend'
+            })
+
+            // Wait for model to be populated before loading Surfaces
+            newRCode.populated().then(function(){
+
+                Utils.Popover.Buttons({
+                    title: 'Unique Friend Invite Code',
+                    text: 'Give the unique code <strong>'+S(newRCode.get('code'))+'</strong> to another OddJob user who you want to connect with.',
+                    buttons: [{
+                        text: 'Send via SMS',
+                        success: function(){
+                            var sentence = "Try out OddJob! I'm on it now. theoddjobapp.com/i/" + newRCode.get('code');
+                            window.plugins.socialsharing.shareViaSMS(sentence, '', function(msg) {console.log('ok: ' + msg)}, function(msg) {Utils.Notification.Toast('error: ' + msg)})
+                        }
+                    },{
+                        text: 'Send via Email',
+                        success: function(){
+                            // https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin
+                            var sentence = "Try out OddJob! I'm on it now. theoddjobapp.com/i/" + newRCode.get('code');
+                            window.plugins.socialsharing.shareViaEmail(sentence, 'Join me on OddJob!', null, null, null, null, function(msg) {console.log('ok: ' + msg)}, function(msg) {Utils.Notification.Toast('error: ' + msg)})
+                        }
+                    },{
+                        text: 'Copy to Clipboard',
+                        success: function(){
+                            Utils.Clipboard.copyTo('Try out OddJob at theoddjobapp.com/i/' + newRCode.get('code'));
+                        }
+                    }]
+                });
+
+                // var nada = prompt('Code has been copied','get handy at handyapp.com/i/' + newRCode.get('code'));
+
+                // var sentence = "get handy! I'm on it now. handyapp.com/i/" + newRCode.get('code');
+                // console.log(sentence);
+                // window.plugins.socialsharing.shareViaSMS(sentence, phone_number, function(msg) {console.log('ok: ' + msg)}, function(msg) {Utils.Notification.Toast('error: ' + msg)})
+
+            });
+            newRCode.fetch();
+
+        });
 
         // - search (always visible)
         this.headerContent.Search = new Surface({
@@ -976,7 +1035,8 @@ define(function(require, exports, module) {
             } else {
 
                 
-                that.headerContent.Right.Lightbox.show(that.headerContent.Message);
+                // that.headerContent.Right.Lightbox.show(that.headerContent.Message);
+                that.headerContent.Right.Lightbox.hide();
                 that.headerContent.Middle.Lightbox.hide();
 
                 // that.header.navBar.back.setSize([20,undefined]);

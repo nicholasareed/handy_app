@@ -421,8 +421,14 @@
   font-family: Helvetica, sans-serif;
 
   line-height: 30px;
-  font-size: 24px;
-  padding: 8px 10px;
+  font-size: 16px;
+  padding: 8px 0 8px 10px;
+}
+
+.todo-view-details-default {
+  line-height: 20px;
+  font-size: 14px;
+  padding: 8px 10px; 
 }
 
 .todo-view-tags-default {
@@ -470,8 +476,8 @@
 
 .todo-view-assigned-default {
   padding: 8px;
-  font-size: 18px;
-  line-height: 24px;
+  font-size: 14px;
+  line-height: 18px;
 }
 
 .todo-view-assigned-default.notassigned {
@@ -486,8 +492,8 @@
 .todo-view-owner-default {
   padding: 8px;
 
-  font-size: 18px;
-  line-height: 24px;
+  font-size: 14px;
+  line-height: 18px;
 
   border-bottom: 1px solid #ddd;
 }
@@ -500,6 +506,18 @@
   font-weight: bold;
 }
 
+
+/* Minimized Todo Bar */
+
+.todo-view-minimized-employer-default,
+.todo-view-minimized-assigned-default {
+  text-align: center;
+}
+.todo-view-minimized-employer-default i,
+.todo-view-minimized-assigned-default i {
+  font-size: 24px;
+  line-height: 50px;
+} 
 
 
 /* TodoContent */

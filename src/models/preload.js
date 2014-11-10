@@ -42,7 +42,6 @@ define(function(require, exports, module) {
                 App.Views.MainFooter.Tabs.buttons[0].setOptions({
                     content: '<i class="icon ion-android-lightbulb"></i><div><span class="ellipsis-all">'+App.Data.TodoCollection.totalResults+' Jobs</span></div>'
                 });
-                App.Data.TodoCollection.totalResults;
             });
             App.Data.TodoCollection.fetch();
 
@@ -58,7 +57,6 @@ define(function(require, exports, module) {
                 App.Views.MainFooter.Tabs.buttons[1].setOptions({
                     content: '<i class="icon ion-social-usd"></i><div><span class="ellipsis-all">'+App.Data.InvoiceCollection.totalResults+' Invoices</span></div>'
                 });
-                App.Data.InvoiceCollection.totalResults;
             });
             App.Data.InvoiceCollection.fetch();
 
@@ -82,10 +80,10 @@ define(function(require, exports, module) {
                 }
             });
             App.Data.MessageCollection.on('sync', function(){
-                App.Views.MainFooter.Tabs.buttons[2].setOptions({
-                    content: '<i class="icon ion-android-inbox"></i><div><span class="ellipsis-all">'+App.Data.MessageCollection.totalResults+' Msgs</span></div>'
-                });
-                App.Data.MessageCollection.totalResults;
+                // App.Views.MainFooter.Tabs.buttons[2].setOptions({
+                //     content: '<i class="icon ion-android-inbox"></i><div><span class="ellipsis-all">'+App.Data.MessageCollection.totalResults+' Msgs</span></div>'
+                // });
+                // App.Data.MessageCollection.totalResults;
             });
             App.Data.MessageCollection.fetch();
 

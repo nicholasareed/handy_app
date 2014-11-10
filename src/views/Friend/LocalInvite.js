@@ -135,14 +135,9 @@ define(function(require, exports, module) {
             newRCode.populated().then(function(){
 
                 Utils.Popover.Buttons({
-                    title: 'Unique Code Created',
+                    title: 'Unique Friend Invite Code',
                     text: 'Give the unique code <strong>'+S(newRCode.get('code'))+'</strong> to another OddJob user who you want to connect with.',
                     buttons: [{
-                        text: 'Copy the Code',
-                        success: function(){
-                            Utils.Clipboard.copyTo('Try out OddJob at theoddjobapp.com/i/' + newRCode.get('code'));
-                        }
-                    },{
                         text: 'Send via SMS',
                         success: function(){
                             var sentence = "Try out OddJob! I'm on it now. theoddjobapp.com/i/" + newRCode.get('code');
@@ -154,6 +149,11 @@ define(function(require, exports, module) {
                             // https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin
                             var sentence = "Try out OddJob! I'm on it now. theoddjobapp.com/i/" + newRCode.get('code');
                             window.plugins.socialsharing.shareViaEmail(sentence, 'Join me on OddJob!', null, null, null, null, function(msg) {console.log('ok: ' + msg)}, function(msg) {Utils.Notification.Toast('error: ' + msg)})
+                        }
+                    },{
+                        text: 'Copy to Clipboard',
+                        success: function(){
+                            Utils.Clipboard.copyTo('Try out OddJob at theoddjobapp.com/i/' + newRCode.get('code'));
                         }
                     }]
                 });

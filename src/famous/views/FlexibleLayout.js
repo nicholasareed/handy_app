@@ -14,6 +14,9 @@ define(function(require, exports, module) {
     var EventHandler = require('famous/core/EventHandler');
     var Transitionable = require('famous/transitions/Transitionable');
 
+
+    var Timer = require('famous/utilities/Timer');
+
     /**
      * A layout which divides a context into sections based on a proportion
      *   of the total sum of ratios.  FlexibleLayout can either lay renderables
@@ -175,6 +178,9 @@ define(function(require, exports, module) {
         if (currRatios.isActive()) currRatios.halt();
         currRatios.set(ratios, transition, callback);
         this._ratiosDirty = true;
+    };
+    FlexibleLayout.prototype.updateRatios = function updateRatios(ratios, transition, callback) {
+        this.setRatios(this.options.ratios);
     };
 
     /**

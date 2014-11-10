@@ -35,6 +35,7 @@ define(function(require, exports, module) {
     var StandardHeader = require('views/common/StandardHeader');
     var StandardTabBar = require('views/common/StandardTabBar');
     var SmartSurface = require('views/common/SmartSurface');
+    var LayoutBuilder = require('views/common/LayoutBuilder');
 
     // Extras
     var Utils = require('utils');
@@ -91,8 +92,8 @@ define(function(require, exports, module) {
             // debugger;
 
             // Show user information
-            that.contentLightbox.show(that.contentScrollView);
-            console.log(that.contentScrollView.Views);
+            that.contentLightbox.show(that.PageLayout);
+            console.log(that.PageLayout.Views);
 
             // // Show Certify, Certified, or Nothing
             // // - determine is_me
@@ -472,12 +473,18 @@ define(function(require, exports, module) {
         var that = this;
 
         // create the content
-        this.contentScrollView = new ScrollView(App.Defaults.ScrollView);
-        this.contentScrollView.Views = [];
-        this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
+        this.PageLayout = new LayoutBuilder({
+            size: [undefined, undefined],
+            flexible: {
+                direction: 1, // vertical
+                ratios: [true, 1, true],
+                sequenceFrom: []
+            }
+        });
+        this.PageLayout.Views = [];
 
         // // Pipe edgeHit (bottom) to next_page
-        // this.contentScrollView.on('edgeHit', function(data){
+        // this.PageLayout.on('edgeHit', function(data){
         //     var position = parseInt(this.getPosition(), 10);
         //     if(that.lastEdgeHit == position){
         //         return;
@@ -492,152 +499,342 @@ define(function(require, exports, module) {
         //     // // Probably all good to try and update
         //     // that.PlayerGameListView.next_page.call(that.PlayerGameListView);
         // });
+        
+        this.createDetailsHolder();
+        this.createTopBarLayout();
+        this.createTopBarMinimized();
+        this.createTopBarMaximized();
+        this.createTodoContent();
 
-        // top of game
-        // - Sport Name
-        // - if I have it starred (todo)
-        // - if I need to certify
+        // this.PageLayout.flexible.Views = [];
 
-        this.todoLayout = new View();
-        this.todoLayout.Layout = new FlexibleLayout({
-            direction: 1, // y, vertical
-            ratios: [true, 1, true]
+
+        this.PageLayout.flexible.sequenceFrom(this.PageLayout.Views);
+
+        // Content state modifier
+        this.ContentStateModifier = new StateModifier();
+
+        // Content Lightbox
+        // - waiting for the user to load a bit
+        this.contentLightbox = new RenderController();
+        // this.contentLightbox.getSize = function(){
+        //     return 
+        // }
+        this.loadingUser = new View();
+        this.loadingUser.StateModifier = new StateModifier({
+            origin: [0.5, 0.5]
         });
+        this.loadingUser.Surface = new Surface({
+            content: '<i class="icon ion-loading-c"></i>',
+            size: [true, true],
+            properties: {
+                fontSize: "40px",
+                textAlign: "center",
+                color: "#444",
+                lineHeight: "50px"
+            }
+        });
+        this.loadingUser.add(this.loadingUser.StateModifier).add(this.loadingUser.Surface);
+        this.contentLightbox.show(this.loadingUser);
 
-        var emitter = new EventHandler();
+        // this.layout.content.add(this.ContentStateModifier).add(this.mainNode);
+        this.layout.content.add(this.ContentStateModifier).add(this.contentLightbox);
 
-        this.todoLayout.Layout.Views = [];
+    };
 
-        // Details
-        this.todoDetails = new View();
-        this.todoDetails.BgSurface = new Surface({
+    PageView.prototype.createDetailsHolder = function(){
+        var that = this;
+
+        this.DetailsHolder = new RenderController({
+            showingSize: true
+        });
+        this.DetailsHolder.Bg = new Surface({
             size: [undefined, undefined],
             properties: {
-                backgroundColor: 'rgba(250,250,250,0.8)'
+                backgroundColor: 'rgba(29,123,180,0.2)'
             }
         });
-        this.todoDetails.SeqLayout = new SequentialLayout();
-        this.todoDetails.Views = [];
 
-        // Title
-        this.todoDetails.Title = new View();
-        this.todoDetails.Title.Surface = new Surface({
-            content: 'title content',
-            size: [window.innerWidth, true],
-            classes: ['todo-view-title-default']
-        });
-        // Utils.bindSize(emitter, this.todoDetails.Title, this.todoDetails.Title.Surface);
-        this.todoDetails.Title.add(this.todoDetails.Title.Surface);
-        this.todoDetails.Views.push(this.todoDetails.Title.Surface);
-
-        // Assign/delegate to someone
-        this.todoDetails.Assigned = new View();
-        this.todoDetails.Assigned.Surface = new Surface({
-            content: '',
-            size: [window.innerWidth, true],
-            classes: ['todo-view-assigned-default']
-        });
-        this.todoDetails.Assigned.Surface.on('click', function(){
-            // // Redo assignment
-            // if(that.model.get('assigned_id')){
-            //     // already assigned!
-            //     // - visit that person
-            //     App.history.navigate('user/' + that.model.get('assigned_id._id'));
-            //     return;
-            // }
-
-            App.history.modifyLast({
-                tag: 'StartAssign'
-            });
-            App.history.navigate('todo/assign/' + that.model.get('_id'));
-        });
-
-        // Utils.bindSize(emitter, this.todoDetails.Assigned, this.todoDetails.Assigned.Surface);
-        this.todoDetails.Assigned.add(this.todoDetails.Assigned.Surface);
-        this.todoDetails.Views.push(this.todoDetails.Assigned.Surface);
-
-        // owner
-        this.todoDetails.Owner = new View();
-        this.todoDetails.Owner.Surface = new Surface({
-            content: '',
-            size: [window.innerWidth, true],
-            classes: ['todo-view-owner-default'],
-            properties: {
-                borderBottom: "1px solid #ddd;"
-            }
-        });
-        this.todoDetails.Owner.Surface.on('click', function(){
-            // // Redo owner
-            // if(that.model.get('owner_id') && that.model.get('owner_id._id') != App.Data.User.get('_id')){
-            //     // already changed owner!
-            //     // - visit that person
-            //     App.history.navigate('user/' + that.model.get('owner_id._id'));
-            //     return;
-            // }
-
-            App.history.modifyLast({
-                tag: 'StartOwner'
-            });
-            App.history.navigate('todo/owner/' + that.model.get('_id'));
-        });
-
-        // Utils.bindSize(emitter, this.todoDetails.Owner, this.todoDetails.Owner.Surface);
-        this.todoDetails.Owner.add(this.todoDetails.Owner.Surface);
-        this.todoDetails.Views.push(this.todoDetails.Owner.Surface);
-
-
-        // // Tags
-        // this.todoDetails.Tags = new View();
-        // this.todoDetails.Tags.Surface = new Surface({
-        //     content: 'no tags',
-        //     size: [window.innerWidth, true],
-        //     classes: ['todo-view-tags-default']
-        // });
-        // this.todoDetails.Tags.Surface.on('click', function(){
-        //     Utils.Popover.Buttons({
-        //         title: 'Add/Remove Tags',
-        //         buttons: [{
-        //             text: 'Add Tag'
-        //         }]
-        //     });
-        // });
-        // // Utils.bindSize(emitter, this.todoDetails.Title, this.todoDetails.Title.Surface);
-        // this.todoDetails.Tags.add(this.todoDetails.Tags.Surface);
-        // this.todoDetails.Views.push(this.todoDetails.Tags.Surface);
-
-
-
-        this.todoDetails.getSize = function(){
-            var tmpH = 1;
-            that.todoDetails.Views.forEach(function(tmp){
-                if(tmp._trueSize){
-                    tmpH += tmp._trueSize[1];
-                }
-            });
-            return [undefined, tmpH ? tmpH : undefined];
+        this.DetailsHolder.View = new View();
+        this.DetailsHolder.View.getSize = function(val){
+            return that.DetailsHolder.getSize(val);
         }
+        this.DetailsHolder.View.add(Utils.usePlane('content',1)).add(this.DetailsHolder.Bg);
+        this.DetailsHolder.View.add(Utils.usePlane('content',2)).add(this.DetailsHolder);
 
-        this.todoDetails.SeqLayout.sequenceFrom(this.todoDetails.Views);
-        emitter.on('newsize', function(){
-            console.info('resyncing!');
-            that.todoDetails.SeqLayout.sequenceFrom(that.todoDetails.Views);
+        this.PageLayout.Views.push(this.DetailsHolder.View);
+
+    };
+
+    PageView.prototype.createTopBarLayout = function(){
+        var that = this;
+
+
+    };
+
+    PageView.prototype.createTopBarMinimized = function(){
+        var that = this;
+
+        this.TopBarMinimized = new LayoutBuilder({
+            size: [undefined, 50],
+            flexible: {
+                direction: 0, // horizontal
+                ratios: [1, true, true],
+                sequenceFrom: [{
+                    surface: {
+                        Title: new Surface({
+                            content: '',
+                            wrap: '<div class="ellipsis-all"></div>',
+                            size: [undefined, undefined],
+                            classes: ['todo-view-title-default']
+                        }),
+                        click: function(){
+                            that.DetailsHolder.show(that.TopBarMaximized);
+                            that.PageLayout.flexible.updateRatios();
+                        }
+                    }
+                },{
+                    surface: {
+                        Employer: new Surface({
+                            content: '<i class="icon ion-person"></i>',
+                            size: [50, undefined],
+                            classes: ['todo-view-minimized-employer-default']
+                        }),
+                        click: function(){
+                            that.DetailsHolder.show(that.TopBarMaximized);
+                            that.PageLayout.flexible.updateRatios();
+                        }
+                    }
+                },{
+                    surface: {
+                        Assigned: new Surface({
+                            content: '<i class="icon ion-person"></i>',
+                            size: [50, undefined],
+                            classes: ['todo-view-minimized-assigned-default']
+                        }),
+                        click: function(){
+                            that.DetailsHolder.show(that.TopBarMaximized);
+                            that.PageLayout.flexible.updateRatios();
+                        }
+                    }
+                },
+                // {
+                //     surface: {
+                //         Maximize: new Surface({
+                //             content: '<i class="icon ion-arrow-expand"></i>',
+                //             size: [50, undefined]
+                //         }),,
+                //         click: function(){
+                //             that.DetailsHolder.show(that.TopBarMaximized);
+                //             that.PageLayout.flexible.updateRatios();
+                //         }
+                //     }
+                // }
+                ]
+            }
         });
 
-        this.todoDetails.add(Utils.usePlane('content',1)).add(this.todoDetails.BgSurface);
-        this.todoDetails.add(Utils.usePlane('content',2)).add(this.todoDetails.SeqLayout);
-        this.todoLayout.Layout.Views.push(this.todoDetails);
+        this.DetailsHolder.show(this.TopBarMinimized);
+    };
 
-        that.todoDetails.Views.forEach(function(tmp){
-            tmp.on('deploy', function(){
-                console.log('deployed, ratios setting');
-                that.todoLayout.Layout.setRatios([true, 1, true]);                
-            });
-            // tmp._eventOutput.on('deploy', function(){
-            //     console.log('deployed, ratios setting2');
-            //     that.todoLayout.Layout.setRatios([true, 1, true]);                
-            // });
+    PageView.prototype.createTopBarMaximized = function(){
+        var that = this;
+
+        this.TopBarMaximized = new LayoutBuilder({
+            // size: [undefined, 60],
+            // size: function(){
+            //     return [undefined, this.TopBarMaximized];
+            // },
+            sequential: {
+                sequenceFrom: [{
+                    surface: {
+                        Title: new Surface({
+                            content: 'title',
+                            size: [window.innerWidth, true],
+                            classes: ['todo-view-title-default']
+                        }),
+                        click: function(){
+                            that.DetailsHolder.show(that.TopBarMinimized);
+                            that.PageLayout.flexible.updateRatios();
+                        }
+                    }
+                },{
+                    surface: {
+                        Owner: new Surface({
+                            content: 'assigned content',
+                            size: [window.innerWidth, true],
+                            classes: ['todo-view-owner-default']
+                        }),
+                        click: function(){
+                            alert(2);
+                        }
+                    }
+                },{
+                    surface: {
+                        Assigned: new Surface({
+                            content: 'title content',
+                            size: [window.innerWidth, true],
+                            classes: ['todo-view-assigned-default']
+                        })
+                    }
+                },{
+                    surface: {
+                        Details: new Surface({
+                            content: 'details',
+                            size: [window.innerWidth, true],
+                            classes: ['todo-view-details-default']
+                        }),
+                        click: function(){
+                            that.DetailsHolder.show(that.TopBarMinimized);
+                            that.PageLayout.flexible.updateRatios();
+                        }
+                    }
+                }]
+            }
         });
 
+        // this.DetailsHolder.show(this.TopBarMinimized);
+    };
+
+    // PageView.prototype.createTopBarMaximized_old = function(){
+    //     var that = this;
+
+    //     this.todoLayout = new View();
+    //     this.todoLayout.Layout = new FlexibleLayout({
+    //         direction: 1, // y, vertical
+    //         ratios: [true, 1, true]
+    //     });
+
+    //     this.todoLayout.Layout.Views = [];
+
+    //     // top of todo
+
+    //     // Details
+    //     this.TopBarMaximized = new View();
+    //     this.TopBarMaximized.BgSurface = new Surface({
+    //         size: [undefined, undefined],
+    //         properties: {
+    //             backgroundColor: 'rgba(250,250,250,0.8)'
+    //         }
+    //     });
+    //     this.TopBarMaximized.SeqLayout = new SequentialLayout();
+    //     this.TopBarMaximized.Views = [];
+
+    //     // Title
+    //     this.TopBarMaximized.Title = new View();
+    //     this.TopBarMaximized.Title.Surface = new Surface({
+    //         content: 'title content',
+    //         size: [window.innerWidth, true],
+    //         classes: ['todo-view-title-default']
+    //     });
+    //     this.TopBarMaximized.Title.add(this.TopBarMaximized.Title.Surface);
+    //     this.TopBarMaximized.Views.push(this.TopBarMaximized.Title.Surface);
+
+    //     // Assign/delegate to someone
+    //     this.TopBarMaximized.Assigned = new View();
+    //     this.TopBarMaximized.Assigned.Surface = new Surface({
+    //         content: '',
+    //         size: [window.innerWidth, true],
+    //         classes: ['todo-view-assigned-default']
+    //     });
+    //     this.TopBarMaximized.Assigned.Surface.on('click', function(){
+    //         // // Redo assignment
+    //         // if(that.model.get('assigned_id')){
+    //         //     // already assigned!
+    //         //     // - visit that person
+    //         //     App.history.navigate('user/' + that.model.get('assigned_id._id'));
+    //         //     return;
+    //         // }
+
+    //         App.history.modifyLast({
+    //             tag: 'StartAssign'
+    //         });
+    //         App.history.navigate('todo/assign/' + that.model.get('_id'));
+    //     });
+
+    //     this.TopBarMaximized.Assigned.add(this.TopBarMaximized.Assigned.Surface);
+    //     this.TopBarMaximized.Views.push(this.TopBarMaximized.Assigned.Surface);
+
+    //     // owner
+    //     this.TopBarMaximized.Owner = new View();
+    //     this.TopBarMaximized.Owner.Surface = new Surface({
+    //         content: '',
+    //         size: [window.innerWidth, true],
+    //         classes: ['todo-view-owner-default'],
+    //         properties: {
+    //             borderBottom: "1px solid #ddd;"
+    //         }
+    //     });
+    //     this.TopBarMaximized.Owner.Surface.on('click', function(){
+    //         // // Redo owner
+    //         // if(that.model.get('owner_id') && that.model.get('owner_id._id') != App.Data.User.get('_id')){
+    //         //     // already changed owner!
+    //         //     // - visit that person
+    //         //     App.history.navigate('user/' + that.model.get('owner_id._id'));
+    //         //     return;
+    //         // }
+
+    //         App.history.modifyLast({
+    //             tag: 'StartOwner'
+    //         });
+    //         App.history.navigate('todo/owner/' + that.model.get('_id'));
+    //     });
+
+    //     this.TopBarMaximized.Owner.add(this.TopBarMaximized.Owner.Surface);
+    //     this.TopBarMaximized.Views.push(this.TopBarMaximized.Owner.Surface);
+
+
+    //     // // Tags
+    //     // this.TopBarMaximized.Tags = new View();
+    //     // this.TopBarMaximized.Tags.Surface = new Surface({
+    //     //     content: 'no tags',
+    //     //     size: [window.innerWidth, true],
+    //     //     classes: ['todo-view-tags-default']
+    //     // });
+    //     // this.TopBarMaximized.Tags.Surface.on('click', function(){
+    //     //     Utils.Popover.Buttons({
+    //     //         title: 'Add/Remove Tags',
+    //     //         buttons: [{
+    //     //             text: 'Add Tag'
+    //     //         }]
+    //     //     });
+    //     // });
+    //     // this.TopBarMaximized.Tags.add(this.TopBarMaximized.Tags.Surface);
+    //     // this.TopBarMaximized.Views.push(this.TopBarMaximized.Tags.Surface);
+
+
+
+    //     this.TopBarMaximized.getSize = function(){
+    //         var tmpH = 1;
+    //         that.TopBarMaximized.Views.forEach(function(tmp){
+    //             if(tmp._trueSize){
+    //                 tmpH += tmp._trueSize[1];
+    //             }
+    //         });
+    //         return [undefined, tmpH ? tmpH : undefined];
+    //     }
+
+    //     this.TopBarMaximized.SeqLayout.sequenceFrom(this.TopBarMaximized.Views);
+
+    //     this.TopBarMaximized.add(Utils.usePlane('content',1)).add(this.TopBarMaximized.BgSurface);
+    //     this.TopBarMaximized.add(Utils.usePlane('content',2)).add(this.TopBarMaximized.SeqLayout);
+    //     this.todoLayout.Layout.Views.push(this.TopBarMaximized);
+
+    //     that.TopBarMaximized.Views.forEach(function(tmp){
+    //         tmp.on('deploy', function(){
+    //             console.log('deployed, ratios setting');
+    //             that.todoLayout.Layout.setRatios([true, 1, true]);                
+    //         });
+    //         // tmp._eventOutput.on('deploy', function(){
+    //         //     console.log('deployed, ratios setting2');
+    //         //     that.todoLayout.Layout.setRatios([true, 1, true]);                
+    //         // });
+    //     });
+
+    // };
+
+    PageView.prototype.createTodoContent = function(){
+        var that = this;
 
         // Content
         this.todoContent = new TodoContentView({
@@ -646,19 +843,15 @@ define(function(require, exports, module) {
         this._subviews.push(this.todoContent);
         this.todoContent.View = new View();
         this.todoContent.View.add(Utils.usePlane('content')).add(this.todoContent);
-        this.todoLayout.Layout.Views.push(this.todoContent.View);
+        // this.todoLayout.Layout.Views.push(this.todoContent.View);
 
 
-        // Sequence everything
-        this.todoLayout.Layout.sequenceFrom(this.todoLayout.Layout.Views);
-        emitter.on('newsize', function(){
-            console.info('resyncing!');
-            that.todoLayout.Layout.setRatios([true, 1, true]);
-        });
+        // // Sequence everything
+        // this.todoLayout.Layout.sequenceFrom(this.todoLayout.Layout.Views);
 
-        this.todoLayout.add(this.todoLayout.Layout);
+        // this.todoLayout.add(this.todoLayout.Layout);
 
-        this.contentScrollView.Views.push(this.todoLayout);
+        this.PageLayout.Views.push(this.todoContent.View);
 
 
         // OptionButtons (add text, etc.)
@@ -734,38 +927,7 @@ define(function(require, exports, module) {
         });
         this.todoButtons.add(Utils.usePlane('content',1)).add(this.todoButtons.ButtonSurface);
 
-        this.todoLayout.Layout.Views.push(this.todoButtons);
-
-
-
-        // Content state modifier
-        this.ContentStateModifier = new StateModifier();
-
-        // Content Lightbox
-        // - waiting for the user to load a bit
-        this.contentLightbox = new RenderController();
-        // this.contentLightbox.getSize = function(){
-        //     return 
-        // }
-        this.loadingUser = new View();
-        this.loadingUser.StateModifier = new StateModifier({
-            origin: [0.5, 0.5]
-        });
-        this.loadingUser.Surface = new Surface({
-            content: '<i class="icon ion-loading-c"></i>',
-            size: [true, true],
-            properties: {
-                fontSize: "40px",
-                textAlign: "center",
-                color: "#444",
-                lineHeight: "50px"
-            }
-        });
-        this.loadingUser.add(this.loadingUser.StateModifier).add(this.loadingUser.Surface);
-        this.contentLightbox.show(this.loadingUser);
-
-        // this.layout.content.add(this.ContentStateModifier).add(this.mainNode);
-        this.layout.content.add(this.ContentStateModifier).add(this.contentLightbox);
+        this.PageLayout.Views.push(this.todoButtons);
 
     };
 
@@ -984,8 +1146,14 @@ define(function(require, exports, module) {
         if(that.model != undefined && that.model.hasFetched){
             // pass
 
+            console.log(this.TopBarMaximized);
+
             // title
-            this.todoDetails.Title.Surface.setContent(that.model.get('title'));
+            this.TopBarMaximized.sequential.Title.setContent(that.model.get('title'));
+
+            // title;
+            // this.TopBarMaximized.Title.Surface.setContent(that.model.get('title'));
+            this.TopBarMinimized.flexible.Title.setContent(that.model.get('title'));
 
             console.info('update_content');
             console.log(that.model.get('tags'));
@@ -1026,140 +1194,38 @@ define(function(require, exports, module) {
             //         tagContent += 'no tags';
             //     tagContent += '</div>';
             // }
-            // this.todoDetails.Tags.Surface.setContent(tagContent);
+            // this.TopBarMaximized.Tags.Surface.setContent(tagContent);
 
             // assigned
             if(that.model.get('assigned_id')){
                 // assigned to someone
-                this.todoDetails.Assigned.Surface.setContent('assigned: ' + that.model.get('assigned_id.profile.name'));
-                this.todoDetails.Assigned.Surface.setClasses(['todo-view-assigned-default','assigned']);
+                this.TopBarMaximized.sequential.Assigned.setContent('assigned: ' + that.model.get('assigned_id.profile.name'));
+                this.TopBarMaximized.sequential.Assigned.setClasses(['todo-view-assigned-default','assigned']);
             } else {
                 // Not assigned
-                this.todoDetails.Assigned.Surface.setContent('not assigned');
-                this.todoDetails.Assigned.Surface.setClasses(['todo-view-assigned-default','notassigned']);
+                this.TopBarMaximized.sequential.Assigned.setContent('not assigned');
+                this.TopBarMaximized.sequential.Assigned.setClasses(['todo-view-assigned-default','notassigned']);
             }
 
             // owner
             if(that.model.get('owner_id')){
                 // assigned to someone
                 if(that.model.get('owner_id.profile')){
-                    this.todoDetails.Owner.Surface.setContent('employer: ' + that.model.get('owner_id.profile.name'));
+                    this.TopBarMaximized.sequential.Owner.setContent('employer: ' + that.model.get('owner_id.profile.name'));
                 } else {
-                    this.todoDetails.Owner.Surface.setContent('employer: <span data-replace-id="' + that.model.get('owner_id') + '" data-replace-model="Profile" data-replace-target="profile.name"/>&nbsp;</span>');
-                    Utils.dataModelReplaceOnSurface(this.todoDetails.Owner.Surface);
+                    this.TopBarMaximized.sequential.Owner.setContent('employer: <span data-replace-id="' + that.model.get('owner_id') + '" data-replace-model="Profile" data-replace-target="profile.name"/>&nbsp;</span>');
+                    Utils.dataModelRepsequential.laceO(this.TopBarMaximized.sequential.Owner);
                 }
-                this.todoDetails.Owner.Surface.setClasses(['todo-view-owner-default','has_owner']);
+                this.TopBarMaximized.sequential.Owner.setClasses(['todo-view-owner-default','has_owner']);
             } else {
                 // No owner at the moment
-                this.todoDetails.Owner.Surface.setContent('');
-                this.todoDetails.Owner.Surface.setClasses(['todo-view-owner-default','no_owner']);
-                this.todoDetails.Owner.Surface.setSize([undefined,1]);
+                this.TopBarMaximized.sequential.Owner.setContent('');
+                this.TopBarMaximized.sequential.Owner.setClasses(['todo-view-owner-default','no_owner']);
+                this.TopBarMaximized.sequential.Owner.setSize([undefined,1]);
             }
 
-            return;
-
-
-            // datetime
-            this.gameLeft.GameDatetime.Surface.setContent(moment(that.model.get('created')).format('MMMM Do'));
-
-            // starred
-            // - is one of my Player_ids in the Stars ?
-            // - also can check my user_id
-            // console.log(_.pluck(this.model.get('Star'),'user_id'));
-            // debugger;
-            var StarTotal = that.model.get('StarTotal');
-            that.isStarred = false;
-            console.log(_.pluck(that.model.get('Star'),'user_id'));
-            if(_.pluck(that.model.get('Star'),'user_id').indexOf(App.Data.User.get('_id')) !== -1){
-                that.isStarred = true;
-                // debugger;
-                that.gameLeft.Starred.Surface.setContent('<i class="icon ion-ios7-star"></i><span>'+StarTotal+'</span>');
-            } else {
-                that.gameLeft.Starred.Surface.setContent('<i class="icon ion-ios7-star-outline"></i><span>'+StarTotal+'</span>');
-            }
-
-            // Certified?
-            var myResult = that.GetMyResult();
-            if(myResult !== false){
-                switch(myResult.certified){
-                    case false:
-                        this.gameLeft.CertifyLayout.show(this.gameLeft.CertifiedFalse);
-                        break;
-                    case null:
-                        this.gameLeft.CertifyLayout.show(this.gameLeft.CertifyNull);
-                        break;
-                    case true:
-                        this.gameLeft.CertifyLayout.show(this.gameLeft.CertifiedTrue);
-                        break;
-
-                }
-            }
-            
-            // // Profile Photo
-            // if(that.model.get('profilephoto.urls')){
-            //     this.gameLeft.ProfileImage.Surface.setContent(that.model.get('profilephoto.urls.thumb100x100'));
-            // } else {
-            //     this.gameLeft.ProfileImage.Surface.setContent('img/generic-profile.png');
-            // }
-
-            // // username (header)
-            // // - using "email" for now
-            // if(that.model.get('Profile.email') !== false){
-            //     // this.gameLeft.ProfileName.setContent(that.model.get('Profile.name'));
-            //     that.header.navBar.title.setContent(that.model.get('Profile.email') ? that.model.get('Profile.email').split('@')[0].split('+')[0] : '');
-            // } else {
-            //     // not me
-            //     // - no email set
-            //     // - not showing any name for them
-            //     that.header.navBar.title.setContent('');
-            //     // that.header.navBar.title.setContent(that.model.get('Profile.email') ? that.model.get('email').split('@')[0].split('+')[0] : '');
-            // }
-
-            // // back button
-            // if(that.is_me === true){
-            //     // no back button
-            // } else {
-            //     that.header.navBar.back.setSize([20,undefined]);
-            //     that.header.navBar.back.setContent('<i class="icon ion-android-arrow-back"></i>');
-            //     // that.header.navBar.title.setContent(that.model.get('email').split('@')[0].split('+')[0]);
-            // }
 
         }
-
-        // // Total results/places
-        // if(that.stats_collection != undefined && that.stats_collection.hasFetched){
-        //     // Summary/stat surfaces (update)
-
-        //     // wins
-        //     that.profileRight.OverallRecord.Left.setContent('<div>'+that.stats_collection.summary[that.player_id].w+'</div><div>wins</div>');
-        //     // winning percentage
-        //     that.profileRight.OverallRecord.LeftMiddle.setContent('<div>'+numeral(that.stats_collection.summary[that.player_id].wp).format('.000')+'</div><div>Win %</div>');
-        //     // 1st place
-        //     that.profileRight.OverallRecord.Middle.setContent('<div>'+that.stats_collection.summary[that.player_id]['1']+'</div><div>1st</div>');
-
-
-        //     // _.each(that.stats_collection.summary[that.player_id], function(value, key){
-        //     //     var tmpKey = '';
-        //     //     switch(key){
-        //     //         case "1":
-        //     //         case "2":
-        //     //         case "3":
-        //     //             tmpKey = numeral(key).format('0o');
-        //     //             break;
-        //     //         case "4":
-        //     //             tmpKey = numeral(key).format('0o') + '+';
-        //     //             break;
-
-        //     //         case "w":
-        //     //         case "l":
-        //     //         case "t":
-        //     //             tmpKey = key.toUpperCase();
-        //     //             break;
-        //     //     }
-        //     //     that.GridSurfacesTotal[key].setContent(tmpKey + ': ' + value.toString());
-        //     // });
-
-        // }
 
     };
 

@@ -38,6 +38,25 @@ define(function(require, exports, module) {
         this._modifiers = [];
         this._states = [];
 
+        if(this.options.showingSize === true){
+            this.getSize = (function(){
+                if(this._showing == -1){
+                    console.log(['fundefined', undefined]);
+                    return [undefined, undefined]; // true, true
+                }
+
+                // width
+                var w = this._nodes[this._showing].getSize() ? this._nodes[this._showing].getSize()[0] : undefined;
+
+                // height
+                var h = this._nodes[this._showing].getSize() ? this._nodes[this._showing].getSize()[1] : undefined;
+                console.log(this._nodes[this._showing]);
+                console.log(this._nodes[this._showing].getSize());
+                console.log([w,h]);
+                return [w, h];
+            }).bind(this);
+        }
+
         this.inTransformMap = RenderController.DefaultMap.transform;
         this.inOpacityMap = RenderController.DefaultMap.opacity;
         this.inOriginMap = RenderController.DefaultMap.origin;
