@@ -232,36 +232,44 @@ define(function(require, exports, module) {
             window.addEventListener('native.keyboardshow', function(e){
                 // Utils.Notification.Toast('Keyboard Show');
 
-                var keyboardHeight = e.keyboardHeight;
-
-                // Has the body changed in height?
-                // if yes, set that as the keyboardHeight
-                if(App.defaultSize[1] != window.innerHeight){
-                    keyboardHeight = App.defaultSize[1] - window.innerHeight;
-                } else {
-                    // if no, use the supplied keyboardHeight
-                    switch(App.Config.devicePlatform){
-                        case 'android':
-                            keyboardHeight -= 40;
-                            break;
-                        case 'ios':
-                            break;
-                        default:
-                            break;
-                    }
-                }
-
-                App.mainSize = [App.defaultSize[0],App.defaultSize[1] - keyboardHeight];
-                App.MainContext.emit('resize');
-
-                App.KeyboardShowing = true;
-                App.Events.emit('KeyboardShowHide', true);
-
-                App.Events.emit('resize');
-
                 Timer.setTimeout(function(){
-                    window.scrollTo(0, 0);
-                    document.body.scrollTop = 0;
+                    var keyboardHeight = e.keyboardHeight;
+
+                    console.log('e',e);
+                    console.log('keyboardHeight', keyboardHeight + 0);
+
+                    // Has the body changed in height?
+                    // if yes, set that as the keyboardHeight
+                    if(App.defaultSize[1] != window.innerHeight){
+                        keyboardHeight = App.defaultSize[1] - window.innerHeight;
+                        console.log('new keyboardheight from resized window', keyboardHeight + 0);
+                    } else {
+                        console.log('resizing because the window height did NOT change');
+                        // if no, use the supplied keyboardHeight
+                        switch(App.Config.devicePlatform){
+                            case 'android':
+                                keyboardHeight -= 40;
+                                console.log('shorter android keyboard! -40');
+                                break;
+                            case 'ios':
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    App.mainSize = [App.defaultSize[0],App.defaultSize[1] - keyboardHeight];
+                    App.MainContext.emit('resize');
+
+                    App.KeyboardShowing = true;
+                    App.Events.emit('KeyboardShowHide', true);
+
+                    App.Events.emit('resize');
+
+                    Timer.setTimeout(function(){
+                        window.scrollTo(0, 0);
+                        document.body.scrollTop = 0;
+                    },28);
                 },16);
 
                 // App.mainSize = App.MainContext.getSize();
