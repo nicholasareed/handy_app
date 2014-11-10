@@ -41,7 +41,7 @@ define(function(require, exports, module) {
         if(this.options.showingSize === true){
             this.getSize = (function(){
                 if(this._showing == -1){
-                    console.log(['fundefined', undefined]);
+                    // console.log(['fundefined', undefined]);
                     return [undefined, undefined]; // true, true
                 }
 
@@ -50,9 +50,9 @@ define(function(require, exports, module) {
 
                 // height
                 var h = this._nodes[this._showing].getSize() ? this._nodes[this._showing].getSize()[1] : undefined;
-                console.log(this._nodes[this._showing]);
-                console.log(this._nodes[this._showing].getSize());
-                console.log([w,h]);
+                // console.log(this._nodes[this._showing]);
+                // console.log(this._nodes[this._showing].getSize());
+                // console.log([w,h]);
                 return [w, h];
             }).bind(this);
         }

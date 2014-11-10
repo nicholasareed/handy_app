@@ -413,7 +413,42 @@
 
 
 
+/* Todo Add */
+
+.todo-add-summary-timeframe-default {
+  padding: 10px;
+}
+
+.todo-add-summary-timeframe-default .set-timeframe {
+  text-align: center;
+  color: black;
+  line-height: 40px;
+  font-size: 16px;
+  background: rgba(0,0,0,0.1);
+}
+
+.todo-add-summary-timeframe-default .set-timeframe span {
+  font-weight: bold;
+}
+
+
 /* Todo item View */
+
+.todo-view-details-bg {
+  background: rgba(29,123,180,0.2);
+  border-bottom: 1px solid #ddd;
+
+  -webkit-border-bottom-right-radius: 2px;
+  -webkit-border-bottom-left-radius: 2px;
+  -moz-border-radius-bottomright: 2px;
+  -moz-border-radius-bottomleft: 2px;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+
+  -webkit-box-shadow: 0px 2px 2px 0px rgba(50, 50, 50, 0.75);
+  -moz-box-shadow:    0px 2px 2px 0px rgba(50, 50, 50, 0.75);
+  box-shadow:         0px 2px 2px 0px rgba(50, 50, 50, 0.75);
+}
 
 .todo-view-title-default {
   border-top: 1px solid #ddd;
@@ -429,6 +464,8 @@
   line-height: 20px;
   font-size: 14px;
   padding: 8px 10px; 
+
+  border-bottom: 1px solid #ddd;
 }
 
 .todo-view-tags-default {
@@ -495,7 +532,6 @@
   font-size: 14px;
   line-height: 18px;
 
-  border-bottom: 1px solid #ddd;
 }
 
 .todo-view-owner-default.no_owner {

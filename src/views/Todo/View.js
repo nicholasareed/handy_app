@@ -550,9 +550,7 @@ define(function(require, exports, module) {
         });
         this.DetailsHolder.Bg = new Surface({
             size: [undefined, undefined],
-            properties: {
-                backgroundColor: 'rgba(29,123,180,0.2)'
-            }
+            classes: ['todo-view-details-bg']
         });
 
         this.DetailsHolder.View = new View();
@@ -660,25 +658,6 @@ define(function(require, exports, module) {
                     }
                 },{
                     surface: {
-                        Owner: new Surface({
-                            content: 'assigned content',
-                            size: [window.innerWidth, true],
-                            classes: ['todo-view-owner-default']
-                        }),
-                        click: function(){
-                            alert(2);
-                        }
-                    }
-                },{
-                    surface: {
-                        Assigned: new Surface({
-                            content: 'title content',
-                            size: [window.innerWidth, true],
-                            classes: ['todo-view-assigned-default']
-                        })
-                    }
-                },{
-                    surface: {
                         Details: new Surface({
                             content: 'details',
                             size: [window.innerWidth, true],
@@ -687,6 +666,51 @@ define(function(require, exports, module) {
                         click: function(){
                             that.DetailsHolder.show(that.TopBarMinimized);
                             that.PageLayout.flexible.updateRatios();
+                        }
+                    }
+                },{
+                    surface: {
+                        Owner: new Surface({
+                            content: 'assigned content',
+                            size: [window.innerWidth, true],
+                            classes: ['todo-view-owner-default']
+                        }),
+                        click: function(){
+                            App.history.modifyLast({
+                                tag: 'StartOwner'
+                            });
+                            App.history.navigate('todo/owner/' + that.model.get('_id'));
+                        }
+                    }
+                },{
+                    surface: {
+                        Assigned: new Surface({
+                            content: 'title content',
+                            size: [window.innerWidth, true],
+                            classes: ['todo-view-assigned-default']
+                        }),
+                        click: function(){
+                            App.history.modifyLast({
+                                tag: 'StartAssign'
+                            });
+                            App.history.navigate('todo/assign/' + that.model.get('_id'));
+                        }
+                    }
+                },{
+                    surface: {
+                        Edit: new Surface({
+                            content: 'Modify Job Details',
+                            wrap: '<div class="outward-button"></div>',
+                            size: [window.innerWidth, true],
+                            classes: ['button-outwards-default']
+                        }),
+                        click: function(){
+                            Utils.Popover.Alert('Not Yet working','OK');
+                            return;
+                            // App.history.modifyLast({
+                            //     tag: 'StartEdit'
+                            // });
+                            // App.history.navigate('todo/edit/' + that.model.get('_id'));
                         }
                     }
                 }]
@@ -1150,10 +1174,11 @@ define(function(require, exports, module) {
 
             // title
             this.TopBarMaximized.sequential.Title.setContent(that.model.get('title'));
-
-            // title;
-            // this.TopBarMaximized.Title.Surface.setContent(that.model.get('title'));
             this.TopBarMinimized.flexible.Title.setContent(that.model.get('title'));
+
+            // details/description
+            this.TopBarMaximized.sequential.Details.setContent(that.model.get('details'));
+            // this.TopBarMinimized.flexible.Title.setContent(that.model.get('title'));
 
             console.info('update_content');
             console.log(that.model.get('tags'));

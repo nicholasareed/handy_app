@@ -292,6 +292,30 @@ define(function(require, exports, module) {
                 },
 
 
+
+
+                // Todos/Jobs
+                'todo/add/summary(/:hash)' : function(){
+                    defaultRoute('TodoAddSummary', 'Todo/Add/Summary', arguments, {cache: true});
+                },
+                'todo/add/detail(/:hash)' : function(){
+                    defaultRoute('TodoAddDetail', 'Todo/Add/Detail', arguments, {cache: true});
+                },
+                'todo/add' : function(){
+                    defaultRoute('TodoAdd', 'Todo/Add/Wizard', arguments, {cache: false});
+                },
+
+                'todo/edit/summary(/:hash)' : function(){
+                    defaultRoute('TodoEditSummary', 'Todo/Edit/Summary', arguments, {cache: true});
+                },
+                'todo/edit/detail(/:hash)' : function(){
+                    defaultRoute('TodoEditDetail', 'Todo/Edit/Detail', arguments, {cache: true});
+                },
+                'todo/edit/:id' : function(){
+                    defaultRoute('TodoEdit', 'Todo/Edit/Wizard', arguments, {cache: false});
+                },
+
+
                 'todo/list' : function(){
                     App.Views.MainFooter.route_show = true;
                     App.Views.MainFooter.Tabs.select('todos', false);

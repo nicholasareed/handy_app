@@ -60,6 +60,7 @@ define(function(require, exports, module) {
             case 'password':
             case 'text':
             case 'textarea':
+            case 'select':
                 this.createInput(options);
                 break;
 

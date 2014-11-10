@@ -105,44 +105,24 @@ define(function(require, exports, module) {
         });
         this.headerContent.Create.on('click', function(){
 
-            Utils.Popover.Prompt('Title of new Job', '', 'Create', 'Cancel').then(function(p){
-
-                if(!p || p.trim() == ''){
-                    Utils.Notification.Toast('Job NOT created');
-                    return;
-                }
-
-                Utils.Notification.Toast('Created a new Job!');
-
-                var newModel = new TodoModel.Todo({
-                    title: p.trim()
-                });
-
-                newModel.save()
-                .then(function(result){
-                    // that.ListContent.Todos.collection.fetch();
-                    that._subviews.forEach(function(sv){
-                        sv.collection.fetch();
-                    });
-
-                    App.history.navigate('todo/' + result._id);
-
-                    // // show new todos
-                    // that.headerContent.FilterSwitcher.Lightbox.show(that.headerContent.ShowTodo);
-                    // that.ListContent.show(that.ListContent.Todos);
-                    // that.ListContent.Todos.collection.fetch();
-
-                });
-
+            App.history.modifyLast({
+                tag: 'StartAddTodo'
             });
+            App.history.navigate('todo/add', {history: false});
 
-            // var p = prompt('Todo title');
-            // if(p && p.trim() != ''){
+            return;
 
-            //     Utils.Notification.Toast('Create a new Todo!');
+            // Utils.Popover.Prompt('Title of new Job', '', 'Create', 'Cancel').then(function(p){
+
+            //     if(!p || p.trim() == ''){
+            //         Utils.Notification.Toast('Job NOT created');
+            //         return;
+            //     }
+
+            //     Utils.Notification.Toast('Created a new Job!');
 
             //     var newModel = new TodoModel.Todo({
-            //         title: p
+            //         title: p.trim()
             //     });
 
             //     newModel.save()
@@ -161,10 +141,7 @@ define(function(require, exports, module) {
 
             //     });
 
-            // }
-
-            // // },200);
-
+            // });
 
         });
 
