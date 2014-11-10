@@ -98,7 +98,7 @@ define(function(require, exports, module) {
 
         // create the header
         this.header = new StandardHeader({
-            content: "Search Jobs",
+            content: "Job History",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             moreSurfaces: [
@@ -162,7 +162,7 @@ define(function(require, exports, module) {
         this.contentScrollView.Views.push(this.ListContent);
 
         this.tmpSurface = new Surface({
-            content: 'Concierge not yet available',
+            content: 'Completed and removed jobs not yet available',
             size: [window.innerWidth, true],
             properties: {
                 'text-align' : 'center'
