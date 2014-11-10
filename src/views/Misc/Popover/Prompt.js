@@ -113,8 +113,10 @@ define(function(require, exports, module) {
             align: [0.5, 0.5],
             origin: [0.5, 0.5]
         });
-        this.popoverContent.OuterSizeMod = new StateModifier({
-            size: [window.innerWidth - 40, window.innerHeight]
+        this.popoverContent.OuterSizeMod = new Modifier({
+            size: function(){
+                return [window.innerWidth - 40, App.mainSize[1]]
+            }
         });
         this.popoverContent.SizeMod = new Modifier({
             size: function(){
