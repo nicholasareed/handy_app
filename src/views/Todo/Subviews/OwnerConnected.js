@@ -217,7 +217,7 @@ define(function(require, exports, module) {
              classes: ['select-friends-list-item-default']
         });
         userView.getSize = function(){
-            return [undefined, userView.Surface._size ? userView.Surface._size[1] : undefined]
+            return [undefined, userView.Surface._trueSize ? userView.Surface._trueSize[1] : undefined];
         };
         userView.Surface.pipe(that.contentLayout);
         userView.Surface.on('click', function(){

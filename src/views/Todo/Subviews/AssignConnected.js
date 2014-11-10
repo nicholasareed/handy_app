@@ -17,6 +17,7 @@ define(function(require, exports, module) {
     var RenderController = require('famous/views/RenderController');
 
     var Utility = require('famous/utilities/Utility');
+    var Timer = require('famous/utilities/Timer');
 
     var HeaderFooterLayout = require('famous/views/HeaderFooterLayout');
     var NavigationBar = require('famous/widgets/NavigationBar');
@@ -217,7 +218,7 @@ define(function(require, exports, module) {
              classes: ['select-friends-list-item-default']
         });
         userView.getSize = function(){
-            return [undefined, userView.Surface._size ? userView.Surface._size[1] : undefined]
+            return [undefined, userView.Surface._trueSize ? userView.Surface._trueSize[1] : undefined];
         };
         userView.Surface.pipe(that.contentLayout);
         userView.Surface.on('click', function(){
@@ -248,6 +249,8 @@ define(function(require, exports, module) {
     };
 
     SubView.prototype.updateCollectionStatus = function() { 
+        var that = this;
+
         console.info('updateCollectionStatus');
 
         this.collection.totalResults = this.collection.length; // App.Data.User.get('friends').length;
@@ -284,7 +287,10 @@ define(function(require, exports, module) {
         console.log(this.contentLayout.Views);
 
         // Re-sequence?
-        this.contentLayout.sequenceFrom(this.contentLayout.Views);
+        // Timer.setTimeout(function(){
+            that.contentLayout.sequenceFrom(that.contentLayout.Views);
+        // },2000);
+        // debugger;
 
         // Show correct infinity buttons (More, All, etc.)
         this.render_infinity_buttons();

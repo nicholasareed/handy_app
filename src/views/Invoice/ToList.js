@@ -205,7 +205,7 @@ define(function(require, exports, module) {
         this.TopTabs.add(Utils.usePlane('contentTabs')).add(this.TopTabs.BarSizeMod).add(this.TopTabs.Bar);
 
         this.TopTabs.Bar.defineSection('connected', {
-            content: '<i class="icon ion-arrow-swap"></i><div>Connected</div>',
+            content: '<div>My Connections</div>',
             onClasses: ['friend-list-tabbar-default', 'on'],
             offClasses: ['friend-list-tabbar-default', 'off']
         });
