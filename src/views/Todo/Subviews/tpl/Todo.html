@@ -10,7 +10,7 @@
 	{{#if Todo.assigned_id}}
 		{{#compare Todo.assigned_id._id "==" User._id}}
 	        <span class="assigned">
-	        	Me
+	        	Hired Me
 	        </span>
 	    {{else}}
 	        <span class="assigned">
@@ -19,7 +19,7 @@
 	    {{/compare}}
     {{else}}
         <span class="assigned">
-        	Not Assigned
+        	No one hired
         </span>
 	{{/if}}
 

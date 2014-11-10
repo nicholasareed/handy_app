@@ -1228,11 +1228,11 @@ define(function(require, exports, module) {
             // assigned
             if(that.model.get('assigned_id')){
                 // assigned to someone
-                this.TopBarMaximized.sequential.Assigned.setContent('assigned: ' + that.model.get('assigned_id.profile.name'));
+                this.TopBarMaximized.sequential.Assigned.setContent('hired: ' + that.model.get('assigned_id.profile.name'));
                 this.TopBarMaximized.sequential.Assigned.setClasses(['todo-view-assigned-default','assigned']);
             } else {
                 // Not assigned
-                this.TopBarMaximized.sequential.Assigned.setContent('not assigned');
+                this.TopBarMaximized.sequential.Assigned.setContent('nobody hired');
                 this.TopBarMaximized.sequential.Assigned.setClasses(['todo-view-assigned-default','notassigned']);
             }
 

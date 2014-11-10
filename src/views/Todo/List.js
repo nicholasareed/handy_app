@@ -418,8 +418,8 @@ define(function(require, exports, module) {
 
         // My
         this.filterTabs.MyTodos = new Surface({
-            content: 'My Jobs',
-            size: [100, undefined],
+            content: 'Private Jobs &amp; Hired me',
+            size: [200, undefined],
             classes: ['todo-filter-tabs-item-default']
         });
         this.filterTabs.MyTodos.group = 'Todos';
@@ -437,7 +437,7 @@ define(function(require, exports, module) {
 
         // Assigned
         this.filterTabs.AssignedTodos = new Surface({
-            content: 'Assigned to someone else',
+            content: 'Hired Somebody Else',
             wrap: '<div class="ellipsis-all"></div>',
             size: [undefined, undefined],
             classes: ['todo-filter-tabs-item-default']
