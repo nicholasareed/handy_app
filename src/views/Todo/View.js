@@ -159,13 +159,13 @@ define(function(require, exports, module) {
         this.headerContent.Complete = new View();
         this.headerContent.Complete.Lightbox = new RenderController();
         this.headerContent.Complete.SizeMod = new StateModifier({
-            size: [80, 60]
+            size: [60, 60]
         });
         this.headerContent.Complete.add(this.headerContent.Complete.SizeMod).add(this.headerContent.Complete.Lightbox);
         // settings
         this.headerContent.MarkComplete = new Surface({
             content: '<i class="icon ion-ios7-checkmark-outline"></i><div>Not Done</div>',
-            size: [80, undefined],
+            size: [60, undefined],
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.MarkComplete.on('longtap', function(){
@@ -221,17 +221,60 @@ define(function(require, exports, module) {
 
         });
 
+        // Menu
+        this.headerContent.Menu = new Surface({
+            content: '<i class="icon ion-navicon-round"></i>',
+            size: [60, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.Menu.on('longtap', function(){
+            Utils.Help('Todo/View/Menu');
+        });
+        this.headerContent.Menu.on('click', function(){
+            
+            Utils.Popover.Buttons({
+                buttons: [{
+                    text: 'Delete Job',
+                    success: function(){
+
+                        Utils.Notification.Toast('Deleting Job');
+
+                        var data = {
+                            active: false
+                        }
+
+                        // that.headerContent.Menu.setContent('<i class="icon ion-ios7-checkmark"></i>');
+                        // that.headerContent.Menu.setClasses(['header-tab-icon-text-big','marked-complete']);
+
+                        App.history.back();
+
+                        that.model.set(data);
+                        that.model.save(data,{
+                            patch: true,
+                            // success: function(){
+                            //     that.model.fetch();    
+                            // }
+                        }).then(function(){
+                            that.model.fetch();
+                            // that.todoContent.collection.fetch();
+                        });
+                    }
+                }]
+            });
+
+        });
+
         // Invoiced
         this.headerContent.Invoice = new View();
         this.headerContent.Invoice.Lightbox = new RenderController();
         this.headerContent.Invoice.SizeMod = new StateModifier({
-            size: [80, 60]
+            size: [60, 60]
         });
         this.headerContent.Invoice.add(this.headerContent.Invoice.SizeMod).add(this.headerContent.Invoice.Lightbox);
         // settings
         this.headerContent.ViewInvoice = new Surface({
             content: '<i class="icon ion-social-usd"></i>',
-            size: [80, undefined],
+            size: [60, undefined],
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.ViewInvoice.on('longtap', function(){
@@ -431,11 +474,12 @@ define(function(require, exports, module) {
 
         // create the header
         this.header = new StandardHeader({
-            content: "Job",
+            content: '', // no header title
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             moreClasses: ["normal-header"],
             moreSurfaces: [
+                this.headerContent.Menu,
                 this.headerContent.Email,
                 this.headerContent.Invoice,
                 this.headerContent.Complete
