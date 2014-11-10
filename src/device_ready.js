@@ -258,11 +258,11 @@ define(function(require, exports, module) {
                 App.Events.emit('KeyboardShowHide', true);
 
                 App.Events.emit('resize');
-                
+
                 Timer.setTimeout(function(){
                     window.scrollTo(0, 0);
                     document.body.scrollTop = 0;
-                },2000);
+                },16);
 
                 // App.mainSize = App.MainContext.getSize();
                 // if (App.MainController)
@@ -284,7 +284,7 @@ define(function(require, exports, module) {
                 Timer.setTimeout(function(){
                     window.scrollTo(0, 0);
                     document.body.scrollTop = 0;
-                },2000);
+                },16);
 
                 // App.mainSize = App.MainContext.getSize();
                 // if (App.MainController)
