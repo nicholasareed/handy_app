@@ -280,6 +280,8 @@ body {
   padding: 15px 0 0 10px;
   border-bottom: 1px solid #eee;
 
+  text-align: center;
+
   color: #111;
   
   -moz-border-radius-topleft: 5px;
@@ -298,6 +300,8 @@ body {
   line-height: 18px;
   font-size: 14px;
   padding: 8px;
+
+  text-align: center;
 
   color: #111;
 
@@ -323,6 +327,8 @@ body {
   padding: 15px 0 0 10px;
   border-bottom: 1px solid #eee;
 
+  text-align: center;
+
   color: #111;
 
   font-weight: bold;
@@ -335,6 +341,9 @@ body {
   line-height: 30px;
   font-size: 16px;
   padding: 10px 8px;
+
+  text-align: center;
+  
   /*border-bottom: 1px solid #eee;*/
 }
 
@@ -957,7 +966,7 @@ input[type="submit"].form-button-submit-default.cancel-button {
   font-weight: bold;
   font-size: 18px;
   text-decoration: none;
-  
+
   display: inline-block;
   display: block;
 

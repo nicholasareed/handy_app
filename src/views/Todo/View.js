@@ -233,6 +233,7 @@ define(function(require, exports, module) {
         this.headerContent.Menu.on('click', function(){
             
             Utils.Popover.Buttons({
+                title: 'Additional Options',
                 buttons: [{
                     text: 'Delete Job',
                     success: function(){
@@ -254,7 +255,11 @@ define(function(require, exports, module) {
                             // success: function(){
                             //     that.model.fetch();    
                             // }
-                        }).then(function(){
+                        })
+                        .fail(function(){
+                            console.error('Failed saving active=false');
+                        })
+                        .then(function(){
                             that.model.fetch();
                             // that.todoContent.collection.fetch();
                         });

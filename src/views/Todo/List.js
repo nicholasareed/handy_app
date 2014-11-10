@@ -294,6 +294,9 @@ define(function(require, exports, module) {
                 // todos I am responsible for completing
                 empty_string = 'No Jobs for you to complete';
                 filter = {
+
+                    active: true,
+
                     tags: {
                         '$ne' : 'complete'
                     },
@@ -322,6 +325,9 @@ define(function(require, exports, module) {
                 // todos that are assigned that you know about
                 empty_string = 'No Jobs assigned to someone else';
                 filter = {
+
+                    active: true,
+                    
                     tags: {
                         '$ne' : 'complete'
                     },
