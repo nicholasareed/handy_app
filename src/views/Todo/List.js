@@ -341,7 +341,7 @@ define(function(require, exports, module) {
             case 'hired_else':
                 
                 // todos that are assigned that you know about
-                empty_string = 'No Jobs assigned to someone else';
+                empty_string = 'Nobody is working for you at the moment';
                 filter = {
 
                     active: true,
@@ -468,7 +468,7 @@ define(function(require, exports, module) {
         this.filterTabs.AssignedTodos = new Surface({
             content: 'Hired Me',
             wrap: '<div class="ellipsis-all"></div>',
-            size: [100, undefined],
+            size: [90, undefined],
             classes: ['todo-filter-tabs-item-default']
         });
         this.filterTabs.AssignedTodos.group = 'Todos';
