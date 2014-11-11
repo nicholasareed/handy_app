@@ -1025,7 +1025,7 @@ define(function(require, exports, module) {
         tags = that.model.toJSON().tags;
         tags.push('complete');
 
-        Utils.Popover.Prompt('Cost of this Job','','Save','Cancel')
+        Utils.Popover.Prompt('Cost of this Job','','Next','Cancel')
         .then(function(a){
             a = parseFloat(a);
             if(isNaN(a) ||  (!a && a != 0)){
