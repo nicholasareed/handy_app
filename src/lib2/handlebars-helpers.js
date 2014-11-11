@@ -329,7 +329,7 @@
     Handlebars.registerHelper('Moment', function(tmpString, formatString) {
         // return "3:40pm" or similar
         
-        return momoent(tmpString).format(formatString);
+        return moment(tmpString).format(formatString);
         
     });
 
