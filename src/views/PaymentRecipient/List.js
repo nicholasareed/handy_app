@@ -89,36 +89,18 @@ define(function(require, exports, module) {
             classes: ['header-tab-icon-text-big']
         });
         this.headerContent.Create.on('longtap', function(){
-            Utils.Help('PaymentSource/List/Create');
+            Utils.Help('PaymentRecipient/List/Create');
         });
         this.headerContent.Create.on('click', function(){
             // App.Cache.FriendListOptions = {
             //     default: 'outgoing'
             // };
-            App.history.navigate('payment_source/add/creditcard');
+            App.history.navigate('payment_recipient/add/bankaccount');
         });
-
-        // Accept payments (banking details)
-        this.headerContent.BankDetails = new Surface({
-            content: '<i class="icon ion-cash"></i>',
-            size: [App.Defaults.Header.Icon.w, undefined],
-            classes: ['header-tab-icon-text-big']
-        });
-        this.headerContent.BankDetails.on('longtap', function(){
-            Utils.Help('PaymentSource/List/BankDetails');
-        });
-        this.headerContent.BankDetails.on('click', function(){
-            if(App.Data.User.get('profile.can_accept_payment')){
-                App.history.navigate('payment_recipient/list');
-                return;
-            }
-            Utils.Help('PaymentSource/List/BankDetails');
-        });
-
 
         // create the header
         this.header = new StandardHeader({
-            content: "Payment Methods",
+            content: "Bank Accounts",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             // moreContent: false
@@ -127,7 +109,7 @@ define(function(require, exports, module) {
             moreSurfaces: [
                 // this.headerContent.PotentialFriends,
                 // this.headerContent.GetRecommendation,
-                this.headerContent.BankDetails,
+                // this.headerContent.BankDetails,
                 this.headerContent.Create
             ]
             // moreContent: "New", //'<span class="icon ion-navicon-round"></span>'

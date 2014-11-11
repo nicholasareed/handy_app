@@ -273,6 +273,18 @@ define(function(require, exports, module) {
 
 
 
+                'payment_recipient/list' : function(){
+                    defaultRoute('PaymentRecipientList', 'PaymentRecipient/List', arguments);
+                },
+                'payment_recipient/add/bankaccount' : function(){
+                    defaultRoute('PaymentRecipientAddBankAccount', 'PaymentRecipient/AddBankAccount', arguments, {cache: false});
+                },
+                'payment_recipient/:id' : function(){
+                    defaultRoute('PaymentRecipientView', 'PaymentRecipient/View', arguments);
+                },
+
+
+
 
                 // Todos/Jobs
                 'todo/add/summary(/:hash)' : function(){
