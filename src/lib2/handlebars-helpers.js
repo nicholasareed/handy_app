@@ -319,9 +319,17 @@
 
 
     Handlebars.registerHelper('Numeral', function(tmpString, formatString) {
-        // return "3:40pm" or similar
+        // return "0,0.0" or similar
         
         return numeral(tmpString).format(formatString);
+        
+    });
+
+
+    Handlebars.registerHelper('Moment', function(tmpString, formatString) {
+        // return "3:40pm" or similar
+        
+        return momoent(tmpString).format(formatString);
         
     });
 
