@@ -290,9 +290,10 @@ define(function(require, exports, module) {
         // create correct filter
 
         switch(this.tabs.todos){
-            case 'my':
+
+            case 'unhired':
                 // todos I am responsible for completing
-                empty_string = 'No Jobs for you to complete';
+                empty_string = 'Create a job and hire someone later';
                 filter = {
 
                     active: true,
@@ -302,32 +303,49 @@ define(function(require, exports, module) {
                     },
 
                     // assigned to me
-                    '$or' : [{
-                        assigned_id: App.Data.User.get('_id')
-                    },
+                    '$or' : [
 
-                    // created by me, and not assigned to somebody
-                    {
-                        owner_id: App.Data.User.get('_id'),
-                        assigned_id: null
-                    },
+                        // owned by me, and not assigned to somebody
+                        {
+                            owner_id: App.Data.User.get('_id'),
+                            assigned_id: null
+                        },
 
-                    // created by me, and not assigned to somebody
-                    {
-                        user_id: App.Data.User.get('_id'),
-                        assigned_id: null
+                        // created by me, and not assigned to somebody
+                        {
+                            user_id: App.Data.User.get('_id'),
+                            assigned_id: null
                     }]
                 };
                 break;
 
-            case 'assigned':
+            case 'hired_me':
+                
+                // todos that are assigned that you know about
+                empty_string = 'No Jobs that you are hired for';
+                filter = {
+
+                    active: true,
+
+                    tags: {
+                        '$ne' : 'complete'
+                    },
+
+                    // not assigned to me
+                    // is assigned to somebody though!
+                    assigned_id: App.Data.User.get('_id')
+
+                };
+                break;
+
+            case 'hired_else':
                 
                 // todos that are assigned that you know about
                 empty_string = 'No Jobs assigned to someone else';
                 filter = {
 
                     active: true,
-                    
+
                     tags: {
                         '$ne' : 'complete'
                     },
@@ -338,13 +356,6 @@ define(function(require, exports, module) {
                         '$ne' : App.Data.User.get('_id'),
                         '$type' : 7
                     }
-                };
-                break;
-
-            case 'complete':
-                empty_string = 'No Jobs have been completed';
-                filter = {
-                    tags: 'complete'
                 };
                 break;
         }
@@ -422,7 +433,7 @@ define(function(require, exports, module) {
         this.filterTabs.Layout = new FlexibleLayout({
             direction: 0, //x
             // ratios: [true,true,true, 1, true,true,true]
-            ratios: [true,1]
+            ratios: [true,true,1]
         });
         this.filterTabs.Views = [];
         this.filterTabs.SizeMod = new StateModifier({
@@ -436,13 +447,13 @@ define(function(require, exports, module) {
 
         // My
         this.filterTabs.MyTodos = new Surface({
-            content: 'Private Jobs &amp; Hired me',
-            size: [200, undefined],
+            content: 'No one Hired',
+            size: [120, undefined],
             classes: ['todo-filter-tabs-item-default']
         });
         this.filterTabs.MyTodos.group = 'Todos';
         this.filterTabs.MyTodos.on('click', function(){
-            that.tabs.todos = 'my';
+            that.tabs.todos = 'unhired';
             that.tab_change();
             that.filterTabs.Views.forEach(function(tmpView){
                 if(tmpView.group == 'Todos'){
@@ -455,14 +466,14 @@ define(function(require, exports, module) {
 
         // Assigned
         this.filterTabs.AssignedTodos = new Surface({
-            content: 'Hired Somebody Else',
+            content: 'Hired Me',
             wrap: '<div class="ellipsis-all"></div>',
-            size: [undefined, undefined],
+            size: [100, undefined],
             classes: ['todo-filter-tabs-item-default']
         });
         this.filterTabs.AssignedTodos.group = 'Todos';
         this.filterTabs.AssignedTodos.on('click', function(){
-            that.tabs.todos = 'assigned';
+            that.tabs.todos = 'hired_me';
             that.tab_change();
             that.filterTabs.Views.forEach(function(tmpView){
                 if(tmpView.group == 'Todos'){
@@ -475,13 +486,14 @@ define(function(require, exports, module) {
 
         // Completed
         this.filterTabs.CompleteTodos = new Surface({
-            content: 'Complete',
+            content: 'Hired Someone Else',
+            wrap: '<div class="ellipsis-all"></div>',
             size: [undefined, undefined],
             classes: ['todo-filter-tabs-item-default']
         });
         this.filterTabs.CompleteTodos.group = 'Todos';
         this.filterTabs.CompleteTodos.on('click', function(){
-            that.tabs.todos = 'complete';
+            that.tabs.todos = 'hired_else';
             that.tab_change();
             that.filterTabs.Views.forEach(function(tmpView){
                 if(tmpView.group == 'Todos'){
@@ -490,7 +502,7 @@ define(function(require, exports, module) {
             });
             this.setClasses(['todo-filter-tabs-item-default','selected']);
         });
-        // this.filterTabs.Views.push(this.filterTabs.CompleteTodos);
+        this.filterTabs.Views.push(this.filterTabs.CompleteTodos);
 
         this.filterTabs.Layout.sequenceFrom(this.filterTabs.Views);
         
