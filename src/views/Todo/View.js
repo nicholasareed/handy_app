@@ -1230,7 +1230,7 @@ define(function(require, exports, module) {
             this.TopBarMinimized.flexible.Title.setContent(that.model.get('title'));
 
             // details/description
-            this.TopBarMaximized.sequential.Details.setContent(that.model.get('details').length > 0 ? that.model.get('details') : '--');
+            this.TopBarMaximized.sequential.Details.setContent((that.model.get('details') && that.model.get('details').length > 0) ? that.model.get('details') : '--');
             // this.TopBarMinimized.flexible.Title.setContent(that.model.get('title'));
 
             console.info('update_content');
