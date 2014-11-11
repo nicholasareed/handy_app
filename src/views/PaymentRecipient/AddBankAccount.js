@@ -85,12 +85,32 @@ define(function(require, exports, module) {
     PageView.prototype.createHeader = function(){
         var that = this;
 
+        // Invite somebody
+        this.headerContent = new View();
+        this.headerContent.QuickHelp = new Surface({
+            content: '<i class="icon ion-ios7-help-outline"></i>',
+            size: [App.Defaults.Header.Icon.w, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.QuickHelp.on('longtap', function(){
+            Utils.Help('PaymentRecipient/List/QuickHelp');
+        });
+        this.headerContent.QuickHelp.on('click', function(){
+            // App.Cache.FriendListOptions = {
+            //     default: 'outgoing'
+            // };
+            // App.history.navigate('payment_recipient/add/bankaccount');
+            Utils.Popover.Alert('Data is secured by Stripe, and SSNs are not stored on our system (only used for verification)<br /><br />Contact us at nicholas.a.reed@gmail.com for questions.','OK');
+        });
+
         // create the header
         this.header = new StandardHeader({
             content: "Add Bank Account",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
-            moreContent: false
+            moreSurfaces: [
+                this.headerContent.QuickHelp
+            ]
         }); 
         this.header._eventOutput.on('back',function(){
             App.history.back();//.history.go(-1);
@@ -154,6 +174,17 @@ define(function(require, exports, module) {
             value: ''
         });
 
+        this.inputSSN = new FormHelper({
+
+            margins: [10,10],
+
+            form: this.form,
+            name: 'ssn',
+            placeholder: 'Social Security Number',
+            type: 'number',
+            value: ''
+        });
+
         this.inputAccount = new FormHelper({
 
             margins: [10,10],
@@ -185,6 +216,7 @@ define(function(require, exports, module) {
         this.form.addInputsToForm([
             this.inputSaveName,
             this.inputRealName,
+            this.inputSSN,
             this.inputAccount,
             this.inputRouting,
             this.submitButton
@@ -214,7 +246,8 @@ define(function(require, exports, module) {
         console.log(bankAccountData);
 
          var bank_save_name = $.trim(this.inputSaveName.getValue().toString()),
-            user_fullname = $.trim(this.inputRealName.getValue().toString());
+            user_fullname = $.trim(this.inputRealName.getValue().toString()),
+            user_ssn = $.trim(this.inputSSN.getValue().toString());
 
         console.log(bank_save_name);
 
@@ -237,6 +270,7 @@ define(function(require, exports, module) {
                     type: 'bank_account',
                     bank_token: response.id,
                     // cardid: response.card.id,
+                    ssn: user_ssn,
                     name: user_fullname,
                     save_as: bank_save_name
                 },
