@@ -199,6 +199,10 @@ define(function(require, exports, module) {
                 // that.headerContent.MarkComplete.setClasses(['header-tab-icon-text-big','marked-complete']);
             }
 
+            return;
+
+
+
             // that.headerContent.MarkComplete.setContent('<i class="icon ion-ios7-checkmark"></i>');
             // that.headerContent.MarkComplete.setClasses(['header-tab-icon-text-big','marked-complete']);
 
@@ -1018,15 +1022,16 @@ define(function(require, exports, module) {
             add_tags: ['complete']
         };
         var invoiceData = {};
-        tags = that.model.get('tags');
+        tags = that.model.toJSON().tags;
         tags.push('complete');
 
-        Utils.Popover.Prompt('Cost of this Job','','Save','Cancel','number')
+        Utils.Popover.Prompt('Cost of this Job','','Save','Cancel')
         .then(function(a){
             a = parseFloat(a);
-            if(!a){
+            if(isNaN(a) ||  (!a && a != 0)){
                 // canceled
                 console.error(a);
+                Utils.Notification.Toast('Invalid value supplied. Example: 25.68');
                 return;
             }
 
