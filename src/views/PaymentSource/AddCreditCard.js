@@ -156,31 +156,43 @@ define(function(require, exports, module) {
         this.inputExpMonth = new FormHelper({
 
             margins: [10,10],
+            size: [100, true],
 
             form: this.form,
-            placeholder: '2-Digit Expiration Month',
+            placeholder: 'MM',
             type: 'number',
-            value: ''
+            value: '',
+            attr: {
+                maxlength: 2
+            }
         });
 
         this.inputExpYear = new FormHelper({
 
             margins: [10,10],
+            size: [100, true],
 
             form: this.form,
             placeholder: '2-Digit Expiration Year',
             type: 'number',
-            value: ''
+            value: '',
+            attr: {
+                maxlength: 2
+            }
         });
 
         this.inputCvc = new FormHelper({
 
             margins: [10,10],
+            size: [200, true],
 
             form: this.form,
             placeholder: 'CVC Code (on back)',
             type: 'number',
-            value: ''
+            value: '',
+            attr: {
+                maxlength: 4
+            }
         });
 
         this.inputZipcode = new FormHelper({
