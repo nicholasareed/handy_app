@@ -25,7 +25,7 @@ define(function(require, exports, module) {
     var Backbone = require('backbone-adapter');
 
     // Models
-    var PaymentSourceModel = require("models/payment_source");
+    var PaymentRecipientModel = require("models/payment_recipient");
 
     // Extras
     var Utils = require('utils');
@@ -75,7 +75,7 @@ define(function(require, exports, module) {
 
         // Create collection of Games for player_id
         var options = {};
-        this.collection = new PaymentSourceModel.PaymentSourceCollection([],{
+        this.collection = new PaymentRecipientModel.PaymentRecipientCollection([],{
             // type: 'friend'
         });
         this.collection.on("sync", that.updateCollectionStatus.bind(this), this);
