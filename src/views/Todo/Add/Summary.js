@@ -197,7 +197,7 @@ define(function(require, exports, module) {
 
         this.addFormSurfaces();
 
-        this.addTimeframeSlider();
+        // this.addTimeframeSlider();
 
         // // weight
         // this.weightView = new View();
@@ -694,6 +694,9 @@ define(function(require, exports, module) {
 
         // detail/description
         formData.details = this._inputs['details'].getValue().toString();
+
+        // timeframe
+        // - todo...v2 (trying to limit the number of extra options) (maybe have a + sign to expand advanced options?)
 
         // // Group_id
         // formData.group_id = this.summary.group.get('_id');

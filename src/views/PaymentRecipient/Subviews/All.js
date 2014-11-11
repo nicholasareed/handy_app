@@ -17,6 +17,7 @@ define(function(require, exports, module) {
     var RenderController = require('famous/views/RenderController');
 
     var Utility = require('famous/utilities/Utility');
+    var Timer = require('famous/utilities/Timer');
 
     var HeaderFooterLayout = require('famous/views/HeaderFooterLayout');
     var NavigationBar = require('famous/widgets/NavigationBar');
@@ -33,8 +34,10 @@ define(function(require, exports, module) {
 
     // Templates
     var Handlebars          = require('lib2/handlebars-adapter');
-    var tpl                 = require('text!./tpl/BankAccount.html');
-    var template            = Handlebars.compile(tpl);
+    var tpl_bank                 = require('text!./tpl/BankAccount.html');
+    var tpl_card                 = require('text!./tpl/DebitCard.html');
+    var template_bank            = Handlebars.compile(tpl_bank);
+    var template_card            = Handlebars.compile(tpl_card);
 
     function SubView(options) {
         var that = this;
@@ -191,19 +194,20 @@ define(function(require, exports, module) {
     SubView.prototype.addOne = function(Model){
         var that = this;
 
-        var paymentView = new View(),
-            name = Model.get('profile.name') || '&nbsp;none';
+        var paymentView = new View();
+            // name = Model.get('profile.name') || '&nbsp;none';
 
         paymentView.Model = Model;
+        var template_chosen = Model.get('type') == 'bank_account' ? template_bank : template_card;
         paymentView.Surface = new Surface({
-             content: template({
+             content: template_chosen({
                 Payment: Model.toJSON()
              }),
              size: [undefined, true],
-             classes: ['payment-source-list-item-default']
+             classes: ['payment-recipient-list-item-default']
         });
-        paymentView.getSize = function(){
-            return [undefined, paymentView.Surface._size ? paymentView.Surface._size[1] : undefined]
+        paymentView.getSize = function(val){
+            return paymentView.Surface.getSize(val); //[undefined, paymentView.Surface._size ? paymentView.Surface._size[1] : undefined]
         };
         paymentView.Surface.pipe(that.contentLayout);
         paymentView.Surface.on('click', function(){
@@ -217,6 +221,8 @@ define(function(require, exports, module) {
     };
 
     SubView.prototype.updateCollectionStatus = function() { 
+        var that = this;
+
         console.info('updateCollectionStatus');
 
         this.collection.totalResults = this.collection.length; // App.Data.User.get('friends').length;
@@ -253,7 +259,9 @@ define(function(require, exports, module) {
         console.log(this.contentLayout.Views);
 
         // Re-sequence?
-        this.contentLayout.sequenceFrom(this.contentLayout.Views);
+        Timer.setTimeout(function(){
+            that.contentLayout.sequenceFrom(that.contentLayout.Views);
+        },16);
 
         // Show correct infinity buttons (More, All, etc.)
         this.render_infinity_buttons();

@@ -92,10 +92,14 @@ define(function(require, exports, module) {
 
         this.contentScrollView = new View();
         this.contentScrollView.OriginMod = new StateModifier({
+            align: [0.5,0.5],
             origin: [0.5, 0.5]
         });
-        this.contentScrollView.OuterSizeMod = new StateModifier({
-            size: [window.innerWidth - 80, true]
+        this.contentScrollView.OuterSizeMod = new Modifier({
+            size: function(){
+                // console.log(App.mainSize[1]);
+                return [window.innerWidth - 40, App.mainSize[1]]
+            }
         });
         this.contentScrollView.PositionMod = new StateModifier({
             transform: Transform.translate(0, window.innerHeight, 0)
@@ -124,27 +128,8 @@ define(function(require, exports, module) {
         // sequenceFrom
         this.contentScrollView.SeqLayout.sequenceFrom(this.contentScrollView.Views);
 
-
-        this.contentScrollView.SizeMod = new Modifier({
-            size: function(){
-                // if(that.contentScrollView.trueSize){
-                //     console.log('-----------');
-                //     // console.log(that.form.trueSize());
-                //     console.log(that.contentScrollView.getSize());
-                //     console.log(that.contentScrollView._size);
-                // }
-                var defaultSize = 200;
-                var newSize = that.contentScrollView.getSize ? (that.contentScrollView.getSize(true) ? that.contentScrollView.getSize(true)[1] : defaultSize) : defaultSize;
-                // console.log(that.contentScrollView.getSize(true));
-                if(newSize === true){
-                    newSize = defaultSize;
-                }
-                return [undefined, newSize] // default 200 sizing
-            }
-        });
-
         // add sizing and everything
-        this.contentScrollView.add(this.contentScrollView.OuterSizeMod).add(this.contentScrollView.OriginMod).add(this.contentScrollView.PositionMod).add(this.contentScrollView.ScaleMod).add(this.contentScrollView.SizeMod).add(this.contentScrollView.SeqLayout);
+        this.contentScrollView.add(this.contentScrollView.OuterSizeMod).add(this.contentScrollView.OriginMod).add(this.contentScrollView.PositionMod).add(this.contentScrollView.ScaleMod).add(this.contentScrollView.SeqLayout);
 
         // show the content in the lightbox
         // this.lightbox.show(this.contentScrollView);

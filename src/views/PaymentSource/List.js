@@ -95,7 +95,24 @@ define(function(require, exports, module) {
             // App.Cache.FriendListOptions = {
             //     default: 'outgoing'
             // };
-            App.history.navigate('payment_source/add/creditcard');
+
+            Utils.Popover.Buttons({
+                title: 'Pay people via:',
+                buttons: [{
+                    text: 'Credit Card',
+                    success: function(){
+                        App.history.navigate('payment_source/add/creditcard');            
+                    }
+                },
+                // {
+                //     text: 'Bank Account',
+                //     success: function(){
+                //         App.history.navigate('payment_source/add/bankaccount');            
+                //     }
+                // }
+                ]
+            });
+
         });
 
         // Accept payments (banking details)
@@ -127,7 +144,7 @@ define(function(require, exports, module) {
             moreSurfaces: [
                 // this.headerContent.PotentialFriends,
                 // this.headerContent.GetRecommendation,
-                this.headerContent.BankDetails,
+                // this.headerContent.BankDetails,
                 this.headerContent.Create
             ]
             // moreContent: "New", //'<span class="icon ion-navicon-round"></span>'

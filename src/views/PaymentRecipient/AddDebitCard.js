@@ -105,7 +105,7 @@ define(function(require, exports, module) {
 
         // create the header
         this.header = new StandardHeader({
-            content: "Add Bank Account",
+            content: "Add Debit Card",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             moreSurfaces: [
@@ -177,9 +177,9 @@ define(function(require, exports, module) {
             margins: [10,10],
 
             form: this.form,
-            name: 'ssn',
+            name: 'name',
             placeholder: 'Social Security Number',
-            type: 'number',
+            type: 'text',
             value: ''
         });
 
@@ -200,27 +200,68 @@ define(function(require, exports, module) {
 
             form: this.form,
             name: 'name',
-            placeholder: 'Save Bank Account As',
+            placeholder: 'Save Card As',
             type: 'text',
             value: ''
         });
 
-        this.inputAccount = new FormHelper({
+        this.inputNumber = new FormHelper({
 
             margins: [10,10],
 
             form: this.form,
-            placeholder: 'Account Number',
+            placeholder: 'Debit Card Number',
             type: 'number',
             value: ''
         });
 
-        this.inputRouting = new FormHelper({
+        this.inputExpMonth = new FormHelper({
+
+            margins: [10,10],
+            size: [100,true],
+
+            form: this.form,
+            placeholder: 'MM',
+            type: 'number',
+            value: '',
+            attr: {
+                'maxlength' : 2
+            }
+        });
+
+        this.inputExpYear = new FormHelper({
+
+            margins: [10,10],
+            size: [100,true],
+            form: this.form,
+            placeholder: 'YY',
+            type: 'number',
+            value: '',
+            attr: {
+                'maxlength' : 2
+            }
+        });
+
+        this.inputCvc = new FormHelper({
+
+            margins: [10,10],
+            size: [200,true],
+
+            form: this.form,
+            placeholder: 'CVC Code (on back)',
+            type: 'number',
+            value: '',
+            attr: {
+                'maxlength' : 4
+            }
+        });
+
+        this.inputZipcode = new FormHelper({
 
             margins: [10,10],
 
             form: this.form,
-            placeholder: 'Routing Number',
+            placeholder: 'Billing Zipcode',
             type: 'number',
             value: ''
         });
@@ -228,9 +269,9 @@ define(function(require, exports, module) {
         this.submitButton = new FormHelper({
             form: this.form,
             type: 'submit',
-            value: 'Save Bank Account',
+            value: 'Save Card',
             margins: [10,10],
-            click: this.save_bankaccount.bind(this)
+            click: this.save_card.bind(this)
         });
 
         this.form.addInputsToForm([
@@ -239,15 +280,17 @@ define(function(require, exports, module) {
             this.inputSSN,
             this.spacer,
             this.inputSaveName,
-            this.inputAccount,
-            this.inputRouting,
+            this.inputNumber,
+            this.inputExpMonth,
+            this.inputExpYear,
+            this.inputCvc,
+            this.inputZipcode,
             this.submitButton
         ]);
 
-
     };
 
-    PageView.prototype.save_bankaccount = function(ev){
+    PageView.prototype.save_card = function(ev){
         var that = this;
 
         if(this.checking === true){
@@ -258,37 +301,35 @@ define(function(require, exports, module) {
         this.submitButton.setContent('Please Wait');
 
         // var $form = this.$('#credit-card-form');
-        var bankAccountData = {
+        var creditCardData = {
             // name: $form.find('#name').val(),
-            country: 'US',
-            accountNumber: $.trim(this.inputAccount.getValue().toString()),
-            routingNumber: $.trim(this.inputRouting.getValue().toString()),
+            number: $.trim(this.inputNumber.getValue().toString()),
+            exp_month: $.trim(this.inputExpMonth.getValue().toString()),
+            exp_year: $.trim(this.inputExpYear.getValue().toString()),
+            cvc: $.trim(this.inputCvc.getValue().toString()),
+            address_zip: $.trim(this.inputZipcode.getValue().toString())
          };
 
-        console.log(bankAccountData);
+        console.log(creditCardData);
 
-        var bank_save_name = $.trim(this.inputSaveName.getValue().toString()),
+        var card_save_name = $.trim(this.inputSaveName.getValue().toString());
+        var card_last4 = creditCardData.number.substr(-4,4),
             user_fullname = $.trim(this.inputRealName.getValue().toString()),
             user_ssn = $.trim(this.inputSSN.getValue().toString());
 
-        console.log(bank_save_name);
+         card_save_name = card_save_name.length > 0 ? card_save_name : creditCardData.card_number.substr(-4,4); // saved name or last 4
 
-        Stripe.bankAccount.createToken(bankAccountData, function(status, response){
+        console.log(card_save_name);
+
+        Stripe.card.createToken(creditCardData, function(status, response){
             if(response.error){
-                Utils.Notification.Toast('Failed to save bank account');
+                Utils.Notification.Toast('Failed to save card');
                 Utils.Popover.Alert(S(response.error.message));
                 // Re-enable the button
                 // that.$('.add-button').attr('disabled','disabled');
                 that.checking = false;
-                that.submitButton.setContent('Save Bank Account');
+                that.submitButton.setContent('Save Card');
                 return;
-            }
-
-            var last4 = 'unknown';
-            try {
-                last4 = response.bank_account.last4;
-            }catch(err){
-                console.error(err);
             }
 
             $.ajax({
@@ -296,32 +337,31 @@ define(function(require, exports, module) {
                 cache: false,
                 method: 'POST',
                 data: {
-                    type: 'bank_account',
+                    type: 'card',
                     token: response.id,
-                    // cardid: response.card.id,
+                    cardid: response.card.id,
+                    save_as: card_save_name,
+                    last4: card_last4,
                     ssn: user_ssn,
-                    name: user_fullname,
-
-                    save_as: bank_save_name,
-                    last4: last4,
+                    name: user_fullname
                 },
                 success: function(response){
-                    // Succeeded attaching Bank Account to user
+                    // Succeeded attaching Debit Card to user
                     console.log(response);
 
-                    // // Emit event that a payment recipient has been added
-                    // App.Events.trigger('payment_recipients_updated');
+                    // // Emit event that a payment source has been added
+                    // App.Events.trigger('payment_sources_updated');
 
-                    Utils.Notification.Toast('Saved Bank Account');
+                    Utils.Notification.Toast('Saved Card');
 
                     // Return to previous page
                     App.history.back();
                 },
                 error: function(err){
-                    Utils.Popover.Alert('Error attaching Bank Account');
+                    Utils.Popover.Alert('Error attaching Debit Card');
 
                     that.checking = false;
-                    that.submitButton.setContent('Save Bank Account');
+                    that.submitButton.setContent('Save Card');
                 }
             });
 

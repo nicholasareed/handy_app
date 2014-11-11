@@ -279,6 +279,9 @@ define(function(require, exports, module) {
                 'payment_recipient/add/bankaccount' : function(){
                     defaultRoute('PaymentRecipientAddBankAccount', 'PaymentRecipient/AddBankAccount', arguments, {cache: false});
                 },
+                'payment_recipient/add/debitcard' : function(){
+                    defaultRoute('PaymentRecipientAddDebitCard', 'PaymentRecipient/AddDebitCard', arguments, {cache: false});
+                },
                 'payment_recipient/:id' : function(){
                     defaultRoute('PaymentRecipientView', 'PaymentRecipient/View', arguments);
                 },

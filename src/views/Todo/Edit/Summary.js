@@ -191,7 +191,7 @@ define(function(require, exports, module) {
 
         this.addFormSurfaces();
 
-        this.addTimeframeSlider();
+        // this.addTimeframeSlider();
 
         // // weight
         // this.weightView = new View();

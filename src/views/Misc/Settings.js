@@ -164,8 +164,14 @@ define(function(require, exports, module) {
 
             {
                 title: 'Payments',
-                desc: 'Manage cards and bank accounts',
+                desc: 'Manage cards, etc.',
                 href: 'payment_source/list'
+            },
+
+            {
+                title: 'Accept Money',
+                desc: 'Manage debit accounts',
+                href: 'payment_recipient/list'
             },
 
             {

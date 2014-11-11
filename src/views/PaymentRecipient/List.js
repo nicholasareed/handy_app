@@ -95,12 +95,33 @@ define(function(require, exports, module) {
             // App.Cache.FriendListOptions = {
             //     default: 'outgoing'
             // };
-            App.history.navigate('payment_recipient/add/bankaccount');
+
+            if(App.Data.User.get('profile.can_accept_payment')){
+
+                Utils.Popover.Buttons({
+                    title: 'Accept Payment via:',
+                    buttons: [{
+                        text: 'Bank Account',
+                        success: function(){
+                            App.history.navigate('payment_recipient/add/bankaccount');            
+                        }
+                    },{
+                        text: 'Debit Card',
+                        success: function(){
+                            App.history.navigate('payment_recipient/add/debitcard');            
+                        }
+                    }]
+                });
+                return;
+            }
+
+            Utils.Help('PaymentSource/List/BankDetails');
+
         });
 
         // create the header
         this.header = new StandardHeader({
-            content: "Bank Accounts",
+            content: "Accept Money",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             // moreContent: false

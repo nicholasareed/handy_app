@@ -4,7 +4,7 @@
     <span class="ellipsis-all">{{Payment.save_as}}&nbsp;</span>
 </div>
 <div>
-    <span class="ellipsis-all">Account ends in {{Payment.last4}}&nbsp;</span>
+    <span class="ellipsis-all">*{{Payment.last4}}&nbsp;</span>
 
     {{#if Payment.stripe_recipient.verified}}
     	<div class="verified">
@@ -15,4 +15,5 @@
     		Not Verified
     	</div>
     {{/if}}
+
 </div>
