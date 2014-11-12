@@ -82,6 +82,20 @@ define(function(require, exports, module) {
         // Icons
         this.headerContent = new View();
 
+        // Admin interface
+        this.headerContent.Admin = new Surface({
+            content: '<i class="icon ion-alert-circled"></i>',
+            size: [App.Defaults.Header.Icon.w, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.Admin.on('longtap', function(){
+            Utils.Help('Invoice/List/Admin');
+        });
+        this.headerContent.Admin.on('click', function(){
+            App.history.navigate('payment_charge/list');
+        });
+
+
         // Payment methods
         this.headerContent.Payment = new Surface({
             content: '<i class="icon ion-card"></i>',
@@ -215,6 +229,16 @@ define(function(require, exports, module) {
 
 
 
+        var moreSurfaces = [
+            // this.headerContent.Invoices,
+            this.headerContent.Payment,
+            this.headerContent.Recipient,
+            this.headerContent.Create,
+            // this.headerContent.FilterSwitcher,
+        ];
+        if(App.Data.User.get('admin') == true){
+            moreSurfaces.unshift(this.headerContent.Admin);
+        }
 
         // create the header
         this.header = new StandardHeader({
@@ -224,13 +248,7 @@ define(function(require, exports, module) {
             backContent: false,
             // moreContent: false
             // moreClasses: ["normal-header"],
-            moreSurfaces: [
-                // this.headerContent.Invoices,
-                this.headerContent.Payment,
-                this.headerContent.Recipient,
-                this.headerContent.Create,
-                // this.headerContent.FilterSwitcher,
-            ]
+            moreSurfaces: moreSurfaces
             // moreContent: "New", //'<span class="icon ion-navicon-round"></span>'
         });
         this.header._eventOutput.on('back',function(){
