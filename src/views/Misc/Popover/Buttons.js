@@ -138,7 +138,7 @@ define(function(require, exports, module) {
         this.contentScrollView.SeqLayout.sequenceFrom(this.contentScrollView.Views);
 
         // add sizing and everything
-        this.contentScrollView.add(this.contentScrollView.OuterSizeMod).add(this.contentScrollView.OriginMod).add(this.contentScrollView.PositionMod).add(this.contentScrollView.ScaleMod).add(this.contentScrollView.SizeMod).add(this.contentScrollView.SeqLayout);
+        this.contentScrollView.add(this.contentScrollView.OuterSizeMod).add(this.contentScrollView.OriginMod).add(this.contentScrollView.PositionMod).add(this.contentScrollView.ScaleMod).add(this.contentScrollView.SeqLayout);
 
         // show the content in the lightbox
         // this.lightbox.show(this.contentScrollView);
