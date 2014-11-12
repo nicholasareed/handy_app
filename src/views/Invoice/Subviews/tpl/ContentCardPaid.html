@@ -3,15 +3,10 @@
 
 	<!-- text -->
 	<div>
-	    Paid by Credit Card
+	    Paid by Credit Card - {{format_date created "MMM Do, h:mma"}}
 	 </div>
 	 <div>
 	    {{Numeral details.amount "$0,0.00"}} - &#35;{{details.stripe_id}}
-	</div>
-
-	<!-- time -->
-	<div>
-		{{format_date created "MMM Do, h:mma"}}
 	</div>
 
 </div>

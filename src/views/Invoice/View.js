@@ -190,6 +190,11 @@ define(function(require, exports, module) {
                 buttons: [{
                     text: 'Yes, mark as Unpaid',
                     success: function(){
+
+                        Utils.Popover.Alert('Sorry, functionality not yet supported', 'OK');
+
+                        return;
+
                         Utils.Notification.Toast('Marking as Unpaid');
                         that.model.save({
                             remove_tags: ['paid']
@@ -401,37 +406,12 @@ define(function(require, exports, module) {
         });
         this.invoiceDetails.Views.push(this.invoiceDetails.Cost);
 
-        // To user
-        this.invoiceDetails.ToSurface = new Surface({
-            content: '',
-            size: [window.innerWidth, true],
-            classes: ['invoice-view-to-default']
-        });
-        this.invoiceDetails.ToSurface.on('click', function(){
-
-            // // Redo assignment
-            // if(that.model.get('to_user_id')){
-            //     // already assigned!
-            //     // - visit that person
-            //     App.history.navigate('user/' + that.model.get('to_user_id._id'));
-            //     return;
-            // }
-
-            App.history.modifyLast({
-                tag: 'StartTo'
-            });
-            App.history.navigate('invoice/to/' + that.model.get('_id'));
-        });
-        this.invoiceDetails.Views.push(this.invoiceDetails.ToSurface);
-
         // From user
         this.invoiceDetails.FromSurface = new Surface({
             content: '',
+            wrap: '<div></div>',
             size: [window.innerWidth, true],
-            classes: ['invoice-view-from-default'],
-            properties: {
-                borderBottom: "1px solid #ddd;"
-            }
+            classes: ['invoice-view-from-default']
         });
         this.invoiceDetails.FromSurface.on('click', function(){
             // // Redo assignment
@@ -451,6 +431,34 @@ define(function(require, exports, module) {
             App.history.navigate('invoice/owner/' + that.model.get('_id'));
         });
         this.invoiceDetails.Views.push(this.invoiceDetails.FromSurface);
+
+        // Recipient user
+        this.invoiceDetails.RecipientSurface = new Surface({
+            content: '',
+            wrap: '<div></div>',
+            size: [window.innerWidth, true],
+            classes: ['invoice-view-to-default'],
+            properties: {
+                borderBottom: "1px solid #ddd;"
+            }
+        });
+        this.invoiceDetails.RecipientSurface.on('click', function(){
+
+            // // Redo assignment
+            // if(that.model.get('recipient_user_id')){
+            //     // already assigned!
+            //     // - visit that person
+            //     App.history.navigate('user/' + that.model.get('recipient_user_id._id'));
+            //     return;
+            // }
+
+            App.history.modifyLast({
+                tag: 'StartTo'
+            });
+            App.history.navigate('invoice/to/' + that.model.get('_id'));
+        });
+        this.invoiceDetails.Views.push(this.invoiceDetails.RecipientSurface);
+
 
         this.invoiceDetails.getSize = function(){
             var tmpH = 1;
@@ -603,8 +611,8 @@ define(function(require, exports, module) {
                 }
             }];
 
-        if(that.model.get('from_user_id._id') == App.Data.User.get('_id')){
-            title = 'Collect Invoice';
+        if(that.model.get('recipient_user_id._id') == App.Data.User.get('_id')){
+            title = 'Pay Invoice';
             buttons.push({
                 text: 'Just Mark as Paid',
                 success: function(){
@@ -642,7 +650,7 @@ define(function(require, exports, module) {
 
         Utils.Popover.Buttons({
             title: title,
-            body: 'How is this invoice being paid?',
+            text: 'How is this invoice being paid?',
             buttons: buttons
         });
 
@@ -652,6 +660,7 @@ define(function(require, exports, module) {
         var that = this;
 
         // Gather PaymentSources
+        Utils.Notification.Toast('Gathering Payment Sources');
 
         var PaymentSources = new PaymentSourceModel.PaymentSourceCollection([],{
         });
@@ -767,25 +776,25 @@ define(function(require, exports, module) {
             // amount
             this.invoiceDetails.Cost.setContent('<div>' + S(numeral(that.model.get('amount')).format('$0,0.00')) + ' <span>&nbsp;+/-&nbsp;</span></div>');
 
-            // to
-            if(that.model.get('to_user_id')){
+            // recipient
+            if(that.model.get('recipient_user_id')){
                 // assigned to someone
-                this.invoiceDetails.ToSurface.setContent('to: ' + that.model.get('to_user_id.profile.name') || '');
-                this.invoiceDetails.ToSurface.setClasses(['invoice-view-to-default','assigned']);
+                this.invoiceDetails.RecipientSurface.setContent('recipient: ' + that.model.get('recipient_user_id.profile.name') || '');
+                this.invoiceDetails.RecipientSurface.setClasses(['invoice-view-to-default','assigned']);
             } else {
                 // Not assigned
-                this.invoiceDetails.ToSurface.setContent('not sent to anyone');
-                this.invoiceDetails.ToSurface.setClasses(['invoice-view-to-default','notassigned']);
+                this.invoiceDetails.RecipientSurface.setContent('no one being paid');
+                this.invoiceDetails.RecipientSurface.setClasses(['invoice-view-to-default','notassigned']);
             }
 
-            // from
+            // payer
             if(that.model.get('from_user_id')){
                 // assigned to someone
-                this.invoiceDetails.FromSurface.setContent('pay to: ' + that.model.get('from_user_id.profile.name') || '');
+                this.invoiceDetails.FromSurface.setContent('payer: ' + that.model.get('from_user_id.profile.name') || '');
                 this.invoiceDetails.FromSurface.setClasses(['invoice-view-from-default','has_owner']);
             } else {
                 // No owner at the moment (what the fuck)
-                this.invoiceDetails.FromSurface.setContent('');
+                this.invoiceDetails.FromSurface.setContent('no one set to pay');
                 this.invoiceDetails.FromSurface.setClasses(['invoice-view-from-default','no_owner']);
                 this.invoiceDetails.FromSurface.setSize([undefined,1]);
             }

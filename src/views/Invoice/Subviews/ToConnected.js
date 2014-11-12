@@ -227,12 +227,12 @@ define(function(require, exports, module) {
             // Not assigned to anyone, lets go assign/delegate to someone!
             // App.history.navigate('todo/assign/' + Model.get('_id'));
             that.model.save({
-                to_user_id: Model.get('_id')
+                recipient_user_id: Model.get('_id')
             },{
                 patch: true
             }).then(function(){
                 that.model.set({
-                    to_user_id: Model.toJSON()
+                    recipient_user_id: Model.toJSON()
                 });
                 that.model.fetch();
                 App.history.backTo('StartTo');

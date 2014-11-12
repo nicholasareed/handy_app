@@ -84,8 +84,6 @@
   background: white;
 
   padding: 0px 8px;
-
-  border-bottom: 1px dashed #ddd;
 }
 
 .payment-source-list-item-default > div:nth-child(1) {
@@ -104,6 +102,8 @@
   color: #333;
 
   padding-bottom: 16px;
+  
+  border-bottom: 1px dashed #ddd;
 }
 
 
@@ -226,7 +226,7 @@
 
 .invoice-view-cost-default > div {
   display: inline-block;
-  padding: 2px 8px;
+  padding: 2px 8px 2px 0;
   /*border: 1px solid #444;*/
 
   border-radius: 3px;
@@ -266,6 +266,20 @@
 
 .invoice-view-to-default {
   padding: 8px;
+  border-bottom: 1px solid #888;
+}
+
+.invoice-view-to-default div {
+  
+  display: inline-block;
+  
+  padding: 4px;
+
+  border: 1px solid #444;
+
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+
 }
 
 .invoice-view-to-default.notassigned {
@@ -279,7 +293,19 @@
 
 .invoice-view-from-default {
   padding: 8px;
-  border-bottom: 1px solid #ddd;
+}
+
+.invoice-view-from-default div {
+  
+  display: inline-block;
+
+  padding: 4px;
+
+  border: 1px solid #444;
+
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+
 }
 
 .invoice-view-from-default.no_owner {

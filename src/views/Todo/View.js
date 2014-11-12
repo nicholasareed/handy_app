@@ -292,9 +292,14 @@ define(function(require, exports, module) {
         this.headerContent.ViewInvoice.on('click', function(){
             
             // Invoiced?
-            if(that.model.get('invoice_id')){
+            if(that.model.get('invoice_id._id')){
                 // Go to invoice
                 App.history.navigate('invoice/' + that.model.get('invoice_id._id'));
+                return;
+            }
+            if(that.model.get('invoice_id')){
+                // Go to invoice
+                App.history.navigate('invoice/' + that.model.get('invoice_id'));
                 return;
             }
 
@@ -1043,10 +1048,14 @@ define(function(require, exports, module) {
                     text: 'New Invoice',
                     success: function(){
 
+                        console.info('invoice model created');
+                        console.info(that.model.toJSON());
                         var newModel = new InvoiceModel.Invoice({
                             // friend_id: that.model.get('_id'),
                             // amount: a,
-                            title: that.model.get('title')
+                            title: that.model.get('title'),
+                            from_user_id: that.model.get('owner_id._id'),
+                            recipient_user_id: that.model.get('assigned_id._id')
                             // todo_id: that.model.get('_id')
                         });
 
@@ -1069,6 +1078,8 @@ define(function(require, exports, module) {
                                 patch: true
                             })
                             .then(function(newModel){
+
+                                that.model.fetch();
 
                                 Utils.Notification.Toast('Tap the $ to see the invoice');
                                 // App.history.navigate('invoice/' + newInvoice._id);
@@ -1297,7 +1308,7 @@ define(function(require, exports, module) {
                     this.TopBarMaximized.sequential.Owner.setContent('employer: ' + that.model.get('owner_id.profile.name'));
                 } else {
                     this.TopBarMaximized.sequential.Owner.setContent('employer: <span data-replace-id="' + that.model.get('owner_id') + '" data-replace-model="Profile" data-replace-target="profile.name"/>&nbsp;</span>');
-                    Utils.dataModelRepsequential.laceO(this.TopBarMaximized.sequential.Owner);
+                    Utils.dataModelReplaceOnSurface(this.TopBarMaximized.sequential.Owner);
                 }
                 this.TopBarMaximized.sequential.Owner.setClasses(['todo-view-owner-default','has_owner']);
             } else {

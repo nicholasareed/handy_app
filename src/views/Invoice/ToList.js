@@ -139,7 +139,7 @@ define(function(require, exports, module) {
 
         // create the header
         this.header = new StandardHeader({
-            content: "Send Invoice To",
+            content: "Money Recipient",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             // moreContent: false

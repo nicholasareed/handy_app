@@ -266,7 +266,7 @@ define(function(require, exports, module) {
             case 'draft':
                 
                 filter = {
-                    to_user_id: {
+                    recipient_user_id: {
                         '$exists' : false
                     },
                     tags: {
@@ -278,7 +278,7 @@ define(function(require, exports, module) {
             case 'sent':
                 
                 filter = {
-                    to_user_id: {
+                    recipient_user_id: {
                         '$exists' : true
                     },
                     tags: {
@@ -320,7 +320,7 @@ define(function(require, exports, module) {
         //         // filter.assigned_id = App.Data.User.get('_id');
         //         break;
         //     case 'to':
-        //         filter.to_user_id = App.Data.User.get('_id');
+        //         filter.recipient_user_id = App.Data.User.get('_id');
         //         break;
         //     case 'from':
         //         filter.from_user_id = App.Data.User.get('_id');
@@ -384,25 +384,6 @@ define(function(require, exports, module) {
         // All the tab options that could be clicked
         // - and a spacer
 
-        // Sent
-        this.filterTabs.UnpaidInvoices = new Surface({
-            content: 'Unpaid',
-            size: [100, undefined],
-            classes: ['invoice-filter-tabs-item-default']
-        });
-        this.filterTabs.UnpaidInvoices.group = 'Invoices';
-        this.filterTabs.UnpaidInvoices.on('click', function(){
-            that.tabs.invoices = 'sent';
-            that.tab_change();
-            that.filterTabs.Views.forEach(function(tmpView){
-                if(tmpView.group == 'Invoices'){
-                    tmpView.setClasses(['invoice-filter-tabs-item-default']);
-                }
-            });
-            this.setClasses(['invoice-filter-tabs-item-default','selected']);
-        });
-        this.filterTabs.Views.push(this.filterTabs.UnpaidInvoices);
-
         // Draft
         this.filterTabs.DraftInvoices = new Surface({
             content: 'Draft',
@@ -421,6 +402,25 @@ define(function(require, exports, module) {
             this.setClasses(['invoice-filter-tabs-item-default','selected']);
         });
         this.filterTabs.Views.push(this.filterTabs.DraftInvoices);
+
+        // Sent
+        this.filterTabs.UnpaidInvoices = new Surface({
+            content: 'Unpaid',
+            size: [100, undefined],
+            classes: ['invoice-filter-tabs-item-default']
+        });
+        this.filterTabs.UnpaidInvoices.group = 'Invoices';
+        this.filterTabs.UnpaidInvoices.on('click', function(){
+            that.tabs.invoices = 'sent';
+            that.tab_change();
+            that.filterTabs.Views.forEach(function(tmpView){
+                if(tmpView.group == 'Invoices'){
+                    tmpView.setClasses(['invoice-filter-tabs-item-default']);
+                }
+            });
+            this.setClasses(['invoice-filter-tabs-item-default','selected']);
+        });
+        this.filterTabs.Views.push(this.filterTabs.UnpaidInvoices);
 
         // Paid
         this.filterTabs.PaidInvoices = new Surface({
@@ -450,149 +450,8 @@ define(function(require, exports, module) {
         this.contentScrollView.Views.push(this.filterTabs);
 
         // Select Defaults
-        this.filterTabs.UnpaidInvoices._eventOutput.trigger('click');
+        this.filterTabs.DraftInvoices._eventOutput.trigger('click');
         // this.filterTabs.TodosAssignedAll._eventOutput.trigger('click');
-
-
-        return;
-
-
-
-        // All the tab options that could be clicked
-        // - and a spacer
-
-        this.filterTabs.InvoicesNotPaid = new Surface({
-            content: '<i class="icon ion-ios7-circle-outline"></i>',
-            size: [50, undefined],
-            classes: ['invoice-filter-tabs-item-default']
-        });
-        this.filterTabs.InvoicesNotPaid.group = 'InvoicesPaid';
-        this.filterTabs.InvoicesNotPaid.on('click', function(){
-            that.tabs.invoices_paid = 'notcomplete';
-            that.tab_change();
-            that.filterTabs.Views.forEach(function(tmpView){
-                if(tmpView.group == 'InvoicesPaid'){
-                    tmpView.setClasses(['invoice-filter-tabs-item-default']);
-                }
-            });
-            this.setClasses(['invoice-filter-tabs-item-default','selected']);
-        });
-        this.filterTabs.Views.push(this.filterTabs.InvoicesNotPaid);
-
-        this.filterTabs.InvoicesPaid = new Surface({
-            content: '<i class="icon ion-social-usd"></i>',
-            size: [50, undefined],
-            classes: ['invoice-filter-tabs-item-default']
-        });
-        this.filterTabs.InvoicesPaid.group = 'InvoicesPaid';
-        this.filterTabs.InvoicesPaid.on('click', function(){
-            that.tabs.invoices_paid = 'complete';
-            that.tab_change();
-            that.filterTabs.Views.forEach(function(tmpView){
-                if(tmpView.group == 'InvoicesPaid'){
-                    tmpView.setClasses(['invoice-filter-tabs-item-default']);
-                }
-            });
-            this.setClasses(['invoice-filter-tabs-item-default','selected']);
-        });
-        this.filterTabs.Views.push(this.filterTabs.InvoicesPaid);
-
-        this.filterTabs.InvoicesAll = new Surface({
-            content: 'All',
-            size: [50, undefined],
-            classes: ['invoice-filter-tabs-item-default']
-        });
-        this.filterTabs.InvoicesAll.group = 'InvoicesPaid';
-        this.filterTabs.InvoicesAll.on('click', function(){
-            that.tabs.invoices_paid = 'all';
-            that.tab_change();
-            that.filterTabs.Views.forEach(function(tmpView){
-                if(tmpView.group == 'InvoicesPaid'){
-                    tmpView.setClasses(['invoice-filter-tabs-item-default']);
-                }
-            });
-            this.setClasses(['invoice-filter-tabs-item-default','selected']);
-        });
-        this.filterTabs.Views.push(this.filterTabs.InvoicesAll);
-
-        // spacer
-        this.filterTabs.Spacer = new Surface({
-            size: [undefined, undefined]
-        });
-        this.filterTabs.Views.push(this.filterTabs.Spacer);
-
-        this.filterTabs.InvoicesFromMe = new Surface({
-            content: 'From',
-            size: [50, undefined],
-            classes: ['invoice-filter-tabs-item-default']
-        });
-        this.filterTabs.InvoicesFromMe.group = 'InvoicesRecipient';
-        this.filterTabs.InvoicesFromMe.on('click', function(){
-            that.tabs.invoices_recipient = 'from';
-            that.tab_change();
-            that.filterTabs.Views.forEach(function(tmpView){
-                if(tmpView.group == 'InvoicesRecipient'){
-                    tmpView.setClasses(['invoice-filter-tabs-item-default']);
-                }
-            });
-            this.setClasses(['invoice-filter-tabs-item-default','selected']);
-        });
-        this.filterTabs.Views.push(this.filterTabs.InvoicesFromMe);
-
-        this.filterTabs.InvoicesToMe = new Surface({
-            content: 'To',
-            size: [50, undefined],
-            classes: ['invoice-filter-tabs-item-default']
-        });
-        this.filterTabs.InvoicesToMe.group = 'InvoicesRecipient';
-        this.filterTabs.InvoicesToMe.on('click', function(){
-            that.tabs.invoices_recipient = 'to';
-            that.tab_change();
-            that.filterTabs.Views.forEach(function(tmpView){
-                if(tmpView.group == 'InvoicesRecipient'){
-                    tmpView.setClasses(['invoice-filter-tabs-item-default']);
-                }
-            });
-            this.setClasses(['invoice-filter-tabs-item-default','selected']);
-        });
-        this.filterTabs.Views.push(this.filterTabs.InvoicesToMe);
-
-        this.filterTabs.InvoicesAllWithMe = new Surface({
-            content: 'All',
-            size: [50, undefined],
-            classes: ['invoice-filter-tabs-item-default']
-        });
-        this.filterTabs.InvoicesAllWithMe.group = 'InvoicesRecipient';
-        this.filterTabs.InvoicesAllWithMe.on('click', function(){
-            that.tabs.invoices_recipient = 'all';
-            that.tab_change();
-            that.filterTabs.Views.forEach(function(tmpView){
-                if(tmpView.group == 'InvoicesRecipient'){
-                    tmpView.setClasses(['invoice-filter-tabs-item-default']);
-                }
-            });
-            this.setClasses(['invoice-filter-tabs-item-default','selected']);
-        });
-        this.filterTabs.Views.push(this.filterTabs.InvoicesAllWithMe);
-
-        this.filterTabs.Layout.sequenceFrom(this.filterTabs.Views);
-
-        // hack/fix for setRatio with true surfaces
-        // - should instead have the FlexibleLayout check for a "still dirty" surface or getSize and wait for it to not be "null"
-        // Timer.setTimeout(function(){
-        //     console.log(1);
-        //     that.filterTabs.Layout.setRatios(theRatio);
-        // },2000);
-        
-        var node = this.filterTabs.add(this.filterTabs.SizeMod);
-        node.add(Utils.usePlane('contentTabs',-1)).add(this.filterTabs.BgSurface);
-        node.add(Utils.usePlane('contentTabs')).add(this.filterTabs.Layout);
-
-        this.contentScrollView.Views.push(this.filterTabs);
-
-        // Select Defaults
-        this.filterTabs.InvoicesNotPaid._eventOutput.trigger('click');
-        this.filterTabs.InvoicesAllWithMe._eventOutput.trigger('click');
 
     };
     
