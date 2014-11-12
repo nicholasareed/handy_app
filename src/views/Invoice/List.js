@@ -80,9 +80,35 @@ define(function(require, exports, module) {
         var that = this;
         
         // Icons
+        this.headerContent = new View();
+
+        // Payment methods
+        this.headerContent.Payment = new Surface({
+            content: '<i class="icon ion-card"></i>',
+            size: [App.Defaults.Header.Icon.w, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.Payment.on('longtap', function(){
+            Utils.Help('Invoice/List/Payment');
+        });
+        this.headerContent.Payment.on('click', function(){
+            App.history.navigate('payment_source/list');
+        });
+
+        // Accept Money (recipient)
+        this.headerContent.Recipient = new Surface({
+            content: '<i class="icon ion-cash"></i>',
+            size: [App.Defaults.Header.Icon.w, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.Recipient.on('longtap', function(){
+            Utils.Help('Invoice/List/Recipient');
+        });
+        this.headerContent.Recipient.on('click', function(){
+            App.history.navigate('payment_recipient/list');
+        });
 
         // Create an Invoice
-        this.headerContent = new View();
         this.headerContent.Create = new Surface({
             content: '<i class="icon ion-ios7-plus-outline"></i>',
             size: [App.Defaults.Header.Icon.w, undefined],
@@ -200,6 +226,8 @@ define(function(require, exports, module) {
             // moreClasses: ["normal-header"],
             moreSurfaces: [
                 // this.headerContent.Invoices,
+                this.headerContent.Payment,
+                this.headerContent.Recipient,
                 this.headerContent.Create,
                 // this.headerContent.FilterSwitcher,
             ]
@@ -222,7 +250,7 @@ define(function(require, exports, module) {
         // this.HeaderNode.add(this.header.StateModifier).add(this.header);
 
         // Attach header to the layout        
-        this.layout.header.add(this.header);
+        this.layout.header.add(Utils.usePlane('header')).add(this.header);
 
     };
 

@@ -162,17 +162,17 @@ define(function(require, exports, module) {
                 href: 'profile/edit'
             },
 
-            {
-                title: 'Payments',
-                desc: 'Manage cards, etc.',
-                href: 'payment_source/list'
-            },
+            // {
+            //     title: 'Payments',
+            //     desc: 'Manage cards, etc.',
+            //     href: 'payment_source/list'
+            // },
 
-            {
-                title: 'Accept Money',
-                desc: 'Manage debit accounts',
-                href: 'payment_recipient/list'
-            },
+            // {
+            //     title: 'Accept Money',
+            //     desc: 'Manage debit accounts',
+            //     href: 'payment_recipient/list'
+            // },
 
             {
                 title: 'Push Notifications',
