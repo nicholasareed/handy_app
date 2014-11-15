@@ -63,6 +63,7 @@
     <gap:plugin name="com.phonegap.plugins.barcodescanner" />
     <gap:plugin name="com.verso.cordova.clipboard" />
     <gap:plugin name="org.apache.cordova.splashscreen" />
+    <gap:plugin name="com.chariotsolutions.nfc.plugin" version="0.5.1" />
 
     <!-- <gap:plugin name="com.plugin.datepicker" /> -->
     <gap:plugin name="nl.x-services.plugins.socialsharing" />
@@ -77,9 +78,9 @@
 
 
     <!-- Android SingleInstance LaunchMode -->
-    <!-- <gap:config-file platform="android" parent="/manifest/application">
+    <gap:config-file platform="android" parent="/manifest/application">
         <activity android:launchMode="singleInstance" />
-    </gap:config-file> -->
+    </gap:config-file>
 
     
     <gap:plugin name="nl.x-services.plugins.launchmyapp">

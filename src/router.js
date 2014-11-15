@@ -360,7 +360,12 @@ define(function(require, exports, module) {
                     defaultRoute('FriendList', 'Friend/List', arguments, {cache: true});
                 },
                 'friend/add' : function(){
-                    defaultRoute('FriendInvite', 'Friend/LocalInvite', arguments, {cache: true});
+                    // defaultRoute('FriendInvite', 'Friend/LocalInvite', arguments, {cache: true});
+                    defaultRoute('FriendInvite', 'Friend/InviteOptions', arguments, {cache: true});
+                },
+                'friend/localsearch/email' : function(){
+                    // defaultRoute('FriendInvite', 'Friend/LocalInvite', arguments, {cache: true});
+                    defaultRoute('FriendLocalSearchEmail', 'Friend/LocalSearchEmail', arguments, {cache: true});
                 },
 
                 'friend/emailonly/choose/:type/:todo_or_invoice_id' : function(){

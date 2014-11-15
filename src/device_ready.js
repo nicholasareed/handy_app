@@ -452,7 +452,7 @@ define(function(require, exports, module) {
 
                     App.Data.pushNotification.register(function(result){
 
-                        Utils.Notification.Toast('Registered for Push Notifications');
+                        // Utils.Notification.Toast('Registered for Push Notifications');
                         console.log('Push Setup OK');
                         // alert('Push Setup OK');
                         // alert('success w/ Push Notifications');

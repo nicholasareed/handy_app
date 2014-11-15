@@ -84,7 +84,7 @@ define(function(require, exports, module) {
 
         // Admin interface
         this.headerContent.Admin = new Surface({
-            content: '<i class="icon ion-alert-circled"></i>',
+            content: '<i class="icon ion-arrow-swap"></i>',
             size: [App.Defaults.Header.Icon.w, undefined],
             classes: ['header-tab-icon-text-big']
         });

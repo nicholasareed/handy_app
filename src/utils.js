@@ -410,7 +410,75 @@ define(function (require) {
                     splitPath = pathname.split('/');
 
                 switch(splitPath[0]){
+
+                    case 'u':
+                        Utils.Notification.Toast('Viewing user');
+
+                        App.history.navigate('user/' + splitPath[1]);
+                        break;
+
                     case 'i':
+                        alert(2);
+                        return;
+                        Utils.Popover.Buttons({
+                            title: 'Opened URL Options',
+                            text: 'Choose from the following options',
+                            buttons: [{
+                                text: 'Make Connection',
+                                success: function(){
+
+                                    Utils.Notification.Toast('Creating Connection');
+
+                                    // Check the invite code against the server
+                                    // - creates the necessary relationship also
+                                    $.ajax({
+                                        url: Credentials.server_root + 'friend/connect',
+                                        method: 'post',
+                                        data: {
+                                            from: 'url', // if on the Player Edit / LinkUp page, we'd be using 'linkup'
+                                            friend_id: splitPath[1]
+                                        },
+                                        success: function(response){
+                                            if(response.code != 200){
+                                                if(response.msg){
+                                                    Utils.Popover.Alert(response.msg);
+                                                    return;
+                                                }
+                                                Utils.Popover.Alert('Failed to create connection, please try again');
+                                                return false;
+                                            }
+
+                                            // Relationship has been created
+                                            // - either just added to a player
+                                            //      - simply go look at it
+                                            // - or am the Owner of a player now
+                                            //      - go edit the player
+
+                                            if(response.type == 'friend'){
+                                                Utils.Notification.Toast('You have successfully added a friend!');
+
+                                                // Update list of players
+                                                App.Data.User.fetch();
+
+                                                // App.history.back();
+
+                                                return;
+                                            }
+
+                                        },
+                                        error: function(err){
+                                            Utils.Popover.Alert('Failed with that code, please try again');
+                                            return;
+                                        }
+                                    });
+
+                                }
+                            }]
+                        });
+
+                        break;
+
+                    case 'old_i':
                         Utils.Notification.Toast('Accepting a Friend Invite!');
 
                         var code = splitPath[1];

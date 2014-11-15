@@ -204,7 +204,7 @@ define(function(require, exports, module) {
                 // this.headerContent.PotentialFriends,
                 // this.headerContent.GetRecommendation,
                 this.headerContent.Invite,
-                this.headerContent.QuickInvite
+                // this.headerContent.QuickInvite
             ]
             // moreContent: "New", //'<span class="icon ion-navicon-round"></span>'
         });
