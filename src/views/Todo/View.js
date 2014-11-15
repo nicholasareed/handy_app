@@ -1039,6 +1039,10 @@ define(function(require, exports, module) {
         //     alert(a);
         // });
         // return;
+            if(a === false){
+                // canceled out
+                return;
+            }
 
         // Utils.Popover.Prompt('Cost of this Job','','Next','Cancel')
         // .then(function(a){
