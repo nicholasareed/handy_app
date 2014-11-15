@@ -341,11 +341,11 @@ define(function(require, exports, module) {
         var modelKey = 'emails'; // phoneNumbers
 
         if(!Model.get(modelKey)){
-            emailCount = '<strong>0</strong> numbers';
+            emailCount = '<strong>0</strong> emails';
         } else if(Model.get(modelKey).length == 1){
-            emailCount = '<stong>1</strong> number';
+            emailCount = '<stong>1</strong> email';
         } else {
-            emailCount = '<strong>' + Model.get(modelKey).length + '</strong> numbers';
+            emailCount = '<strong>' + Model.get(modelKey).length + '</strong> emails';
         }
 
         userView.Model = Model;
@@ -361,12 +361,12 @@ define(function(require, exports, module) {
             var userEmail = userView.Model.get(modelKey);
 
             if(!userEmail || !userEmail.length){
-                Utils.Notification.Toast('No phone number!');
+                Utils.Notification.Toast('No emails!');
                 return;
             }
 
             if(userEmail.length > 1){
-                // Multiple phone number options!
+                // Multiple phone email options!
                 var optList = [];
                 userEmail.forEach(function(email){
                     optList.push({

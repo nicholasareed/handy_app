@@ -256,6 +256,8 @@ define(function(require, exports, module) {
         // var body = "Down the OddJob app theoddjobapp.com/i/" + newRCode.get('code');
         // console.log(subject);
 
+        return;
+
         var subject = 'OddJob Invite';
         var body = 'View my OddJob profile and connect with me by visiting theoddjobapp.com/u/' + App.Data.User.get('_id');
         window.plugins.socialsharing.shareViaEmail(subject, email, function(msg) {
@@ -326,14 +328,18 @@ define(function(require, exports, module) {
     PageView.prototype.send_invite_via_email = function(ev){
         var that = this;
 
-        Utils.Popover.Alert('ok');
-
         if(this.checking === true){
-            // return;
+            return;
         }
         this.checking = true;
 
-        var formData = {};
+        var subject = 'OddJob Invite';
+        var body = 'View my OddJob profile and connect with me by visiting theoddjobapp.com/u/' + App.Data.User.get('_id');
+        window.plugins.socialsharing.shareViaEmail(subject, email, function(msg) {
+            console.log('ok: ' + msg)
+        }, function(msg) {
+            Utils.Notification.Toast('Error: ' + msg)
+        })
 
 
         return false;

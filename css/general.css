@@ -81,13 +81,11 @@ body {
   background: white;
 
   padding: 0px 8px;
-
-  border-bottom: 1px dashed #ddd;
 }
 
 .contact-list-item-default > div:nth-child(1) {
   font-size: 36px;
-  line-height: 36px;
+  line-height: 40px;
   color: #333;
 
   padding-top: 10px;
@@ -98,6 +96,7 @@ body {
   line-height: 18px;
   color: #333;
   padding-left: 4px;
+  border-bottom: 1px dashed #ddd;
 }
 
 
