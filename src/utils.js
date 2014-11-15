@@ -403,7 +403,7 @@ define(function (require) {
                 console.log('url');
                 console.log(url);
 
-                var urlhost = 'ulu://',
+                var urlhost = 'oddjob://',
 
                     n = url.indexOf(urlhost),
                     pathname = url.substring(n + urlhost.length),
