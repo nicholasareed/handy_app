@@ -330,11 +330,6 @@ define(function(require, exports, module) {
 
         Utils.Notification.Toast('Send invite via email');
 
-        if(this.checking === true){
-            return;
-        }
-        this.checking = true;
-
         var subject = 'OddJob Invite';
         var body = 'View my OddJob profile and connect with me by visiting http://theoddjobapp.com/u/' + App.Data.User.get('_id');
         var To = $.trim(this._inputs['email'].getValue().toString());
