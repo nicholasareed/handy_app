@@ -418,8 +418,7 @@ define(function (require) {
                         break;
 
                     case 'i':
-                        alert(2);
-                        return;
+                    
                         Utils.Popover.Buttons({
                             title: 'Opened URL Options',
                             text: 'Choose from the following options',
@@ -467,7 +466,7 @@ define(function (require) {
 
                                         },
                                         error: function(err){
-                                            Utils.Popover.Alert('Failed with that code, please try again');
+                                            Utils.Popover.Alert('Failed to create connection, please try again');
                                             return;
                                         }
                                     });
