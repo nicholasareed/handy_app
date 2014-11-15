@@ -204,7 +204,7 @@ define(function(require, exports, module) {
         // });
         // this.searchContacts.pipe(this.form._formScrollView);
         // this.allInputs.push(this.searchContacts);
-        
+
 
         this.form.addInputsToForm(this.allInputs);
 
@@ -316,7 +316,7 @@ define(function(require, exports, module) {
         this.submitButton = new FormHelper({
             form: this.form,
             type: 'submit',
-            value: 'Send Invite',
+            value: 'Launch Email App',
             margins: [10,10],
             click: this.send_invite_via_email.bind(this)
         });
@@ -336,8 +336,14 @@ define(function(require, exports, module) {
         this.checking = true;
 
         var subject = 'OddJob Invite';
-        var body = 'View my OddJob profile and connect with me by visiting theoddjobapp.com/u/' + App.Data.User.get('_id');
-        window.plugins.socialsharing.shareViaEmail(body, subject, null, null, null, null, function(msg) {
+        var body = 'View my OddJob profile and connect with me by visiting http://theoddjobapp.com/u/' + App.Data.User.get('_id');
+        var To = $.trim(this._inputs['email'].getValue().toString());
+        if(To == ''){
+            To = [];
+        } else {
+            To = [To];
+        }
+        window.plugins.socialsharing.shareViaEmail(body, subject, To, null, null, null, function(msg) {
             console.log('ok: ' + msg)
             Utils.Notification.Toast('Launched Email Client');
         }, function(msg) {
