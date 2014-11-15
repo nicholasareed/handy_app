@@ -36,7 +36,7 @@ define(function(require, exports, module) {
 
         this.layout = new View();
         this.layout.SizeMod = new StateModifier({
-            size: [300, 437]
+            size: [undefined, 437]
         });
 
         this._currencyAmount = 0;
@@ -118,7 +118,7 @@ define(function(require, exports, module) {
         this.createNumbersAndButtons();
 
         this.ButtonsView = new LayoutBuilder({
-            size: [300, 300],
+            size: [undefined, 300],
             grid: {
                 dimensions: [3,4],
                 sequenceFrom: this.NumberButtonViews
