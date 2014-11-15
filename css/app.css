@@ -379,7 +379,6 @@
 
   padding: 0px 8px;
 
-  border-bottom: 1px dashed #ddd;
 }
 
 .select-friends-list-item-default > div:nth-child(1) {
@@ -398,6 +397,10 @@
   color: #333;
 
   padding-bottom: 16px;
+}
+
+.select-friends-list-item-default > div:last-child {
+  border-bottom: 1px dashed #ddd;
 }
 
 
