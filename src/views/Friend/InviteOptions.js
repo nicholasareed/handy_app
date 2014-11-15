@@ -335,8 +335,9 @@ define(function(require, exports, module) {
 
         var subject = 'OddJob Invite';
         var body = 'View my OddJob profile and connect with me by visiting theoddjobapp.com/u/' + App.Data.User.get('_id');
-        window.plugins.socialsharing.shareViaEmail(subject, email, function(msg) {
+        window.plugins.socialsharing.shareViaEmail(body, subject, null, null, null, null, function(msg) {
             console.log('ok: ' + msg)
+            Utils.Notification.Toast('Launched Email Client');
         }, function(msg) {
             Utils.Notification.Toast('Error: ' + msg)
         })
