@@ -328,6 +328,8 @@ define(function(require, exports, module) {
     PageView.prototype.send_invite_via_email = function(ev){
         var that = this;
 
+        Utils.Notification.Toast('Send invite via email');
+
         if(this.checking === true){
             return;
         }
