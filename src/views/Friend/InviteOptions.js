@@ -179,32 +179,32 @@ define(function(require, exports, module) {
         this.createSubmitButton();
 
 
-        // spacer !!
-        this.spacer = new Surface({
-            size: [undefined, 1],
-            properties: {
-                background: '#ddd'
-            }
-        });
-        this.spacer.pipe(this.form._formScrollView);
+        // // spacer !!
+        // this.spacer = new Surface({
+        //     size: [undefined, 1],
+        //     properties: {
+        //         background: '#ddd'
+        //     }
+        // });
+        // this.spacer.pipe(this.form._formScrollView);
 
-        this.allInputs.push(this.spacer);
+        // this.allInputs.push(this.spacer);
 
-        // Additional options
-        // - Get email from contacts
+        // // Additional options
+        // // - Get email from contacts
 
-        this.searchContacts = new Surface({
-            content: 'Search Contacts',
-            wrap: '<div class="outward-button"></div>',
-            size: [window.innerWidth, true],
-            classes: ['button-outwards-default']
-        });
-        this.searchContacts.on('click', function(){
-            App.history.navigate('friend/localsearch/email');
-        });
-        this.searchContacts.pipe(this.form._formScrollView);
-
-        this.allInputs.push(this.searchContacts);
+        // this.searchContacts = new Surface({
+        //     content: 'Search Contacts',
+        //     wrap: '<div class="outward-button"></div>',
+        //     size: [window.innerWidth, true],
+        //     classes: ['button-outwards-default']
+        // });
+        // this.searchContacts.on('click', function(){
+        //     App.history.navigate('friend/localsearch/email');
+        // });
+        // this.searchContacts.pipe(this.form._formScrollView);
+        // this.allInputs.push(this.searchContacts);
+        
 
         this.form.addInputsToForm(this.allInputs);
 
