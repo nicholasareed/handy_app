@@ -418,7 +418,7 @@ define(function (require) {
                         break;
 
                     case 'i':
-                    
+
                         Utils.Popover.Buttons({
                             title: 'Opened URL Options',
                             text: 'Choose from the following options',
@@ -627,8 +627,8 @@ define(function (require) {
                 sourceType : null, //Camera.PictureSourceType.CAMERA,
                 allowEdit : true,
                 encodingType: Camera.EncodingType.JPEG,
-                targetWidth: 1000,
-                targetHeight: 1000,
+                targetWidth: -1,
+                targetHeight: -1,
                 popoverOptions: CameraPopoverOptions,
                 saveToPhotoAlbum: false 
               };
