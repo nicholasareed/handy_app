@@ -43,7 +43,8 @@ define(function(require, exports, module) {
         email: require('text!./tpl/ContentEmail.html'),
         mark_complete: require('text!./tpl/ContentMarkComplete.html'),
         mark_incomplete: require('text!./tpl/ContentMarkIncomplete.html'),
-        added_email: require('text!./tpl/ContentAddedEmail.html')
+        added_email: require('text!./tpl/ContentAddedEmail.html'),
+        generic_invoice_update: require('text!./tpl/ContentGenericInvoiceUpdate.html')
     };
     var templates           = {};
     _.each(tpls, function(val, key){
@@ -244,12 +245,11 @@ define(function(require, exports, module) {
             //     surfaceVars.classes.push('list-content-mark-complete-default');
             //     break;
 
-            // case 'mark_incomplete':
-            //     // Display some text
-            //     surfaceVars.content = templates.mark_incomplete(Model.toJSON());
-            //     surfaceVars.classes.push('list-content-mark-complete-default');
-            //     surfaceVars.classes.push('incomplete');
-            //     break;
+            case 'added_to_invoice':
+                // Display some text
+                surfaceVars.content = templates.generic_invoice_update(Model.toJSON());
+                surfaceVars.classes.push('list-content-item-default');
+                break;
 
             default:
                 // console.error('testing default type');
