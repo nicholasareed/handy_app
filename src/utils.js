@@ -335,6 +335,30 @@ define(function (require) {
                 // Change history (must)
                 App.history.navigate('popover/colorpicker', {history: false});
             },
+            Currency: function(opts){ // use callback pattern instead?
+
+                var def = $.Deferred();
+
+                // defaults
+                opts = _.defaults(opts, {
+                    title: null
+                });
+
+                opts.on_done = function(value){
+                    def.resolve(value);
+                };
+                opts.on_cancel = function(){
+                    def.resolve(false);
+                };
+
+                // Options and details
+                App.Cache.OptionModal = opts;
+
+                // Change history (must)
+                App.history.navigate('popover/currency', {history: false});
+
+                return def.promise();
+            },
         },
 
         Help: function(key){

@@ -334,7 +334,9 @@ define(function(require, exports, module) {
 
                         Utils.Notification.Toast('Creating Invoice');
 
-                        Utils.Popover.Prompt('Cost of this Job','','Save','Cancel','number')
+                        Utils.Popover.Currency({
+                            title: 'Cost of this Job'
+                        })
                         .then(function(a){
                             a = parseFloat(a);
                             if(!a){
@@ -1030,8 +1032,16 @@ define(function(require, exports, module) {
         tags = that.model.toJSON().tags;
         tags.push('complete');
 
-        Utils.Popover.Prompt('Cost of this Job','','Next','Cancel')
+        Utils.Popover.Currency({
+            title: 'Cost of this Job'
+        })
         .then(function(a){
+        //     alert(a);
+        // });
+        // return;
+
+        // Utils.Popover.Prompt('Cost of this Job','','Next','Cancel')
+        // .then(function(a){
             a = parseFloat(a);
             if(isNaN(a) ||  (!a && a != 0)){
                 // canceled

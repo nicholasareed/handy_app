@@ -25,6 +25,7 @@ require.config({
         jquery: '../src/lib2/jquery',
         backbone: '../src/lib2/backbone',
         moment: '../src/lib2/moment',
+        numeral: '../src/lib2/numeral.min',
         // history: '../src/lib2/history',
         utils: '../src/utils',
         handlebars: '../src/lib2/handlebars',

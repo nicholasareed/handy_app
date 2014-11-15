@@ -382,6 +382,81 @@ body {
 
 
 
+/* Currency Input */
+
+.currency-input-bg {
+  background: white;
+}
+
+.currency-input-title {
+
+  text-align: center;
+  padding: 10px;
+
+  border-bottom: 1px solid #eee;
+}
+
+.currency-input-title > div {
+  font-size: 24px;
+  line-height: 28px;
+}
+
+
+.currency-input-type {
+  text-align: center;
+  line-height: 80px;
+
+  border-right: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+
+}
+
+.currency-input-amount {
+  text-align: right;
+  padding: 0 10px;
+
+  border-right: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+.currency-input-amount div {
+  font-size: 44px;
+
+  line-height: 80px;
+}
+
+.currency-input-delete {
+  text-align: center;
+}
+
+.currency-input-number {
+  text-align: center;
+  line-height: 75px;
+
+  font-size: 24px;
+}
+
+.currency-input-number div {
+  display: inline-block;
+
+  width: 50px;
+  height: 50px;
+
+  line-height: 50px;
+
+  border: 1px solid #eee;
+
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+}
+
+.currency-input-button {
+  line-height: 75px;
+  text-align: center;
+
+  font-size: 30px;
+}
+
 
 
 /* Misc colors */

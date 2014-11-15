@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var Scene = require('famous/core/Scene');
     var Surface = require('famous/core/Surface');
+    var ElementOutput = require('famous/core/ElementOutput');
     var RenderNode = require('famous/core/RenderNode');
     var Transform = require('famous/core/Transform');
     var View = require('famous/core/View');
@@ -22,6 +23,7 @@ define(function(require, exports, module) {
     var Timer = require('famous/utilities/Timer');
     var Utils = require('utils');
 
+    var GridLayout = require('famous/views/GridLayout');
     var FlexibleLayout = require('famous/views/FlexibleLayout');
     var SequentialLayout = require('famous/views/SequentialLayout');
     var ScrollView = require('famous/views/Scrollview');
@@ -48,6 +50,7 @@ define(function(require, exports, module) {
         var returnNode; // node that gets wrapped by size
         var name;
 
+
         // maybe passing in a famous-like element already?, that just needs a name?
 
         // "extract" out the keys we might want to use
@@ -55,9 +58,15 @@ define(function(require, exports, module) {
         // What type are we going to use?
         if(options.surface){
             // EXPECTING a title/key to be here
-            name = _.without(Object.keys(options.surface),'click','pipe')[0];
-            console.log('name', name);
-            node = options.surface[name];
+            if(options.surface.key){
+                name = options.surface.key;
+                console.log('name1', name);
+                node = options.surface.surface; // if using this format, then "surface" is for our surface
+            } else {
+                name = _.without(Object.keys(options.surface),'click','pipe','surface')[0];
+                console.log('name2', name);
+                node = options.surface[name];
+            }
 
             if(options.surface.click){
                 node.on('click', options.surface.click);
@@ -65,8 +74,8 @@ define(function(require, exports, module) {
             if(options.surface.pipe){
                 node.pipe(options.surface.pipe);
             }
-
             return node;
+
         } else if(options.flexible){
             name = 'flexible';
             returnNode = this.createFlexibleLayout(options.flexible);
@@ -77,9 +86,17 @@ define(function(require, exports, module) {
 
         } else if(options.flipper){
 
+        } else if(options.grid){
+            name = 'grid';
+            returnNode = this.createGridLayout(options.grid);
         } else {
             console.error('missing type of Layout to build');
             debugger;
+        }
+
+        // change name?
+        if(options[name].key){
+            name = options[name].key;
         }
 
         // set the size (can handle a bunch of passed-in sizes)
@@ -145,35 +162,23 @@ define(function(require, exports, module) {
         // sequenceFrom
         options.sequenceFrom.forEach(function(obj){
 
-            if((typeof obj).toLowerCase() == 'object'){
-
-                // // obj passed in, by name to reference it
-                // // - the ONLY key!!
-                // // - Surface, etc.
-                var key = Object.keys(obj)[0];
-                var name = Object.keys(obj[key])[0];
-                // var tmpNode = obj[key];
-                // if(tmpNode instanceof String){
-                //     // what else could somebody pass in?
-                // } else {
-                //     // expecting a RenderNode or other Famous-like node-thing
-                //     tmp[key] = tmpNode;
-                // }
-                // var tmpObj = {
-                //     surface: tmpNode;
-                // };
-                var tmpNode = new LayoutBuilder(obj);
+            var tmpNode;
+            if(obj instanceof ElementOutput ||
+               obj instanceof RenderNode ||
+               obj instanceof View ||
+               obj instanceof Surface){
+                tmpNode = obj;
+            } else if((typeof obj).toLowerCase() == 'object'){
+                var typofLayout = _.without(Object.keys(obj),'size')[0]; // "surface"
+                var name = obj[typofLayout].key ? obj[typofLayout].key : Object.keys(obj[typofLayout])[0];
+                tmpNode = new LayoutBuilder(obj);
                 tmp[name] = tmpNode;
-                // tmp[key] = tmpNode;
-
             } else {
-                // Using a famous-node element
-                // - probably for prototyping quickly
-                console.log('famous-like element?', obj);
-                var tmpNode = obj;
+                console.error('unknown type');
+                debugger;
             }
 
-            console.info('tmpNode', tmpNode);
+            // console.info('tmpNode', tmpNode);
             tmp.Views.push(tmpNode);
         });
 
@@ -200,22 +205,22 @@ define(function(require, exports, module) {
         // sequenceFrom
         options.sequenceFrom.forEach(function(obj){
 
-            if((typeof obj).toLowerCase() == 'object'){
-
-                var key = Object.keys(obj)[0];
-                var name = Object.keys(obj[key])[0];
-                var tmpNode = new LayoutBuilder(obj);
+            var tmpNode;
+            if(obj instanceof ElementOutput ||
+               obj instanceof RenderNode ||
+               obj instanceof View ||
+               obj instanceof Surface){
+                tmpNode = obj;
+            } else if((typeof obj).toLowerCase() == 'object'){
+                var typofLayout = _.without(Object.keys(obj),'size')[0]; // "surface"
+                var name = obj[typofLayout].key ? obj[typofLayout].key : Object.keys(obj[typofLayout])[0];
+                tmpNode = new LayoutBuilder(obj);
                 tmp[name] = tmpNode;
-
-                // tmp[key] = tmpNode;
-
             } else {
-                // Using a famous-node element
-                // - probably for prototyping quickly
-                console.log('famous-like element?', obj);
-                var tmpNode = obj;
+                console.error('unknown type');
+                debugger;
             }
-
+            
             console.info('tmpNode', tmpNode);
             tmp.Views.push(tmpNode);
         });
@@ -237,20 +242,57 @@ define(function(require, exports, module) {
         // sequenceFrom
         options.sequenceFrom.forEach(function(obj){
 
-            if((typeof obj).toLowerCase() == 'object'){
-
-                var key = Object.keys(obj)[0];
-                var name = Object.keys(obj[key])[0];
-                var tmpNode = new LayoutBuilder(obj);
+            var tmpNode;
+            if(obj instanceof ElementOutput ||
+               obj instanceof RenderNode ||
+               obj instanceof View ||
+               obj instanceof Surface){
+                tmpNode = obj;
+            } else if((typeof obj).toLowerCase() == 'object'){
+                var typofLayout = _.without(Object.keys(obj),'size')[0]; // "surface"
+                var name = obj[typofLayout].key ? obj[typofLayout].key : Object.keys(obj[typofLayout])[0];
+                tmpNode = new LayoutBuilder(obj);
                 tmp[name] = tmpNode;
-
-                // tmp[key] = tmpNode;
-
             } else {
-                // Using a famous-node element
-                // - probably for prototyping quickly
-                console.log('famous-like element?', obj);
-                var tmpNode = obj;
+                console.error('unknown type');
+                debugger;
+            }
+
+            console.info('tmpNode', tmpNode);
+            tmp.Views.push(tmpNode);
+        });
+
+        tmp.sequenceFrom(tmp.Views);
+
+        return tmp;
+
+    };
+
+    LayoutBuilder.prototype.createGridLayout = function(options){
+        var that = this;
+
+        var tmp = new GridLayout({
+            dimensions: options.dimensions || [] // 3 col, 4 row
+        });
+        tmp.Views = [];
+
+        // sequenceFrom
+        options.sequenceFrom.forEach(function(obj){
+
+            var tmpNode;
+            if(obj instanceof ElementOutput ||
+               obj instanceof RenderNode ||
+               obj instanceof View ||
+               obj instanceof Surface){
+                tmpNode = obj;
+            } else if((typeof obj).toLowerCase() == 'object'){
+                var typofLayout = _.without(Object.keys(obj),'size')[0]; // "surface"
+                var name = obj[typofLayout].key ? obj[typofLayout].key : Object.keys(obj[typofLayout])[0];
+                tmpNode = new LayoutBuilder(obj);
+                tmp[name] = tmpNode;
+            } else {
+                console.error('unknown type');
+                debugger;
             }
 
             console.info('tmpNode', tmpNode);
