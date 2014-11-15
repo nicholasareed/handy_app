@@ -706,6 +706,13 @@
   line-height: 13px;
 }
 
+.list-content-item-default div.formatted-datetime {
+ color: #888;
+
+  font-size: 11px;
+  line-height: 13px;   
+}
+
 
 
 

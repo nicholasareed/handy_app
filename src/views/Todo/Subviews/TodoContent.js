@@ -292,6 +292,9 @@ define(function(require, exports, module) {
         contentView.Surface.on('click', function(){
             // Utils.Notification.Toast('View Todo');
             // App.history.navigate('todo/' + Model.get('_id'));
+            if(Model.get('type') == 'added_to_invoice'){
+                App.history.navigate('invoice/' + Model.get('details.invoice_id'));
+            }
         });
 
         contentView.add(contentView.Surface);
