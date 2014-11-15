@@ -78,9 +78,10 @@
 
 
     <!-- Android SingleInstance LaunchMode -->
+    <!--
     <gap:config-file platform="android" parent="/manifest/application">
         <activity android:launchMode="singleInstance" />
-    </gap:config-file>
+    </gap:config-file>-->
 
     
     <gap:plugin name="nl.x-services.plugins.launchmyapp">
