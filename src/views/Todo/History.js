@@ -15,9 +15,6 @@ define(function(require, exports, module) {
     var Transform = require('famous/core/Transform');
     var Matrix = require('famous/core/Transform');
     var RenderNode         = require('famous/core/RenderNode')
-    
-    var LongTapSync = require("views/common/LongTapSync");
-        
 
     var Utility = require('famous/utilities/Utility');
     var Timer = require('famous/utilities/Timer');
@@ -44,14 +41,13 @@ define(function(require, exports, module) {
 
     // Notifications SubView
     var AllView      = require('./Subviews/All');
-    var FilterView      = require('./Subviews/All');
+    // var RecommendedView      = require('./Subviews/Recommended');
     // var PotentialView      = require('./Subviews/Potential');
     // var IncomingView      = require('./Subviews/Incoming');
     // var OutgoingView      = require('./Subviews/Outgoing');
     
-    // Models
-    var MediaModel = require('models/media');
-    var TodoModel = require('models/todo');
+    // // Models
+    // var MediaModel = require('models/media');
 
     function PageView(params) {
         var that = this;
@@ -68,20 +64,12 @@ define(function(require, exports, module) {
 
         this._subviews = [];
 
-        // // Wait for User to be resolved
-        // App.Data.User.populated().then((function(){
+        // Wait for User to be resolved
+        App.Data.User.populated().then((function(){
             this.createContent();
-        // }).bind(this));
+        }).bind(this));
 
         this.add(this.layout);
-
-        // Listen for 'showing' events
-        this._eventOutput.on('inOutTransition', function(args){
-            // 0 = direction
-            if(args[0] == 'showing'){
-                App.Data.TodoCollection.fetch();
-            }
-        });
 
     }
 
@@ -92,19 +80,22 @@ define(function(require, exports, module) {
         var that = this;
         
         // Icons
-
-        // Create a Todo
         this.headerContent = new View();
 
         // create the header
         this.header = new StandardHeader({
-            content: "Job History",
+            content: "All Jobs",
             classes: ["normal-header"],
             backClasses: ["normal-header"],
-            moreSurfaces: [
-                // this.headerContent.Invoices,
-                // this.headerContent.FilterSwitcher,
-            ]
+            moreContent: false
+            // backContent: false,
+            // moreClasses: ["normal-header"],
+            // moreSurfaces: [
+            //     // this.headerContent.PotentialFriends,
+            //     // this.headerContent.GetRecommendation,
+            //     // this.headerContent.BankDetails,
+            //     // this.headerContent.Create
+            // ]
             // moreContent: "New", //'<span class="icon ion-navicon-round"></span>'
         });
         this.header._eventOutput.on('back',function(){
@@ -118,88 +109,37 @@ define(function(require, exports, module) {
             this.header.inOutTransition.apply(this.header, args);
         })
 
-        // // Node for Modifier and background
-        // this.HeaderNode = new RenderNode();
-        // this.HeaderNode.add(this.headerBg);
-        // this.HeaderNode.add(this.header.StateModifier).add(this.header);
-
         // Attach header to the layout        
-        this.layout.header.add(this.header);
+        this.layout.header.add(Utils.usePlane('header')).add(this.header);
 
     };
-
     
     PageView.prototype.createContent = function(){
         var that = this;
 
-        // this.contentScrollView = new SequentialLayout();
+        // this.contentScrollView = new ScrollView(App.Defaults.ScrollView);
         this.contentScrollView = new FlexibleLayout({
-            direction: 1, //FlexibleLayout.DIRECTION_Y,
-            ratios: [1]
+            direction: FlexibleLayout.DIRECTION_Y,
+            ratios: [true, 1]
         });
         this.contentScrollView.Views = [];
 
         // Content
         this.ContentStateModifier = new StateModifier();
 
-        // Lists
-        this.ListContent = new RenderController();
-
-
-
-        // // Filter 
-        // this.ListContent.FilterTodos = new FilterView({
-        //     empty_string: "You have not created any Todos, ever!",
-        //     filter: {}
-        // });
-        // this._subviews.push(this.ListContent.AllTodos);
-
-        // this.createTabs();
-
-        // // Show "Todos" by default
-        // this.ListContent.show(this.ListContent.Todos);
-        // this.contentScrollView.Views.push(this.ListContent);
-        this.contentScrollView.Views.push(this.ListContent);
-
-        this.tmpSurface = new Surface({
-            content: 'Completed and removed jobs not yet available',
-            size: [window.innerWidth, true],
-            properties: {
-                'text-align' : 'center'
-            }
+        this.AllView = new AllView({
+            empty_string: 'No jobs found in your history',
+            filter: {} // no filter, basically
         });
-        this.tmpSurface.View = new View();
-        this.tmpSurface.SizeMod = new StateModifier({
-            size: [window.innerWidth, undefined]
-        });
-        this.tmpSurface.OriginMod = new StateModifier({
-            origin: [0.5,0.5],
-            align: [0.5,0.5]
-        });
-        this.tmpSurface.View.add(this.tmpSurface.SizeMod).add(this.tmpSurface.OriginMod).add(this.tmpSurface);
+        this._subviews.push(this.AllView);
 
-        this.ListContent.show(this.tmpSurface.View);
-
-        this.contentScrollView.sequenceFrom(this.contentScrollView.Views);
-
-        this.layout.content.add(this.ContentStateModifier).add(this.contentScrollView);
+        this.layout.content.add(this.ContentStateModifier).add(Utils.usePlane('content')).add(this.AllView);
 
     };
 
     PageView.prototype.refreshData = function() {
         try {
-            // this.model.fetch();
-            // this.media_collection.fetch();
-            // this.errorList.fetch();
-            // this.alert_collection.fetch();
-            // this.CarTripListView.collection.fetch();
         }catch(err){};
-    };
-
-    PageView.prototype.remoteRefresh = function(snapshot){
-        var that = this;
-        console.log('RemoteRefresh - PageView');
-        Utils.RemoteRefresh(this, snapshot);
     };
 
     PageView.prototype.inOutTransition = function(direction, otherViewName, transitionOptions, delayShowing, otherView, goingBack){
@@ -225,7 +165,9 @@ define(function(require, exports, module) {
 
                         Timer.setTimeout(function(){
 
-                            // Slide down
+                            // // Fade header
+                            // that.header.StateModifier.setOpacity(0, transitionOptions.outTransition);
+
                             that.ContentStateModifier.setTransform(Transform.translate((window.innerWidth * (goingBack ? 1.5 : -1.5)),0,0), transitionOptions.outTransition);
 
                         }, delayShowing);
@@ -247,10 +189,6 @@ define(function(require, exports, module) {
                         // No animation by default
                         transitionOptions.inTransform = Transform.identity;
 
-                        // // Default header opacity
-                        // that.header.StateModifier.setOpacity(0);
-
-                        // Default position
                         that.ContentStateModifier.setTransform(Transform.translate((window.innerWidth * (goingBack ? -1.5 : 1.5)),0,0));
 
                         // Content
@@ -260,8 +198,26 @@ define(function(require, exports, module) {
                             // Bring content back
                             that.ContentStateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
 
+
                         }, delayShowing + transitionOptions.outTransition.duration);
 
+                        // //Fade out the header
+                        // // var previousTransform = transitionOptions.outTransform;
+                        // transitionOptions.outTransform = Transform.identity;
+
+                        // // Move the content to the left
+                        // // - not the footer
+                        // // console.log(transitionOptions.outTransform);
+                        // // debugger;
+                        // Timer.setTimeout(function(){
+
+                        //     // Bring map content back
+                        //     that.layout.content.StateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.inTransition);
+
+                        //     // Bring Footer Up
+                        //     that.layout.footer.StateModifier.setTransform(Transform.translate(0,0,0), transitionOptions.outTransition);
+
+                        // }, delayShowing);
 
                         break;
                 }

@@ -253,7 +253,7 @@ define(function(require, exports, module) {
             moreSurfaces: [
                 // this.headerContent.Invoices,
                 this.headerContent.History,
-                this.headerContent.Search,
+                // this.headerContent.Search, // Find NEW Jobs (maybe rename to Bids?)
                 this.headerContent.Create
                 // this.headerContent.FilterSwitcher,
             ]

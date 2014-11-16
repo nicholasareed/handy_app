@@ -433,6 +433,11 @@
   padding-bottom: 16px;
 }
 
+.todo-list-item-default > div:nth-child(2) span.deleted {
+  padding-right: 8px;
+  color: #AC2E27;
+}
+
 .todo-list-item-default > div:nth-child(2) span.assigned {
   padding-right: 8px;
   color: #2C3E50;

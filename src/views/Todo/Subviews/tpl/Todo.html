@@ -6,6 +6,15 @@
 
 <div>
 
+	{{print Todo.tags}}
+
+	<!-- Active? -->
+	{{#unless Todo.active}}
+		<span class="deleted">
+			Deleted
+		</span>
+    {{/unless}}
+
 	<!-- Assigned? -->
 	{{#if Todo.assigned_id}}
 		{{#compare Todo.assigned_id._id "==" User._id}}
