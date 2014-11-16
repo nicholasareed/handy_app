@@ -4,48 +4,54 @@
     <span class="ellipsis-all">{{Todo.title}}&nbsp;</span>
 </div>
 
-<div>
+<div class="clearfix content-holder">
+	<div class="three-quarters content">
 
-	{{print Todo.tags}}
+		<!-- Active? -->
+		{{#unless Todo.active}}
+			<span class="deleted">
+				Deleted
+			</span>
+	    {{/unless}}
 
-	<!-- Active? -->
-	{{#unless Todo.active}}
-		<span class="deleted">
-			Deleted
-		</span>
-    {{/unless}}
-
-	<!-- Assigned? -->
-	{{#if Todo.assigned_id}}
-		{{#compare Todo.assigned_id._id "==" User._id}}
-	        <span class="assigned">
-	        	Hired Me
-	        </span>
+		<!-- Assigned? -->
+		{{#if Todo.assigned_id}}
+			{{#compare Todo.assigned_id._id "==" User._id}}
+		        <span class="assigned">
+		        	Hired Me
+		        </span>
+		    {{else}}
+		        <span class="assigned">
+		        	<span data-replace-id="{{Todo.assigned_id._id}}" data-replace-model="Profile" data-replace-field="profile.name">&nbsp;</span>
+		        </span>
+		    {{/compare}}
 	    {{else}}
 	        <span class="assigned">
-	        	<span data-replace-id="{{Todo.assigned_id._id}}" data-replace-model="Profile" data-replace-field="profile.name">&nbsp;</span>
+	        	No one hired
 	        </span>
-	    {{/compare}}
-    {{else}}
-        <span class="assigned">
-        	No one hired
-        </span>
-	{{/if}}
+		{{/if}}
 
-	<!-- Owner? -->
-	{{#if Todo.owner_id}}
-		{{#compare Todo.owner_id._id "!=" User._id}}
-	        <span class="owner">
-	        	for <span data-replace-id="{{Todo.owner_id._id}}" data-replace-model="Profile" data-replace-field="profile.name">&nbsp;</span>
-	        </span>
-	    {{/compare}}
-	{{/if}}
-	
-	<!-- Invoiced? -->
-	{{#if Todo.invoice_id}}
-		<span class="invoiced">
-	    	$
-	    </span>
-	{{/if}}
+		<!-- Owner? -->
+		{{#if Todo.owner_id}}
+			{{#compare Todo.owner_id._id "!=" User._id}}
+		        <span class="owner">
+		        	for <span data-replace-id="{{Todo.owner_id._id}}" data-replace-model="Profile" data-replace-field="profile.name">&nbsp;</span>
+		        </span>
+		    {{/compare}}
+		{{/if}}
+		
+		<!-- Invoiced? -->
+		{{#if Todo.invoice_id}}
+			<span class="invoiced">
+		    	Invoiced
+		    </span>
+		{{/if}}
+
+	</div>
+	<div class="one-quarter created-datetime">
+		<div class="ellipsis-all">
+			{{Moment Todo.created "ddd, MMM do"}}
+		</div>
+	</div>
 
 </div>

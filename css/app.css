@@ -425,7 +425,7 @@
 }
 
 
-.todo-list-item-default > div:nth-child(2) {
+.todo-list-item-default div.content-holder {
   font-size: 14px;
   line-height: 20px;
   color: #333;
@@ -433,23 +433,29 @@
   padding-bottom: 16px;
 }
 
-.todo-list-item-default > div:nth-child(2) span.deleted {
+.todo-list-item-default span.deleted {
   padding-right: 8px;
   color: #AC2E27;
 }
 
-.todo-list-item-default > div:nth-child(2) span.assigned {
+.todo-list-item-default span.assigned {
   padding-right: 8px;
   color: #2C3E50;
 }
 
-.todo-list-item-default > div:nth-child(2) span.invoiced {
+.todo-list-item-default span.invoiced {
   /*padding-right: 8px;*/
   color: green;
 }
 
-.todo-list-item-default > div:nth-child(2) span.owner {
+.todo-list-item-default span.owner {
   color: #7F8C8D;
+}
+
+.todo-list-item-default div.created-datetime {
+  font-size: 14px;
+  color: #777;
+  text-align: right;
 }
 
 
