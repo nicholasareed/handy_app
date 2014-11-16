@@ -242,7 +242,7 @@ define(function(require, exports, module) {
     
         // Email
         this.headerContent.Email = new Surface({
-            content: '<i class="icon ion-email"></i>',
+            content: '<i class="icon ion-ios7-people"></i>',
             size: [60, undefined],
             classes: ['header-tab-icon-text-big']
         });
@@ -295,6 +295,32 @@ define(function(require, exports, module) {
 
         });
 
+        // Menu
+        this.headerContent.Menu = new Surface({
+            content: '<i class="icon ion-navicon-round"></i>',
+            size: [60, undefined],
+            classes: ['header-tab-icon-text-big']
+        });
+        this.headerContent.Menu.on('longtap', function(){
+            Utils.Help('Todo/View/Menu');
+        });
+        this.headerContent.Menu.on('click', function(){
+            
+            Utils.Popover.Buttons({
+                title: 'Additional Options',
+                buttons: [{
+                    text: 'Email Invoice',
+                    success: function(){
+
+                        Utils.Popover.Alert('Emailing an invoice to an email address is not yet supported','ok');
+                        return;
+
+                    }
+                }]
+            });
+
+        });
+
 
         // create the header
         this.header = new StandardHeader({
@@ -302,6 +328,7 @@ define(function(require, exports, module) {
             classes: ["normal-header"],
             backClasses: ["normal-header"],
             moreSurfaces: [
+                this.headerContent.Menu,
                 this.headerContent.Email,
                 this.headerContent,
                 // this.headerContent

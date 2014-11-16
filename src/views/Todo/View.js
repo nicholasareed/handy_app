@@ -410,7 +410,7 @@ define(function(require, exports, module) {
     
         // Email
         this.headerContent.Email = new Surface({
-            content: '<i class="icon ion-email"></i>',
+            content: '<i class="icon ion-ios7-people"></i>',
             size: [60, undefined],
             classes: ['header-tab-icon-text-big']
         });
