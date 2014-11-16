@@ -575,7 +575,8 @@ iframe {
 /* Positioning */
 
 
-.quarter {
+.quarter,
+.one-quarter {
   width: 25%;
 }
 
