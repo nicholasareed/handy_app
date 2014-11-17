@@ -326,6 +326,7 @@ define(function(require, exports, module) {
         this.header = new StandardHeader({
             content: "Invoice",
             classes: ["normal-header"],
+            bgClasses: ['header-bg-green'],
             backClasses: ["normal-header"],
             moreSurfaces: [
                 this.headerContent.Menu,
