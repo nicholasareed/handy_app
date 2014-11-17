@@ -107,9 +107,9 @@ define(function(require, exports, module) {
                                     curve: 'linear'
                                 });
 
-                                App.StatusBarView.newSurface({
-                                    bgClasses: that.options.bgClasses || ['header-bg-default']
-                                });
+                                // App.StatusBarView.newSurface({
+                                //     bgClasses: that.options.bgClasses || ['header-bg-default']
+                                // });
                                 
                                 // that.background.StateMod.setTransform(Transform.translate(0,-100,0), {
                                 //     duration: transitionOptions.outTransition.duration,

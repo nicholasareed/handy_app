@@ -366,8 +366,9 @@ define(function(require, exports, module) {
                 App.StatusBarView.newSurface = function(surf){
                     // animates in a new Surface
                     if(surf instanceof Surface){
-                        App.StatusBarView.Controller.show(surf);
-                        return;
+                        debugger;
+                        // App.StatusBarView.Controller.show(surf);
+                        // return;
                     }
 
                     // create new surface for color, if passed that in an object
