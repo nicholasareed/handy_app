@@ -101,7 +101,7 @@ define(function(require, exports, module) {
                         Timer.setTimeout(function(){
 
                             // background header fade
-                            if(!otherView || !otherView.header || !(otherView.header instanceof StandardHeader) || otherView.header.options.bgClasses != that.options.bgClasses){
+                            if(!otherView || !otherView.header || !(otherView.header instanceof StandardHeader) || JSON.stringify(otherView.header.options.bgClasses) != JSON.stringify(that.options.bgClasses)){
                                 that.background.StateMod.setOpacity(0, {
                                     duration: transitionOptions.outTransition.duration,
                                     curve: 'linear'
