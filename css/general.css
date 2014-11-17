@@ -666,6 +666,10 @@ iframe {
   opacity: 0.5;*/
 }
 
+.header-bg-green {
+  background: green;
+}
+
 .header-bg-white {
   background: white;
 }

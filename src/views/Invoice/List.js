@@ -244,6 +244,7 @@ define(function(require, exports, module) {
         this.header = new StandardHeader({
             content: "Invoices",
             classes: ["normal-header"],
+            bgClasses: ['header-bg-green'],
             backClasses: ["normal-header"],
             backContent: false,
             // moreContent: false

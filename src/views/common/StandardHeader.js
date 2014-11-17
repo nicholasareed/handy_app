@@ -101,15 +101,20 @@ define(function(require, exports, module) {
                         Timer.setTimeout(function(){
 
                             // background header fade
-                            if(!otherView || !otherView.header || !(otherView.header instanceof StandardHeader)){
+                            if(!otherView || !otherView.header || !(otherView.header instanceof StandardHeader) || otherView.header.options.bgClasses != that.options.bgClasses){
                                 that.background.StateMod.setOpacity(0, {
                                     duration: transitionOptions.outTransition.duration,
                                     curve: 'linear'
                                 });
-                                that.background.StateMod.setTransform(Transform.translate(0,-100,0), {
-                                    duration: transitionOptions.outTransition.duration,
-                                    curve: 'linear'
+
+                                App.StatusBarView.newSurface({
+                                    bgClasses: that.options.bgClasses
                                 });
+                                
+                                // that.background.StateMod.setTransform(Transform.translate(0,-100,0), {
+                                //     duration: transitionOptions.outTransition.duration,
+                                //     curve: 'linear'
+                                // });
                             }
 
                             // Fade header
@@ -176,9 +181,13 @@ define(function(require, exports, module) {
 
                         // Default header opacity
                         console.log(otherView);
-                        if(!otherView || !otherView.header || !(otherView.header instanceof StandardHeader)){
+                        if(!otherView || !otherView.header || !(otherView.header instanceof StandardHeader) || otherView.header.options.bgClasses != that.options.bgClasses){
                             that.background.StateMod.setOpacity(0);
                             that.background.StateMod.setTransform(Transform.translate(0,0,0));
+
+                            App.StatusBarView.newSurface({
+                                bgClasses: that.options.bgClasses
+                            });
                         }
 
                         that.OpacityModifier.setOpacity(0);
@@ -215,7 +224,7 @@ define(function(require, exports, module) {
 
                             that.background.StateMod.setOpacity(1, {
                                 duration: transitionOptions.outTransition.duration,
-                                curve: 'linear'
+                                curve: 'easeOut'
                             });
                             that.background.StateMod.setTransform(Transform.translate(0,0,0), {
                                 duration: transitionOptions.outTransition.duration,

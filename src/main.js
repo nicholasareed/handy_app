@@ -359,11 +359,41 @@ define(function(require, exports, module) {
                 App.StatusBarView.getSize = function(){
                     return [undefined, 20];
                 };
-                App.StatusBarView.Surface = new Surface({
-                    size: [undefined, 20],
-                    classes: ['status-bar-default']
+                App.StatusBarView.Controller = new RenderController();
+                App.StatusBarView.add(Utils.usePlane('statusBar')).add(App.StatusBarView.Controller);
+
+                // Animate new colors accordingly (wish it were easier)
+                App.StatusBarView.newSurface = function(surf){
+                    // animates in a new Surface
+                    if(surf instanceof Surface){
+                        App.StatusBarView.Controller.show(surf);
+                        return;
+                    }
+
+                    // create new surface for color, if passed that in an object
+                    if(surf.bgClasses){
+
+                        var tmpSurf = new Surface({
+                            size: [undefined, 20],
+                            classes: surf.bgClasses
+                        })
+
+                        App.StatusBarView.Controller.show(surf);
+                        return;
+                    }
+
+                    // what else?
+                    console.error('no other handler for newSurface');
+                    
+                };
+
+                // Add first surface
+                App.StatusBarView.newSurface({
+                    bgClasses: ['status-bar-green']
                 });
-                App.StatusBarView.add(Utils.usePlane('statusBar')).add(App.StatusBarView.Surface);
+
+
+                // Add to Layout
                 if(App.StatusBar === true){
                     App.MainView.Layout.Views.push(App.StatusBarView);
                 }
