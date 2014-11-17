@@ -181,7 +181,7 @@ define(function(require, exports, module) {
 
                         // Default header opacity
                         console.log(otherView);
-                        if(!otherView || !otherView.header || !(otherView.header instanceof StandardHeader) || JSON.strinfify(otherView.header.options.bgClasses) != JSON.stringify(that.options.bgClasses)){
+                        if(!otherView || !otherView.header || !(otherView.header instanceof StandardHeader) || JSON.stringify(otherView.header.options.bgClasses) != JSON.stringify(that.options.bgClasses)){
                             that.background.StateMod.setOpacity(0);
                             that.background.StateMod.setTransform(Transform.translate(0,0,0));
 
