@@ -89,6 +89,7 @@ define(function(require, exports, module) {
         this.header = new StandardHeader({
             content: "Add Credit Card",
             classes: ["normal-header"],
+            bgClasses: ['header-bg-green'],
             backClasses: ["normal-header"],
             moreContent: false
         }); 

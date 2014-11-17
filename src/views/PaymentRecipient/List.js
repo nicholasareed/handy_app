@@ -123,6 +123,7 @@ define(function(require, exports, module) {
         this.header = new StandardHeader({
             content: "Accept Money",
             classes: ["normal-header"],
+            bgClasses: ['header-bg-green'],
             backClasses: ["normal-header"],
             // moreContent: false
             // backContent: false,

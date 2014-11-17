@@ -107,6 +107,7 @@ define(function(require, exports, module) {
         this.header = new StandardHeader({
             content: "Add Debit Card",
             classes: ["normal-header"],
+            bgClasses: ['header-bg-green'],
             backClasses: ["normal-header"],
             moreSurfaces: [
                 this.headerContent.QuickHelp

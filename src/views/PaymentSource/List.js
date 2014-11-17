@@ -137,6 +137,7 @@ define(function(require, exports, module) {
         this.header = new StandardHeader({
             content: "Payment Methods",
             classes: ["normal-header"],
+            bgClasses: ['header-bg-green'],
             backClasses: ["normal-header"],
             // moreContent: false
             // backContent: false,
