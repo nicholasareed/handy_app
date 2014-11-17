@@ -108,7 +108,7 @@ define(function(require, exports, module) {
                                 });
 
                                 App.StatusBarView.newSurface({
-                                    bgClasses: that.options.bgClasses
+                                    bgClasses: that.options.bgClasses || ['header-bg-default']
                                 });
                                 
                                 // that.background.StateMod.setTransform(Transform.translate(0,-100,0), {
@@ -186,7 +186,7 @@ define(function(require, exports, module) {
                             that.background.StateMod.setTransform(Transform.translate(0,0,0));
 
                             App.StatusBarView.newSurface({
-                                bgClasses: that.options.bgClasses
+                                bgClasses: that.options.bgClasses || ['header-bg-default']
                             });
                         }
 
