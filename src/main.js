@@ -378,7 +378,7 @@ define(function(require, exports, module) {
                             classes: surf.bgClasses
                         })
 
-                        App.StatusBarView.Controller.show(surf);
+                        App.StatusBarView.Controller.show(tmpSurf);
                         return;
                     }
 
