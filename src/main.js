@@ -391,7 +391,7 @@ define(function(require, exports, module) {
 
                 // Add first surface
                 App.StatusBarView.newSurface({
-                    bgClasses: ['status-bar-green']
+                    bgClasses: ['header-bg-default']
                 });
 
 
